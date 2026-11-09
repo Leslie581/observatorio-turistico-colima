@@ -56,3 +56,14 @@ data/cuarentena/*
 *.sqlite
 *.db
 respaldos/
+
+# --- Incorporado de la plantilla Python del remoto (exclusiones de seguridad/empaquetado) ---
+.envrc
+.pypirc
+.streamlit/secrets.toml
+*.egg-info/
+*.egg
+build/
+dist/
+.hypothesis/
+.cache
