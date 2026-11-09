@@ -1,0 +1,10 @@
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+# Los datos se conservan byte a byte (sin conversion de fin de linea ni codificacion). Va al final para prevalecer.
+*.csv -text
+*.tsv -text
+tests/fixtures/** -text
+data/** -text

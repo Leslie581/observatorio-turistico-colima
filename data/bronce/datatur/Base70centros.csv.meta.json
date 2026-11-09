@@ -1,0 +1,12 @@
+{
+  "archivo": "Base70centros.csv",
+  "sha256": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
+  "bytes": 2740171,
+  "capturado_utc": "2026-11-08T23:27:54+00:00",
+  "fuente": "Base70centros.csv (SECTUR/DataTur)",
+  "url": "https://github.com/carlosvaldes941105-debug/Hotel/blob/474c3c0264a6d21e3874753cb48986b380432168/Base70centros%20(1).csv",
+  "origen": "espejo_no_oficial",
+  "metodo": "importacion_local",
+  "ruta_origen": "/tmp/espejo/hotel1/Base70centros (1).csv",
+  "commit": "474c3c0264a6d21e3874753cb48986b380432168"
+}

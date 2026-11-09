@@ -1,0 +1,15 @@
+{
+  "descripcion": "Segunda verificacion independiente (carpeta B) del archivo oficial Base70centros.csv, hecha con fetch() + crypto.subtle.digest('SHA-256') desde el navegador integrado de la app Claude Code en la computadora del equipo. Una sola peticion GET al enlace del boton 'Descargar' de datos.gob.mx; no es un extractor ni un script de captura. El archivo no se guardo desde el navegador.",
+  "fecha_utc": "2026-11-09T15:52:06Z",
+  "pagina_dataset": "https://www.datos.gob.mx/dataset/ocupacion_hotelera_70_destinos_principales_monitoreados_datatur",
+  "licencia_leida_en_la_pagina": "Creative Commons Attribution 4.0",
+  "url": "https://repodatos.atdt.gob.mx/s_turismo/ocupacion_hotelera/Base70centros.csv",
+  "estado_http": 200,
+  "last_modified": "Tue, 15 Jul 2025 21:08:21 GMT",
+  "etag": "\"6876c345-29cfcb\"",
+  "bytes": 2740171,
+  "sha256": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
+  "sha256_bronce_repositorio": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
+  "identico": true,
+  "limitaciones": "No lo hizo el extractor de Python (el servidor responde 403 a scripts; no se intenta evadirlo). Verifica contenido; la autorizacion de uso proviene de la licencia CC BY 4.0 declarada en la pagina, no del hash."
+}

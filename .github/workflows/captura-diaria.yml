@@ -1,0 +1,137 @@
+name: captura-diaria-denue
+
+# Fuente programada de E0: DENUE (INEGI), API documentada con token gratuito.
+# NO captura DATATUR: sus condiciones de uso automatizado no están resueltas (docs/fuentes/datatur.md).
+# Estado: IMPLEMENTADO. No hay ejecución real en GitHub hasta que el equipo la lance (docs/E0/verificacion.md).
+on:
+  schedule:
+    - cron: "17 13 * * *"   # diario 07:17 hora de Ciudad de México (UTC-6 fijo, sin horario de verano)
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: "Capturar aunque ya exista la captura de hoy"
+        type: boolean
+        default: false
+
+# Un solo escritor a la vez: evita capturas simultáneas y conflictos al hacer push.
+concurrency:
+  group: captura-denue
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # solo para guardar bitácora y bronce sanitizado; sin otros permisos
+
+defaults:
+  run:
+    shell: bash   # bash -e -o pipefail: un fallo dentro de un pipe (| tee) no se oculta
+
+jobs:
+  capturar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUNBUFFERED: "1"
+      TDL_CONTACTO: ${{ vars.TDL_CONTACTO }}
+      FORZAR: ${{ inputs.forzar }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Instalar dependencias fijadas
+        run: python -m pip install -r requirements.txt
+
+      # Obligatoria: si falla, la ejecución termina aquí (todavía no se capturó nada).
+      # `-rs` lista las pruebas OMITIDAS (p. ej. las de red) con su motivo.
+      - name: Pruebas sin red
+        run: |
+          mkdir -p logs
+          python -m pytest -q -rs 2>&1 | tee logs/pytest.txt
+
+      # El token se expone solo a este paso. El extractor lo enmascara en bitácoras y fichas.
+      - name: Captura DENUE
+        id: captura
+        continue-on-error: true   # para poder guardar evidencia; el paso final SÍ falla si este falla
+        env:
+          INEGI_TOKEN: ${{ secrets.INEGI_TOKEN }}
+        run: |
+          if [ "$FORZAR" = "true" ]; then python -m extractores.captura_denue --forzar
+          else python -m extractores.captura_denue; fi
+
+      # OBLIGATORIA. `--exigir-datos`: "sin datos que inspeccionar" cuenta como fallo.
+      - name: Verificación obligatoria (histórico, integridad, privacidad)
+        id: verificar
+        continue-on-error: true   # idem: se evalúa en el paso final
+        run: |
+          python -m pipeline.verificar_e0 --solo historico --solo integridad --solo privacidad --exigir-datos \
+            | tee logs/verificacion.json
+
+      # Informativa: con pocos días de historial no puede evaluarse el objetivo O1; no falla la ejecución.
+      - name: Disponibilidad (informativa)
+        id: disponibilidad
+        continue-on-error: true
+        run: python -m pipeline.verificar_e0 --solo disponibilidad | tee logs/disponibilidad.json
+
+      - name: Resumen de la ejecución
+        if: always()
+        env:
+          R_CAPTURA: ${{ steps.captura.outcome }}
+          R_VERIFICAR: ${{ steps.verificar.outcome }}
+          R_DISPONIBILIDAD: ${{ steps.disponibilidad.outcome }}
+        run: |
+          {
+            echo "## Captura DENUE · run ${GITHUB_RUN_ID}"
+            echo "| Paso | Resultado |"; echo "|---|---|"
+            echo "| Captura | ${R_CAPTURA} |"
+            echo "| Verificación obligatoria | ${R_VERIFICAR} |"
+            echo "| Disponibilidad (informativa) | ${R_DISPONIBILIDAD} |"
+            echo "Pruebas: $(tail -n 1 logs/pytest.txt 2>/dev/null || echo 'sin salida') (las omitidas figuran como skipped; no cuentan como aprobadas)"
+            echo '```json'; tail -n 1 calidad/bitacora_capturas.jsonl 2>/dev/null || echo '{"sin_bitacora": true}'; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Siempre se guarda la bitácora (también las ejecuciones fallidas: base de la fiabilidad de E1).
+      # El bronce solo se publica si la verificación obligatoria PASÓ (nunca datos que no la pasaron).
+      - name: Guardar bitácora (y bronce sanitizado si la verificación pasó)
+        if: always()
+        env:
+          R_VERIFICAR: ${{ steps.verificar.outcome }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add calidad/bitacora_capturas.jsonl
+          if [ "$R_VERIFICAR" = "success" ]; then git add data/bronce/denue
+          else echo "Verificación no satisfactoria: NO se publica el bronce de esta ejecución"; fi
+          if git diff --cached --quiet; then echo "sin cambios que guardar"; exit 0; fi
+          git commit -m "captura DENUE ${GITHUB_RUN_ID} [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencia-captura-${{ github.run_id }}
+          path: |
+            logs/bitacora.jsonl
+            logs/pytest.txt
+            logs/verificacion.json
+            logs/disponibilidad.json
+            calidad/bitacora_capturas.jsonl
+          if-no-files-found: ignore
+          retention-days: 30
+
+      # Último paso: la evidencia ya quedó guardada. Falla si CUALQUIER paso obligatorio no fue `success`
+      # (incluye `skipped`/`cancelled`: algo que no se ejecutó no cuenta como satisfactorio).
+      - name: Fallar si la captura o la verificación obligatoria no fueron satisfactorias
+        if: always()
+        env:
+          R_CAPTURA: ${{ steps.captura.outcome }}
+          R_VERIFICAR: ${{ steps.verificar.outcome }}
+        run: |
+          echo "captura=${R_CAPTURA} verificacion=${R_VERIFICAR}"
+          if [ "$R_CAPTURA" != "success" ] || [ "$R_VERIFICAR" != "success" ]; then
+            echo "::error::Captura o verificación obligatoria no satisfactoria; revise el resumen y el artefacto de evidencia."
+            exit 1
+          fi

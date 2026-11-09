@@ -1,0 +1,13 @@
+# Propuesta de issues para E0 (para aprobación; no se han creado en GitHub)
+
+Responsables **provisionales**. Reparto de referencia: Integrante A ≈ 60 % (arquitectura, extracción, integración, pruebas y revisión final), Integrante B ≈ 40 % (documentación, fuentes, verificación, calidad y entrevista). Se puede modificar. Ramas previstas más adelante: `feature/captura` y `feature/calidad-docs` (una por frente, no por tarea). Cada issue se cierra con el commit que lo atiende. No se atribuye ningún trabajo a nadie hasta que lo haga.
+
+| # | Issue | Responsable provisional | Rama prevista | Criterios de aceptación |
+|---|---|---|---|---|
+| 1 | **Subir el repositorio, colaboradores y configurar secretos** | A | main | Repositorio con ambos integrantes y los tres docentes como colaboradores; secreto `INEGI_TOKEN` y variable `TDL_CONTACTO` creados; ningún secreto en el historial (búsqueda confirmada) |
+| 2 | **Primera captura DENUE real y primera ejecución manual en Actions** | A | `feature/captura` | `workflow_dispatch` en verde; commit del bot con bitácora y bronce del día; JSON sin campos personales; el token no aparece en logs; segunda ejecución del mismo día = `omitida_duplicada`; enlace guardado en `ENTREGA.md`; archivado el `robots.txt` de INEGI leído (`robots_leido` en la bitácora) |
+| 3 | **Ejecución programada y bitácora de 7 días** | A | `feature/captura` | Al menos una ejecución con `disparador: schedule`; después de 7 días, `pipeline.verificar_e0 --solo disponibilidad` calculado; cualquier fallo registrado como defecto |
+| 4 | **Decisión sobre DATATUR 2025–2026** | B (revisa A) | `feature/calidad-docs` | El equipo elige entre las opciones de `docs/fuentes/datatur.md` §7; si es la 2, borrador de solicitud de autorización enviado **por el equipo**; la respuesta se archiva; hasta entonces el canal B sigue suspendido y fuera de Git |
+| 5 | **Entrevista de validación** | B (A toma notas) | `feature/calidad-docs` | ≥ 15 min, cinco preguntas, respuestas reales con fecha y duración, consentimiento; sección 8 de la propuesta completada; si cambian las hipótesis, secciones 1, 2 y 4 ajustadas |
+| 6 | **Registros PSP y revisión de calidad de E0** | A y B (cada quien el suyo) | `feature/calidad-docs` | Cada integrante con filas reales de tiempo y defectos en sus propios CSV, renombrados al formato del Kit; Quality Lead de E0 definido y `calidad/revision_calidad.md` llenado por quien revisa al otro |
+| 7 | **Cierre de E0: propuesta, ficha y etiqueta** | B redacta, A revisa y etiqueta | main | Propuesta de 3 a 5 páginas sin hipótesis presentadas como hechos; `ENTREGA.md` con enlaces válidos; `pytest` y `verificar_e0` en verde en máquina limpia; etiqueta `e0` creada **solo** cuando lo anterior esté completo (no se ha creado) |

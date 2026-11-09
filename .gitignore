@@ -1,0 +1,58 @@
+# --- Entornos y secretos ---
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*token*
+!tests/**/*token*
+secrets/
+credentials*.json
+
+# --- Cachés y temporales ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# --- Logs HTTP detallados (la bitacora de ejecuciones SI se versiona: calidad/bitacora_capturas.jsonl) ---
+logs/
+*.log
+
+# --- Datos cuya publicacion NO esta autorizada o aclarada ---
+# DATATUR: Sistema de Monitoreo Hotelero (endpoint interno, terminos de gob.mx restringen la difusion).
+data/bronce/datatur_monitoreo/
+data/privado/
+evidencias_privadas/
+DataturReportePublico_original.csv
+# DENUE sin sanitizar (con telefono/correo/razon social): nunca versionar crudos
+data/bronce/denue/crudo/
+data/bronce/denue/sin_sanitizar/
+
+# --- Datos derivados grandes o regenerables (capas posteriores a E0) ---
+*.parquet
+*.duckdb
+data/plata/*
+data/oro/*
+!data/plata/.gitkeep
+!data/oro/.gitkeep
+data/cuarentena/*
+!data/cuarentena/.gitkeep
+
+# --- Datos personales / respaldos ---
+*.sqlite
+*.db
+respaldos/
