@@ -69,11 +69,13 @@ jobs:
           python -m pipeline.verificar_e0 --solo historico --solo integridad --solo privacidad --exigir-datos \
             | tee logs/verificacion.json
 
-      # Informativa: con pocos días de historial no puede evaluarse el objetivo O1; no falla la ejecución.
+      # Informativa: un indicador calculado por debajo del objetivo O1 (95 %) NO falla la ejecución
+      # (código 0 con --informativo; se ve en el resumen). Un ERROR TÉCNICO al ejecutar el verificador
+      # (código 2) sí la falla: se evalúa en el paso final.
       - name: Disponibilidad (informativa)
         id: disponibilidad
         continue-on-error: true
-        run: python -m pipeline.verificar_e0 --solo disponibilidad | tee logs/disponibilidad.json
+        run: python -m pipeline.verificar_e0 --solo disponibilidad --informativo | tee logs/disponibilidad.json
 
       - name: Resumen de la ejecución
         if: always()
@@ -87,7 +89,22 @@ jobs:
             echo "| Paso | Resultado |"; echo "|---|---|"
             echo "| Captura | ${R_CAPTURA} |"
             echo "| Verificación obligatoria | ${R_VERIFICAR} |"
-            echo "| Disponibilidad (informativa) | ${R_DISPONIBILIDAD} |"
+            echo "| Disponibilidad (informativa; solo falla ante error técnico) | ${R_DISPONIBILIDAD} |"
+            python - <<'PY'
+          import json
+          try:
+              d = json.load(open("logs/disponibilidad.json", encoding="utf-8"))["disponibilidad"]
+          except Exception as e:
+              print(f"**Disponibilidad: ERROR al leer el resultado ({type(e).__name__})**")
+          else:
+              if d["estado"] == "error":
+                  print(f"**Disponibilidad: ERROR TÉCNICO del verificador: {d['error']}**")
+              elif d["estado"] == "sin_datos":
+                  print("Disponibilidad: sin datos suficientes para evaluar el objetivo del 95 %.")
+              else:
+                  marca = "CUMPLIDO" if d["objetivo_cumplido"] else "NO CUMPLIDO todavía"
+                  print(f"**Disponibilidad observada: {d['tasa_exito']:.1%} ({d['exitosas']} de {d['ejecuciones']} ejecuciones) · objetivo {d['objetivo']:.0%}: {marca}.** Es informativa y no bloquea la ejecución.")
+          PY
             echo "Pruebas: $(tail -n 1 logs/pytest.txt 2>/dev/null || echo 'sin salida') (las omitidas figuran como skipped; no cuentan como aprobadas)"
             echo '```json'; tail -n 1 calidad/bitacora_capturas.jsonl 2>/dev/null || echo '{"sin_bitacora": true}'; echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
@@ -122,16 +139,18 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      # Último paso: la evidencia ya quedó guardada. Falla si CUALQUIER paso obligatorio no fue `success`
-      # (incluye `skipped`/`cancelled`: algo que no se ejecutó no cuenta como satisfactorio).
+      # Último paso: la evidencia ya quedó guardada. Falla si captura, verificación obligatoria o la ejecución
+      # técnica del verificador de disponibilidad no fueron `success` (incluye `skipped`/`cancelled`).
+      # Que la disponibilidad esté por debajo del 95 % NO es un error: el verificador sale con 0.
       - name: Fallar si la captura o la verificación obligatoria no fueron satisfactorias
         if: always()
         env:
           R_CAPTURA: ${{ steps.captura.outcome }}
           R_VERIFICAR: ${{ steps.verificar.outcome }}
+          R_DISPONIBILIDAD: ${{ steps.disponibilidad.outcome }}
         run: |
-          echo "captura=${R_CAPTURA} verificacion=${R_VERIFICAR}"
-          if [ "$R_CAPTURA" != "success" ] || [ "$R_VERIFICAR" != "success" ]; then
-            echo "::error::Captura o verificación obligatoria no satisfactoria; revise el resumen y el artefacto de evidencia."
+          echo "captura=${R_CAPTURA} verificacion=${R_VERIFICAR} disponibilidad(ejecucion del verificador)=${R_DISPONIBILIDAD}"
+          if [ "$R_CAPTURA" != "success" ] || [ "$R_VERIFICAR" != "success" ] || [ "$R_DISPONIBILIDAD" != "success" ]; then
+            echo "::error::Captura, verificación obligatoria o ejecución técnica del verificador no satisfactorias; revise el resumen y el artefacto de evidencia."
             exit 1
           fi

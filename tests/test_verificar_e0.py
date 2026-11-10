@@ -143,3 +143,50 @@ def test_codigo_de_salida_trata_sin_datos_segun_la_bandera():
     assert v.codigo_salida(informe) == 0
     assert v.codigo_salida(informe, exigir_datos=True) == 1
     assert v.codigo_salida({"x": {"ok": False}}) == 1
+
+
+# --- Disponibilidad informativa: indicador por debajo del objetivo frente a error técnico ---
+def _bitacora_50(tmp_path):
+    b = tmp_path / "b.jsonl"
+    filas = [{"resultado": "fallo", "fecha_local": "2026-11-09"}, {"resultado": "exito", "fecha_local": "2026-11-09"}]
+    contenido = "\n".join(json.dumps(f) for f in filas)
+    b.write_text(contenido, encoding="utf-8")
+    return b, contenido
+
+
+def test_disponibilidad_50_por_ciento_se_calcula_igual_y_no_cumple_el_objetivo(tmp_path):
+    b, _ = _bitacora_50(tmp_path)
+    r = v.disponibilidad(b)
+    assert (r["ejecuciones"], r["exitosas"], r["tasa_exito"], r["objetivo"]) == (2, 1, 0.5, 0.95)
+    assert r["objetivo_cumplido"] is False and r["estado"] == "fallida"
+
+
+def test_informativo_no_falla_por_estar_bajo_el_objetivo_pero_no_informativo_si(tmp_path, monkeypatch, capsys):
+    b, _ = _bitacora_50(tmp_path)
+    monkeypatch.setattr(v, "BITACORA", b)
+    monkeypatch.setitem(v.COMPROBACIONES, "disponibilidad", lambda: v.disponibilidad(b))
+    assert v.main(["--solo", "disponibilidad", "--informativo"]) == 0
+    salida = json.loads(capsys.readouterr().out)
+    assert salida["disponibilidad"]["tasa_exito"] == 0.5 and salida["disponibilidad"]["objetivo_cumplido"] is False
+    assert v.main(["--solo", "disponibilidad"]) == 1
+
+
+def test_error_tecnico_del_verificador_es_bloqueante_incluso_en_modo_informativo(tmp_path, monkeypatch, capsys):
+    corrupta = tmp_path / "b.jsonl"
+    corrupta.write_text("esto no es json\n", encoding="utf-8")
+    monkeypatch.setitem(v.COMPROBACIONES, "disponibilidad", lambda: v.disponibilidad(corrupta))
+    assert v.main(["--solo", "disponibilidad", "--informativo"]) == 2
+    salida = json.loads(capsys.readouterr().out)
+    assert salida["disponibilidad"]["estado"] == "error" and "JSONDecodeError" in salida["disponibilidad"]["error"]
+
+
+def test_las_comprobaciones_obligatorias_siguen_fallando_con_codigo_1(tmp_path, monkeypatch):
+    monkeypatch.setitem(v.COMPROBACIONES, "integridad", lambda: {"ok": False, "estado": "fallida"})
+    assert v.main(["--solo", "integridad"]) == 1
+    assert v.main(["--solo", "integridad", "--exigir-datos"]) == 1
+
+
+def test_el_modo_informativo_no_cambia_los_datos_historicos(tmp_path):
+    b, contenido = _bitacora_50(tmp_path)
+    v.disponibilidad(b)
+    assert b.read_text(encoding="utf-8") == contenido

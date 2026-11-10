@@ -1,11 +1,12 @@
 """Comprueba la ESTRUCTURA del workflow. No demuestra que funcione en GitHub: eso requiere una ejecución real."""
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
 import yaml
 
 RUTA = Path(__file__).resolve().parent.parent / ".github" / "workflows" / "captura-diaria.yml"
-INFORMATIVOS = {"disponibilidad"}  # pasos con continue-on-error que no deben fallar la ejecución
 
 
 @pytest.fixture(scope="module")
@@ -48,15 +49,44 @@ def test_token_solo_en_el_paso_de_captura_y_nunca_se_imprime(wf, pasos):
     assert "secrets." not in "\n".join(p.get("run", "") for p in pasos)
 
 
-def test_los_pasos_obligatorios_con_continue_on_error_se_evaluan_al_final(pasos):
+def test_todo_paso_con_continue_on_error_se_evalua_en_el_paso_final(pasos):
     final = pasos[-1]
     assert final["if"] == "always()"
-    texto = str(final)
-    obligatorios = [p["id"] for p in pasos if p.get("continue-on-error") and p["id"] not in INFORMATIVOS]
-    assert set(obligatorios) == {"captura", "verificar"}
-    for i in obligatorios:
-        assert f"steps.{i}.outcome" in texto
+    ids = [p["id"] for p in pasos if p.get("continue-on-error")]
+    assert set(ids) == {"captura", "verificar", "disponibilidad"}
+    for i in ids:
+        assert f"steps.{i}.outcome" in str(final)
     assert "exit 1" in final["run"]
+
+
+def test_disponibilidad_es_informativa_pero_no_oculta_errores_tecnicos(pasos):
+    d = _por_id(pasos, "disponibilidad")
+    assert "--informativo" in d["run"] and "logs/disponibilidad.json" in d["run"]
+    verificar = _por_id(pasos, "verificar")
+    assert "--informativo" not in verificar["run"] and "--exigir-datos" in verificar["run"]  # la obligatoria sigue bloqueante
+
+
+def test_el_resumen_muestra_si_el_objetivo_se_cumple(pasos):
+    r = next(p for p in pasos if p.get("name") == "Resumen de la ejecución")
+    assert "objetivo_cumplido" in r["run"] and "NO CUMPLIDO" in r["run"] and "ERROR TÉCNICO" in r["run"]
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="sin bash")
+@pytest.mark.parametrize("captura,verificar,disponibilidad,sale_en_rojo", [
+    ("success", "success", "success", False),   # disponibilidad 50 % con captura válida: el verificador salió 0
+    ("failure", "success", "success", True),    # fallo real de captura
+    ("success", "failure", "success", True),    # fallo de la verificación obligatoria
+    ("success", "success", "failure", True),    # error técnico del verificador de disponibilidad
+    ("skipped", "success", "success", True),
+])
+def test_logica_real_del_paso_final(pasos, captura, verificar, disponibilidad, sale_en_rojo):
+    # Las variables van dentro del script (no por entorno): en Windows `bash` puede ser el de WSL y no las hereda.
+    exportar = f'export R_CAPTURA={captura} R_VERIFICAR={verificar} R_DISPONIBILIDAD={disponibilidad}\n'
+    # bytes con LF: en Windows el modo texto convertiría a CRLF y bash fallaría con `fi`
+    r = subprocess.run(["bash", "-e"], input=(exportar + pasos[-1]["run"]).encode("utf-8"), capture_output=True)
+    r.stdout, r.stderr = r.stdout.decode("utf-8", "replace"), r.stderr.decode("utf-8", "replace")
+    assert f"captura={captura} verificacion={verificar}" in r.stdout  # el script vio los valores
+    assert (r.returncode != 0) is sale_en_rojo, r.stdout + r.stderr
 
 
 def test_la_evidencia_se_guarda_antes_del_paso_final(pasos):

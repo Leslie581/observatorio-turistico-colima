@@ -152,6 +152,7 @@ def disponibilidad(bitacora: Path = BITACORA, objetivo: float = 0.95) -> dict:
     tasa = exitos / len(validas)
     return {"ok": tasa >= objetivo, "estado": _estado(tasa >= objetivo), "ejecuciones": len(validas),
             "exitosas": exitos, "tasa_exito": round(tasa, 4), "objetivo": objetivo,
+            "objetivo_cumplido": tasa >= objetivo,
             "dias_con_captura": len({f["fecha_local"] for f in validas if f["resultado"] == "exito"}),
             "nota": "La medición completa de fiabilidad (MTBF, MTTR) corresponde a E1"}
 
@@ -160,7 +161,19 @@ COMPROBACIONES = {"historico": historico, "integridad": integridad, "privacidad"
                   "disponibilidad": disponibilidad}
 
 
-def codigo_salida(informe: dict, exigir_datos: bool = False) -> int:
+EXIT_ERROR_TECNICO = 2
+
+
+def codigo_salida(informe: dict, exigir_datos: bool = False, informativo: bool = False) -> int:
+    """0 = sin problemas; 1 = una comprobación calculada FALLÓ (o faltan datos con --exigir-datos);
+    2 = ERROR TÉCNICO al ejecutar una comprobación (siempre bloqueante, también en modo informativo).
+
+    En modo ``informativo`` un indicador calculado correctamente que no alcanza su objetivo
+    (``ok`` False) NO produce código distinto de 0; el resultado sigue visible en el JSON."""
+    if any(v.get("estado") == "error" for v in informe.values()):
+        return EXIT_ERROR_TECNICO
+    if informativo:
+        return 0
     malos = [v["ok"] is False or (exigir_datos and v["ok"] is None) for v in informe.values()]
     return 1 if any(malos) else 0
 
@@ -169,10 +182,20 @@ def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--solo", choices=sorted(COMPROBACIONES), action="append")
     p.add_argument("--exigir-datos", action="store_true", help="'sin_datos' cuenta como fallo")
+    p.add_argument("--informativo", action="store_true",
+                   help="un indicador calculado por debajo de su objetivo no da código distinto de 0; "
+                        "un error técnico de ejecución sí (código 2)")
     args = p.parse_args(argv)
-    informe = {n: COMPROBACIONES[n]() for n in (args.solo or COMPROBACIONES)}
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")  # JSON legible igual en Windows y Linux
+    informe = {}
+    for n in (args.solo or COMPROBACIONES):
+        try:
+            informe[n] = COMPROBACIONES[n]()
+        except Exception as e:  # noqa: BLE001 - un error técnico nunca se oculta
+            informe[n] = {"ok": None, "estado": "error", "error": f"{type(e).__name__}: {e}"}
     print(json.dumps(informe, ensure_ascii=False, indent=2))
-    return codigo_salida(informe, args.exigir_datos)
+    return codigo_salida(informe, args.exigir_datos, args.informativo)
 
 
 if __name__ == "__main__":
