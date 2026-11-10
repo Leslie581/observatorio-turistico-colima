@@ -6,7 +6,7 @@ La calidad es obligación de los dos integrantes. En cada entrega uno actúa com
 
 | Entrega | Quality Lead | Revisado | Fecha | Resultado | Evidencia |
 |---|---|---|---|---|---|
-| E0 | _por definir por el equipo_ | _por definir_ | _por definir_ | _pendiente_ | _commit o issue_ |
+| E0 | Integrante A (`Leslie581`), para el conjunto del PR #1 | Trabajo de la integrante B (`eimymuz`): PR #1, 7 archivos | 2026-11-09 | Correcciones solicitadas; revisión **posterior** a la fusión; sin aprobación plena. La auditoría recíproca (B revisa a A) sigue pendiente | [Auditoría 1 en `auditorias.md`](auditorias.md#auditoría-1-pr-1-posterior-a-la-fusión) |
 | E1 | _por definir_ | | | | |
 
 ## Lista de comprobación E0
