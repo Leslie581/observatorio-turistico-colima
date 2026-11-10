@@ -10,3 +10,4 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-09,,,,pruebas,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Captura local DENUE y verificacion E0,35
 2026-11-09,,,,codigo,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Configuracion y depuracion de GitHub Actions,65
 2026-11-09,,,,pruebas,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Revision de pruebas y ejecucion exitosa,20
+2026-11-09,,,,revision,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Auditoria interna posterior a la fusion del PR #1 sobre los 7 archivos de la integrante B,30
