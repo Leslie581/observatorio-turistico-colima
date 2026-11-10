@@ -3,12 +3,12 @@
 **Proyecto integrador TRUSTED DATA LAB** · Equipo: _integrantes por completar_ · Versión: 2026-11-09 (borrador para revisión del equipo)
 **Nombre comercial:** por definir. (“StayMetrics” fue únicamente el prototipo previo.)
 
-> **Cómo leer este documento en un minuto.** Vamos a medir y pronosticar la ocupación hotelera de Manzanillo con datos oficiales de SECTUR (108 meses, 2016–2024) y a describir su oferta de hospedaje con el directorio del INEGI, que capturamos cada día. Servirá a quienes administran o invierten en hoteles de Manzanillo para ver patrones y riesgos, **no** para fijar precios ni decidir inversiones por sí solo. La entrevista con un usuario real está **pendiente**; todo lo que dice este documento sobre el cliente es hipótesis hasta hacerla.
+> **Cómo leer este documento en un minuto.** Vamos a medir y pronosticar la ocupación hotelera de Manzanillo con datos oficiales de SECTUR (108 meses, 2016–2024) y a describir su oferta de hospedaje con el directorio del INEGI, que capturamos cada día. Servirá a quienes administran o invierten en hoteles de Manzanillo para ver patrones y riesgos, **no** para fijar precios ni decidir inversiones por sí solo. Se realizó una entrevista individual con un administrador de alojamiento, aplicada por un colaborador externo (registro parcial), y una encuesta exploratoria (§8). Su evidencia es limitada, por lo que lo que dice este documento sobre el cliente sigue siendo **hipótesis**.
 
 ## 1. Sector, región y usuarios
 - **Sector:** hospedaje turístico (hoteles y moteles de categoría turística).
 - **Región:** municipio y centro turístico de Manzanillo, Colima.
-- **Usuarios previstos (hipótesis a validar en la entrevista):** propietarios, administradores y gerentes de hoteles, e inversionistas o asesores que evalúan el mercado hotelero del puerto. Una asociación hotelera o una dependencia de turismo son clientes alternativos.
+- **Usuarios previstos (hipótesis; validación exploratoria en §8):** propietarios, administradores y gerentes de hoteles, e inversionistas o asesores que evalúan el mercado hotelero del puerto. Una asociación hotelera o una dependencia de turismo son clientes alternativos.
 - **Por qué pagarían (hipótesis):** hoy comparar la ocupación propia contra el mercado, anticipar la temporada baja y entender qué parte de la demanda es nacional o extranjera exige reunir y limpiar datos dispersos. Un reporte confiable, con la calidad de los datos demostrada, ahorra ese trabajo. **No hemos verificado** que alguien pague por ello; el modelo de negocio se trabaja en E4.
 
 ## 2. Problema y pregunta central
@@ -58,9 +58,9 @@ Detalle completo, con el origen de cada afirmación, en [`docs/fuentes/`](../fue
 ### Qué está verificado y qué sigue pendiente (corte 2026-11-09)
 | Verificado | Pendiente |
 |---|---|
-| Base70 en bronce: 108 meses de Manzanillo sin huecos, hash igual al archivo oficial, licencia CC BY 4.0 leída | Entrevista; token de INEGI y primera corrida real del DENUE |
+| Base70 en bronce: 108 meses de Manzanillo sin huecos, hash igual al archivo oficial, licencia CC BY 4.0 leída | Token de INEGI y primera corrida real del DENUE |
 | Captura DENUE real en GitHub (manual): 134/134, sin campos personales (verificador de privacidad sobre 4 archivos reales); prevención de duplicados observada en la bitácora; 69 pruebas locales | Ejecución programada (`schedule`); bitácora de 7 días; disponibilidad actual **66.7 % (2 de 3), por debajo del objetivo de 95 %** |
-| Planes y permisos de las fuentes documentados | Entrevista (la integra la compañera); decisión sobre DATATUR 2025–2026; registros PSP con datos reales |
+| Planes y permisos de las fuentes documentados; encuesta exploratoria de validación documentada (§8) | Consentimiento para publicar el resumen de la entrevista, confirmación de los docentes de que es válida una entrevista aplicada por un colaborador externo (§8.1); decisión sobre DATATUR 2025–2026; registros PSP con datos reales |
 
 ## 6. Plan de recopilación
 1. **Histórico (bronce).** `Base70centros.csv` completo, sin modificar, con `.meta.json` y atribución. Verificación reproducible: `python -m pipeline.verificar_e0 --solo historico` (108 meses de Manzanillo, sin huecos).
@@ -78,28 +78,58 @@ Detalle completo, con el origen de cada afirmación, en [`docs/fuentes/`](../fue
 - **Equipo de 2 personas:** cada integrante debe poder explicar cualquier parte.
 - **Uso de IA generativa:** el código y los borradores de este repositorio se prepararon con asistentes (Claude Code); el equipo debe revisar y poder defender lo que entrega.
 
-## 8. Entrevista de validación — **SECCIÓN QUE COMPLETA LA COMPAÑERA (PENDIENTE DE INTEGRAR)**
-> **Aviso para quien integre:** el equipo informa que la entrevista ya se realizó, pero **su registro todavía no está en este repositorio**. Esta sección la completa la persona que la hizo, desde su copia, **solo con lo que realmente ocurrió** (entrevistado, fecha, duración ≥ 15 min, respuestas y aprendizajes). Nada de lo que aparece abajo es una respuesta real. Quien no hizo la entrevista no debe llenarla ni resumirla.
+## 8. Validación con usuarios: entrevista individual y encuesta
+
+### 8.1 Entrevista individual — **realizada mediante colaborador externo; duración reportada y registro parcial**
+Registro y metodología: [`Entrevistas/entrevista_01.md`](Entrevistas/entrevista_01.md).
 
 Requisitos del expediente: al menos 15 minutos, con alguien del sector, cinco preguntas, respuestas y lo aprendido.
 
 | Campo | Valor |
 |---|---|
-| Entrevistado (rol y tipo de negocio; evitar datos personales si no autoriza) | _pendiente_ |
-| Fecha y duración | _pendiente_ |
-| Quién entrevistó y quién tomó notas | _pendiente_ |
-| Consentimiento para citar | _pendiente_ |
+| Fecha y modalidad | 2026-11-09 · llamada telefónica |
+| Duración | Aproximadamente 15 minutos, **reportada**; sin comprobante disponible para el equipo |
+| Persona entrevistada | Administrador de un establecimiento de alojamiento (perfil anónimo) |
+| Quién hizo qué | Preguntas: preparadas por el equipo del proyecto. Entrevista: aplicada por un colaborador externo al equipo. Respuestas: el colaborador las comunicó verbalmente a la integrante B en una segunda llamada, y ella las registró en apuntes privados (registro secundario, no transcripción literal) |
+| Preguntas | Cinco preguntas principales (en el registro). Las complementarias preparadas: aplicación no confirmada |
+| Respuestas | Documentadas en apuntes privados; **publicación pendiente de consentimiento** |
+| Consentimiento para publicar un resumen anónimo | _Pendiente de confirmar_ |
+| Validez para E0 | _Pendiente de confirmar con los docentes_ (entrevista aplicada por una persona externa al equipo) |
+| Relación con la encuesta | Según lo comunicado por el colaborador, la persona entrevistada también respondió el cuestionario StayMetrics. **No se ha verificado** a qué envío corresponde. No se añade como participante adicional ni se recalculan las cifras de la encuesta, y las cifras agregadas de la encuesta **no se atribuyen** a la persona entrevistada |
 
-| # | Pregunta (borrador sugerido, editable) | Respuesta |
-|---|---|---|
-| 1 | ¿Qué decisión de su hotel le gustaría tomar con mejores datos sobre la ocupación de Manzanillo? | _pendiente_ |
-| 2 | ¿Qué información usa hoy para comparar su ocupación con el mercado, y qué le falta? | _pendiente_ |
-| 3 | ¿Qué le sería útil saber con 3 a 12 meses de anticipación? | _pendiente_ |
-| 4 | ¿Con qué frecuencia necesitaría el reporte y en qué formato? | _pendiente_ |
-| 5 | ¿Qué tendría que contener para confiar en él, y pagaría por ello (quién y cuánto)? | _pendiente_ |
+**Estado del registro:** según lo reportado por el colaborador, la entrevista duró aproximadamente 15 minutos, fue con una persona del sector y siguió las cinco preguntas; las respuestas están documentadas de forma indirecta. **Faltan** el consentimiento para publicarlas y la confirmación de los docentes de que esta modalidad es válida. La duración no tiene comprobante. Mientras falten, el registro es **parcial** y el requisito de entrevista **no se da por cumplido**.
 
-| Qué aprendimos | Cómo cambia esto la pregunta o el alcance |
+### 8.2 Encuesta StayMetrics (evidencia complementaria)
+| Aspecto | Valor |
 |---|---|
-| _pendiente_ | _pendiente_ |
+| Instrumento | Cuestionario autoadministrado (Google Forms). Se modificó durante la recopilación: tres versiones, documentadas en [`encuesta/LEEME.md`](encuesta/LEEME.md) §2–3 |
+| Envíos | 11, de los cuales **10 con consentimiento de participación** (el envío sin consentimiento no contiene respuestas) |
+| Muestra | No probabilística, por conveniencia: 6 de 10 participantes en Manzanillo y 3 de 10 en hoteles o resorts de Manzanillo |
+| Alcance de los resultados | **Validación exploratoria** de necesidades; **no es representativa** del sector hotelero |
+| Qué no acredita | La encuesta no es una entrevista: no tiene entrevistador, notas ni registro de duración. La entrevista individual se documenta en 8.1 |
+| Privacidad | Solo se publican estadísticas agregadas; el archivo original se conserva fuera del repositorio |
 
-Las respuestas deberán ajustar las secciones 1, 2 y 4 si contradicen las hipótesis actuales.
+Resultados: [`encuesta/informe_encuesta_e0.md`](encuesta/informe_encuesta_e0.md) · Metodología y privacidad: [`encuesta/LEEME.md`](encuesta/LEEME.md) · Cálculo reproducible: [`laboratorio/encuesta_e0/`](../../laboratorio/encuesta_e0/README.md).
+
+#### Aprendizajes de la encuesta (exploratorios) y efecto en la propuesta
+Cada fila separa lo **observado** en la encuesta de su efecto en la propuesta; nada de esto valida al cliente ni el modelo de negocio.
+
+| Qué aprendimos (observado) | Cómo afecta la pregunta o el alcance |
+|---|---|
+| El interés en pronósticos de ocupación (8 de 10) y en referencias históricas del destino es compatible con la pregunta central | Sin cambios en la pregunta central |
+| La confianza en los datos es la barrera más citada (4 de 5) | Sin cambios de alcance; coincide con documentar la procedencia y el error del pronóstico, ya previstos para E1 |
+| El análisis de precios y competencia se pide tanto como el pronóstico (8 de 10), pero las fuentes actuales no tienen tarifas | Sin cambios: se mantiene el límite de §3 (no habrá recomendaciones de precios). Queda como cuestión abierta para el equipo |
+| Solo 3 de 10 participantes son hoteles o resorts de Manzanillo y la disposición a pagar es mayormente condicional | Sin cambios en los usuarios previstos (§1), que siguen siendo **hipótesis**. **No validado:** el cliente y el modelo de negocio |
+
+### 8.3 Guion preliminar de la integrante A (no utilizado)
+Borrador previo a la entrevista. **No se utilizó**: la entrevista de 8.1 siguió su propio guion. Se conserva como referencia. La tercera columna indica qué parte de la encuesta aborda **parcialmente** cada tema; **no son respuestas de una entrevista**.
+
+| # | Pregunta del borrador | Cobertura parcial en la encuesta |
+|---|---|---|
+| 1 | ¿Qué decisión de su hotel le gustaría tomar con mejores datos sobre la ocupación de Manzanillo? | Decisiones que consultarían (texto libre, n = 3) y funcionalidades de interés (Tabla 8, n = 10) |
+| 2 | ¿Qué información usa hoy para comparar su ocupación con el mercado, y qué le falta? | Herramientas actuales (Tabla 4) e información difícil de conseguir (Tabla 5, n = 5) |
+| 3 | ¿Qué le sería útil saber con 3 a 12 meses de anticipación? | Anticipación con que identifican la demanda (n = 10) y estimación de la demanda (Tabla 5) |
+| 4 | ¿Con qué frecuencia necesitaría el reporte y en qué formato? | **Frecuencia: no cubierta.** Formato: solo sugerencias (uso en celular, gráficas fáciles de interpretar) |
+| 5 | ¿Qué tendría que contener para confiar en él, y pagaría por ello (quién y cuánto)? | Barreras de uso (Tabla 10, n = 5) y disposición a pagar (Tabla 9, n = 9). **No se preguntó quién pagaría ni cuánto** |
+
+Con la evidencia disponible (8.1 y 8.2) no se modifican las secciones 1, 2 y 4.
