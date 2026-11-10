@@ -12,7 +12,7 @@ Funcionalidad
 [ ] Respeta robots.txt, pausa >= 1 s, User-Agent honesto; no evade bloqueos
 Pruebas
 [ ] `python -m pytest -q` pasa en entorno limpio; hay pruebas para lo nuevo
-[ ] `python -m pipeline.verificar_e0` sin fallos
+[ ] `python -m pipeline.verificar_e0 --solo historico --solo integridad --solo privacidad --exigir-datos` sin fallos (la disponibilidad se reporta aparte)
 Documentación
 [ ] README/docs actualizados; sin afirmaciones sin evidencia; hipótesis marcadas como tales
 [ ] Estados correctos: VERIFICADO / IMPLEMENTADO SIN PROBAR / DOCUMENTADO / PENDIENTE

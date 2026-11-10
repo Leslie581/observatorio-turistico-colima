@@ -9,7 +9,7 @@ Proyecto integrador **TRUSTED DATA LAB** (Ingeniería de Datos · Análisis Esta
 ## Documentación
 | Documento | Contenido |
 |---|---|
-| [`docs/E0/propuesta.md`](docs/E0/propuesta.md) | Propuesta (sector, pregunta, preguntas E1–E3, fuentes, limitaciones, entrevista pendiente) |
+| [`docs/E0/propuesta.md`](docs/E0/propuesta.md) | Propuesta (sector, pregunta, preguntas E1–E3, fuentes, limitaciones, entrevista de registro parcial y encuesta) |
 | [`docs/E0/ENTREGA.md`](docs/E0/ENTREGA.md) | Ficha para los tres docentes, con enlaces a evidencia |
 | [`docs/E0/verificacion.md`](docs/E0/verificacion.md) | Pruebas ejecutadas, estado de GitHub Actions y pasos para evidenciarlo |
 | [`docs/E0/migracion.md`](docs/E0/migracion.md) | Qué se reutilizó del prototipo y qué no |
@@ -25,7 +25,7 @@ calidad/             registros de defectos y de tiempo (uno por integrante), obj
 extractores/         base.py (extractor ético), denue.py, datatur.py, captura_denue.py
 pipeline/            verificar_e0.py (E0); bronce→plata→oro llegará en E1
 data/                bronce/ (datatur, denue), plata/, oro/, cuarentena/
-laboratorio/         notebooks (E1–E3)
+laboratorio/         encuesta_e0/ (análisis de la encuesta) y notebooks (E1–E3)
 tablero/             tablero (E4)
 tests/               pytest
 requirements.in / requirements.txt   dependencias (fijadas)

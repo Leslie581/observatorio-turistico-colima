@@ -1,13 +1,13 @@
 # Verificación de E0: pruebas, estado de cada requisito y GitHub Actions
 
-Corte 2026-11-09. Estados: **VERIFICADO** (ejecutado aquí y pasó) · **IMPLEMENTADO SIN PROBAR** · **DOCUMENTADO** · **FALLIDO** · **PENDIENTE** · **NO VERIFICABLE** (no se puede comprobar desde este entorno).
+Corte 2026-11-10. Estados: **VERIFICADO** (ejecutado aquí y pasó) · **IMPLEMENTADO SIN PROBAR** · **DOCUMENTADO** · **FALLIDO** · **PENDIENTE** · **NO VERIFICABLE** (no se puede comprobar desde este entorno).
 Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto a ejecutar.
 
 ## 1. Pruebas ejecutadas el 2026-11-09 (Windows, Python 3.13.15, venv limpio con `requirements.txt`)
 
 | Comprobación | Resultado | Estado |
 |---|---|---|
-| `python -m pytest -q -rs` | 57 aprobadas, 2 omitidas (requieren `TDL_RED=1` y token; **no cuentan como aprobadas**); 0 fallos | VERIFICADO |
+| `python -m pytest -q -rs` | 91 aprobadas, 2 omitidas (requieren `TDL_RED=1` y token; **no cuentan como aprobadas**); 0 fallos | VERIFICADO |
 | Cobertura (`--cov=extractores --cov=pipeline`) | 80 % global (`captura_denue` 76 %, `denue` 94 %, `verificar_e0` 88 %) | VERIFICADO (informativa; el umbral de 60 % del Sello es de E1) |
 | Importación de módulos | `base`, `denue`, `datatur`, `captura_denue`, `verificar_e0` | VERIFICADO |
 | `pip check` | Sin requisitos rotos | VERIFICADO |
@@ -15,13 +15,13 @@ Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto 
 | `… --solo integridad` | SHA-256 y tamaño de `Base70centros.csv` = ficha (`a8ca3f9b…d671`) | VERIFICADO |
 | Hash de `Base70centros.csv` contra la descarga oficial en navegador | Idéntico (2026-11-09 15:52 UTC; `docs/fuentes/evidencias/`) | VERIFICADO (verifica contenido, no autoriza nada) |
 | Hash del blob en el índice de Git | Igual al del archivo (sin conversión CRLF) | VERIFICADO |
-| `… --solo privacidad` | `sin_datos`: **0 archivos reales del DENUE**; no demuestra que la sanitización funcione sobre datos reales | PENDIENTE (hasta la primera captura real) |
+| `… --solo privacidad` | satisfactoria sobre 4 archivos reales del DENUE publicados por el bot (antes de la primera captura real daba `sin_datos`, que no demostraba nada) | VERIFICADO |
 | Pruebas de sanitización (personales, `Nombre` y domicilio) y captura con extractor simulado | Elimina teléfono, correo, sitio web, razón social; no duplica el mismo día; falla explícitamente sin token; el token no aparece en bitácora ni fichas | VERIFICADO (simulado) |
 | Escaneo de secretos en archivos preparados para commit | Sin tokens reales; solo el token ficticio de una prueba | VERIFICADO |
 | `tests/test_workflow.py` sobre `captura-diaria.yml` | Estructura: solo DENUE; token solo en el paso de captura; el paso final (`if: always()`) falla si captura o verificación obligatoria no fueron `success`; la evidencia se sube antes; el bronce solo se publica si la verificación pasó | VERIFICADO (estructura, **no** ejecución en GitHub) |
-| Captura DENUE real desde este repositorio | No se ejecutó: no hay `INEGI_TOKEN` en este entorno y no se pidió | PENDIENTE |
+| Captura DENUE real | Hay 2 capturas exitosas en GitHub Actions (manuales) y una local; esta herramienta no tiene `INEGI_TOKEN` | VERIFICADO en la bitácora |
 | Prueba de red (`TDL_RED=1`) | No ejecutada | PENDIENTE |
-| Disponibilidad de la captura (objetivo O1) | Sin bitácora real | PENDIENTE |
+| Disponibilidad de la captura (objetivo O1) | 2 de 3 = 66.7 %; objetivo de 95 % **no cumplido** | VERIFICADO (resultado real, por debajo del objetivo) |
 | Descarga automática de Base70 | El servidor responde 403 a scripts; no se evade | NO VERIFICABLE por diseño |
 
 ## 2. Estado de GitHub Actions (no confundir niveles)
@@ -31,7 +31,7 @@ Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto 
 | Workflow **implementado** (`.github/workflows/captura-diaria.yml`) | Sí |
 | **Prueba local** de la lógica que el workflow ejecuta (pytest + captura simulada) | Sí (sección 1) |
 | **Ejecución manual real en GitHub** (`workflow_dispatch`) | **VERIFICADO en la bitácora**: 42729922838 (fallo: sin `INEGI_TOKEN`), 42730477358 y 42733335021 (éxito, 134/134), 42732765759 y 42733220215 (omitidas por duplicado). El color de cada job se confirma en la página de la ejecución |
-| **Ejecución programada real en GitHub** (`schedule`) | **PENDIENTE**: ninguna ejecución con `disparador: schedule` todavía (la primera es ≈ 13:17 UTC) |
+| **Ejecución programada real en GitHub** (`schedule`) | **PENDIENTE**: ninguna ejecución con `disparador: schedule` todavía (la primera está programada para las 13:17 UTC del 2026-11-10) |
 | Repositorio remoto | `main` publicado; las ejecuciones las lanzó el equipo desde GitHub (esta herramienta no tiene `gh` ni acceso autenticado) |
 
 Cambios tras la revisión independiente: el paso final evalúa **captura y verificación obligatoria**; la verificación usa `--exigir-datos` (sin archivos que inspeccionar = fallo); `disponibilidad` es informativa; bash con `pipefail` para que `| tee` no oculte fallos; `pytest -rs` lista las omitidas; el bronce no se publica si la verificación falla (la bitácora sí).
