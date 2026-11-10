@@ -6,7 +6,7 @@ Repositorio: https://github.com/Leslie581/observatorio-turistico-colima
 ## Resumen en tres líneas
 1. Observatorio de ocupación hotelera de Manzanillo, Colima; pregunta central y preguntas para E1, E2 y E3 en la [propuesta](propuesta.md).
 2. Histórico de 108 meses (2016–2024) en bronce, con licencia CC BY 4.0 y hash verificado; segunda fuente (DENUE, INEGI) capturada **en GitHub Actions** (134 de 134 establecimientos, sin campos personales). La ejecución **programada** (`schedule`) aún no tiene evidencia.
-3. **Pendientes:** entrevista, PSP y auditoría cruzada (las integra la compañera); ejecución programada real y bitácora de 7 días; colaboradores docentes; disponibilidad actual **66.7 % (2 de 3), por debajo del objetivo de 95 %**. Estado detallado en [`verificacion.md`](verificacion.md).
+3. **Pendientes:** completar el registro de la entrevista individual (realizada el 2026-11-09 por un colaborador externo; duración reportada, sin comprobante; respuestas comunicadas verbalmente a la integrante B y documentadas en privado; faltan el consentimiento para publicarlas y la confirmación de los docentes de que esta modalidad es válida); PSP y auditoría cruzada (las integra la compañera); ejecución programada real y bitácora de 7 días; colaboradores docentes; disponibilidad actual **66.7 % (2 de 3), por debajo del objetivo de 95 %**. Estado detallado en [`verificacion.md`](verificacion.md).
 
 > Esta ficha enlaza evidencias que existen hoy. Donde la evidencia no existe, dice **PENDIENTE**; no se redondea a “cumplido”.
 > **Plazo:** el expediente fija la entrega de E0 para el 6 de noviembre de 2026; este corte es del 9 de noviembre. Consulten con los docentes el tratamiento de la entrega tardía.
@@ -41,7 +41,7 @@ Repositorio: https://github.com/Leslie581/observatorio-turistico-colima
 ## Pregunta y cliente (criterio común de la rúbrica)
 | Criterio | Evidencia | Estado |
 |---|---|---|
-| Pregunta concreta con evidencia de la entrevista; cliente con motivo para pagar | [`propuesta.md` §1–2 y §8](propuesta.md) | Pregunta y cliente: hipótesis DOCUMENTADAS. **Entrevista: la integra la compañera** (sin respuestas en el repositorio todavía) |
+| Pregunta concreta con evidencia de la entrevista; cliente con motivo para pagar | [`propuesta.md` §1–2 y §8](propuesta.md) · [registro de la entrevista](Entrevistas/entrevista_01.md) · [informe de la encuesta](encuesta/informe_encuesta_e0.md) | Pregunta y cliente: hipótesis DOCUMENTADAS. **Encuesta de validación: REALIZADA y DOCUMENTADA** (11 envíos, 10 con consentimiento; muestra por conveniencia; evidencia exploratoria, no representativa). **Entrevista individual: REALIZADA mediante colaborador externo** (2026-11-09, llamada telefónica, administrador de alojamiento; cinco preguntas preparadas por el equipo; duración de aproximadamente 15 min reportada, sin comprobante; respuestas comunicadas verbalmente a la integrante B y documentadas en apuntes privados, no literales); **registro PARCIAL**: faltan el consentimiento para publicar el resumen y la confirmación de los docentes de que esta modalidad es válida; **el requisito de entrevista no se da por cumplido** mientras tanto. Cliente con motivo para pagar: **no validado** (en la encuesta, la disposición a pagar es mayormente condicional) |
 
 ## Repositorio y gestión
 | Requisito | Estado |
@@ -64,7 +64,7 @@ Claude Code (Anthropic) se usó para inspeccionar el prototipo, migrar y adaptar
 ## Pendientes que completa la compañera (no completar desde otra copia)
 | Pendiente | Dónde se integra | Estado |
 |---|---|---|
-| Registro de la entrevista (≥ 15 min, cinco preguntas, respuestas, aprendizajes) | [`propuesta.md` §8](propuesta.md) | PENDIENTE de integrar; no hay respuestas en el repositorio |
+| Registro de la entrevista (≥ 15 min, cinco preguntas, respuestas, aprendizajes) | [`propuesta.md` §8](propuesta.md) | **REALIZADA mediante colaborador externo** el 2026-11-09 (telefónica; cinco preguntas preparadas por el equipo; duración de aproximadamente 15 min reportada, sin comprobante). Registro **PARCIAL** ([`Entrevistas/entrevista_01.md`](Entrevistas/entrevista_01.md)): respuestas comunicadas verbalmente a la integrante B y documentadas en apuntes privados; faltan el consentimiento para publicarlas y la confirmación de los docentes de que esta modalidad es válida. La encuesta se documenta aparte ([`encuesta/LEEME.md`](encuesta/LEEME.md)) |
 | Registros PSP propios (tiempo y defectos) | `calidad/tiempo-integrante-b.csv`, `calidad/defectos-integrante-b.csv` | PENDIENTE |
 | Auditoría de la parte técnica (A) con la [lista de verificación](../../calidad/lista_verificacion_auditoria.md), registrada en [`auditorias.md`](../../calidad/auditorias.md) | `calidad/auditorias.md` | PENDIENTE; no existe ninguna auditoría todavía |
 | Nombres de integrantes en esta ficha y en la propuesta | `ENTREGA.md`, `propuesta.md` | PENDIENTE |
