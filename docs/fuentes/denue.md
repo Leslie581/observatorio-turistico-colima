@@ -32,12 +32,12 @@ Campos reales de `BuscarAreaAct` (revisados sobre los 134 registros del prototip
 
 El bronce del DENUE **no es byte a byte la respuesta de la API**: es la respuesta menos los campos excluidos. La ficha guarda `sha256_respuesta_original`, `campos_personales_eliminados` (incluye `Nombre`) y `campos_domicilio_eliminados`. Los crudos del prototipo (`data/bronce/denue/crudo/`) **no se migraron**.
 
-**Cómo leer las verificaciones.** Una prueba con datos simulados demuestra el comportamiento del código en esos casos; una captura real comprueba el resultado sobre datos auténticos; y `pipeline.verificar_e0 --solo privacidad` sobre **cero** archivos devuelve `sin_datos`, que **no** demuestra nada sobre datos reales. Hoy no hay archivos DENUE reales en este repositorio.
+**Cómo leer las verificaciones.** Una prueba con datos simulados demuestra el comportamiento del código en esos casos; una captura real comprueba el resultado sobre datos auténticos; y `pipeline.verificar_e0 --solo privacidad` sobre **cero** archivos devuelve `sin_datos`, que **no** demuestra nada sobre datos reales. Al 2026-11-10 hay 4 archivos DENUE reales publicados por el bot y la privacidad es satisfactoria sobre ellos.
 
 ## Estado
 | Elemento | Estado |
 |---|---|
 | Cliente DENUE y controles (7) | Migrado del prototipo, 134/134 con token real en Windows [P] |
 | Sanitización previa al bronce, captura diaria idempotente, bitácora de ejecuciones | **IMPLEMENTADO**, probado con respuestas simuladas |
-| Corrida real en este repositorio | **PENDIENTE** (requiere `INEGI_TOKEN` del equipo) |
-| Corrida programada real en GitHub Actions | **PENDIENTE** (ver `docs/E0/verificacion.md`) |
+| Corridas reales | **VERIFICADO**: capturas manuales en GitHub Actions (134 de 134) y una local |
+| Corrida programada (`schedule`) en GitHub Actions | **PENDIENTE** (ver `docs/E0/verificacion.md`) |

@@ -1,3 +1,5 @@
+> **GUÍA INTERNA SUPERADA (2026-11-10).** Documento de coordinación entre las integrantes; sus pendientes ya se atendieron o se actualizaron. El estado vigente está en [`docs/E0/ENTREGA.md`](docs/E0/ENTREGA.md) y en [`calidad/auditorias.md`](calidad/auditorias.md).
+
 # Guía para cerrar E0: lo que te toca a ti
 
 Corte: 2026-11-10. Repositorio: https://github.com/Leslie581/observatorio-turistico-colima (rama `main`, último commit al escribir esto: `12b1df8`).

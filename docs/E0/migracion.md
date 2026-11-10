@@ -1,7 +1,7 @@
 # Inventario de migración (prototipo → repositorio definitivo)
 
 Origen: carpeta del prototipo (`staymetrics-prototipo`, **solo lectura**; no se modificó nada). Destino: este repositorio. Corte 2026-11-09.
-Estado de validación (tras migrar, en el repositorio definitivo): **VERIFICADO** = se ejecutó aquí y pasó · **IMPLEMENTADO SIN PROBAR** · **DOCUMENTADO** · **PENDIENTE**. Comando: `python -m pytest -q` (57 pasan, 2 omitidas por requerir red y token).
+Estado de validación (tras migrar, en el repositorio definitivo): **VERIFICADO** = se ejecutó aquí y pasó · **IMPLEMENTADO SIN PROBAR** · **DOCUMENTADO** · **PENDIENTE**. Comando: `python -m pytest -q` (91 pasan, 2 omitidas por requerir red y token, al 2026-11-10).
 
 ## 1. Migrado
 
@@ -20,7 +20,7 @@ Estado de validación (tras migrar, en el repositorio definitivo): **VERIFICADO*
 
 | Archivo | Para qué | Estado |
 |---|---|---|
-| `extractores/captura_denue.py` | Captura diaria idempotente del DENUE, bitácora de ejecuciones, código de salida | VERIFICADO (simulado); corrida real PENDIENTE |
+| `extractores/captura_denue.py` | Captura diaria idempotente del DENUE, bitácora de ejecuciones, código de salida | VERIFICADO (simulado y en 2 capturas reales manuales de GitHub Actions) |
 | `pipeline/verificar_e0.py` | Histórico (existencia, fechas, duplicados, huecos, ≥ 36, hash), integridad, privacidad, disponibilidad; distingue satisfactoria / fallida / sin_datos | VERIFICADO |
 | `.github/workflows/captura-diaria.yml`, `tests/test_workflow.py` | Workflow programado + manual; pruebas de su estructura (usa PyYAML, añadido a las dependencias) | IMPLEMENTADO SIN PROBAR en GitHub |
 | `calidad/*`, `docs/**` | Registros PSP vacíos, objetivos, propuesta, ficha, fuentes | DOCUMENTADO |

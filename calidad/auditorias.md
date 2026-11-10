@@ -146,3 +146,33 @@ Se revisaron con los archivos de `6c151b0`. "Existente" = ya registrado en la Au
 
 ### Fuera de esta auditoría
 Esta auditoría no evalúa el trabajo de la integrante B (ver la Auditoría 1). **No se registraron defectos** en `defectos-integrante-b.csv`: los hallazgos sobre el trabajo de la integrante A quedan en este documento y no son defectos de la auditora.
+
+## Seguimiento al cierre de E0 (2026-11-10, rama `e0/cierre-final`)
+Estado de atención de las observaciones. **RESUELTA** = corregida y con archivo que lo respalda; **PARCIAL** = atendida en parte; **PENDIENTE** = sin cambios. Esta tabla no aprueba nada: solo informa. Las cuestiones "N" (no comprobables) y las cifras que dependen del CSV privado de la encuesta **siguen sin poder verificarse**.
+
+### Auditoría 1 (integrante A revisa el PR #1 de la integrante B)
+| Observaciones | Estado | Respaldo |
+|---|---|---|
+| V1 a V4: entrevista sin respuestas publicadas, aprendizajes del proceso, duración sin comprobante, consentimiento y validez sin confirmar | **PENDIENTE** | [`entrevista_01.md`](../docs/E0/Entrevistas/entrevista_01.md) no ha cambiado desde la auditoría |
+| V5 y V6: dato geográfico de I10 y resguardo del CSV privado | **PENDIENTE** | [`LEEME.md`](../docs/E0/encuesta/LEEME.md) sin cambios |
+| V7: referencia a la guía interna en el informe | **PARCIAL** | La guía lleva ahora un aviso de "superada" ([`PENDIENTES_COMPANERA_E0.md`](../PENDIENTES_COMPANERA_E0.md)), pero el [informe](../docs/E0/encuesta/informe_encuesta_e0.md) la sigue citando |
+| V8, V9, V11, V15, V18: cifras y estructura consistentes | Sin acción requerida | — |
+| V10: error no controlado con entradas vacías | **PENDIENTE** | [`analisis_encuesta.py`](../laboratorio/encuesta_e0/analisis_encuesta.py) sin cambios |
+| V12: guion preliminar innecesario (§8.3) | **RESUELTA** | Retirado de [`propuesta.md`](../docs/E0/propuesta.md) |
+| V13: nombres del equipo | **RESUELTA** | [`propuesta.md`](../docs/E0/propuesta.md), [`ENTREGA.md`](../docs/E0/ENTREGA.md), [`revision_calidad.md`](revision_calidad.md) |
+| V14: extensión de la propuesta | **PARCIAL** | De 2,824 a unas 1,730 palabras; la paginación exacta **no se pudo verificar** |
+| V16 y V17: enlaces 404 y cifras desactualizadas de la ficha | **RESUELTA** | [`ENTREGA.md`](../docs/E0/ENTREGA.md) reescrita |
+
+### Auditoría 2 (integrante B revisa la parte técnica de A)
+| Hallazgos | Estado | Respaldo |
+|---|---|---|
+| H1: prueba que exige el PSP de B vacío | **RESUELTA** | [`test_calidad_plantillas.py`](../tests/test_calidad_plantillas.py) valida formato y coherencia (91 aprobadas, 2 omitidas) |
+| H2: criterio de aceptación del verificador | **PARCIAL** | [`revision_calidad.md`](revision_calidad.md) y la [lista de verificación](lista_verificacion_auditoria.md) exigen ahora histórico, integridad y privacidad; falta alinear el texto de `verificar_e0.py` |
+| H3: O1 por ventana de 7 días y registro de `--forzar` | **PENDIENTE** | Cambio de código y de método; se deja para E1 |
+| H4: afirmación sobre detección de repetidos por SHA-256 | **PENDIENTE** | [`denue.md`](../docs/fuentes/denue.md) |
+| H5: cifras y estados desactualizados | **PARCIAL** | Actualizados [`verificacion.md`](../docs/E0/verificacion.md), [`migracion.md`](../docs/E0/migracion.md), [`denue.md`](../docs/fuentes/denue.md), [`fuentes/README.md`](../docs/fuentes/README.md) y la [propuesta](../docs/E0/propuesta.md); el comentario de [`captura-diaria.yml`](../.github/workflows/captura-diaria.yml) línea 5 no se tocó |
+| H6 y H7: reglas y estado en `calidad/README.md` | **RESUELTA** | [`calidad/README.md`](README.md) |
+| H8: definición de O3(b) | **PENDIENTE** | Decisión del equipo |
+| H9 y H10: riesgos y README desactualizados | **RESUELTA** | [`riesgos.md`](riesgos.md), [`README.md`](../README.md) |
+| H11 a H16, H18: archivar robots.txt, referencias de `datatur.py`, acoplamiento de `nombre`, solicitudes por ejecución, User-Agent, captura fallida que se omite, acciones por SHA | **PENDIENTE** | Cambios de código o de configuración; ninguno bloquea E0 |
+| H17: enlaces 404, "69 aprobadas", "aún no hay commits" | **RESUELTA** | [`ENTREGA.md`](../docs/E0/ENTREGA.md) |
