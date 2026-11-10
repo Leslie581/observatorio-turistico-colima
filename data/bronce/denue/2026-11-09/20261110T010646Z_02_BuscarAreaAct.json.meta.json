@@ -1,0 +1,69 @@
+{
+  "archivo": "20261110T010646Z_02_BuscarAreaAct.json",
+  "sha256": "60a657bd65d49f26338f1369994823b688a13ea518699a4a0705f7323522cd15",
+  "bytes": 96570,
+  "capturado_utc": "2026-11-10T01:06:49+00:00",
+  "metodo": "BuscarAreaAct",
+  "url": "https://www.inegi.org.mx/app/api/denue/v1/consulta/BuscarAreaAct/06/007/0/0/0/72/721/0/0/0/1/1000/0/***TOKEN***",
+  "estado_http": 200,
+  "encabezados": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Date": "Tue, 10 Nov 2026 01:06:48 GMT"
+  },
+  "fuente": "INEGI DENUE API",
+  "origen": "oficial",
+  "ejecucion": "20261110T010646Z",
+  "parametros": "Colima 06 / Manzanillo 007 / subsector SCIAN 721",
+  "sha256_respuesta_original": "22d98ffbd87f35de5f63d292a16a9568ce45e1be69f817201196af246557fd86",
+  "bytes_respuesta_original": 117543,
+  "campos_personales_eliminados": [
+    "Correo_e",
+    "Nombre",
+    "Razon_social",
+    "Sitio_internet",
+    "Telefono"
+  ],
+  "campos_domicilio_eliminados": [
+    "Calle",
+    "EDIFICIO",
+    "EDIFICIO_PISO",
+    "Num_Exterior",
+    "Num_Interior",
+    "numero_local"
+  ],
+  "registros_con_campos_eliminados": 134,
+  "capturas": [
+    {
+      "capturado_utc": "2026-11-10T01:06:49+00:00",
+      "metodo": "BuscarAreaAct",
+      "url": "https://www.inegi.org.mx/app/api/denue/v1/consulta/BuscarAreaAct/06/007/0/0/0/72/721/0/0/0/1/1000/0/***TOKEN***",
+      "estado_http": 200,
+      "encabezados": {
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Tue, 10 Nov 2026 01:06:48 GMT"
+      },
+      "fuente": "INEGI DENUE API",
+      "origen": "oficial",
+      "ejecucion": "20261110T010646Z",
+      "parametros": "Colima 06 / Manzanillo 007 / subsector SCIAN 721",
+      "sha256_respuesta_original": "22d98ffbd87f35de5f63d292a16a9568ce45e1be69f817201196af246557fd86",
+      "bytes_respuesta_original": 117543,
+      "campos_personales_eliminados": [
+        "Correo_e",
+        "Nombre",
+        "Razon_social",
+        "Sitio_internet",
+        "Telefono"
+      ],
+      "campos_domicilio_eliminados": [
+        "Calle",
+        "EDIFICIO",
+        "EDIFICIO_PISO",
+        "Num_Exterior",
+        "Num_Interior",
+        "numero_local"
+      ],
+      "registros_con_campos_eliminados": 134
+    }
+  ]
+}
