@@ -20,7 +20,9 @@ Confirmado por la integrante A el 2026-11-10: **prototipo el 2026-11-08 (480 min
 | [DEFINITIVO] Configuración y depuración de GitHub Actions | 65 | codigo | 2026-11-09 |
 | [DEFINITIVO] Revisión de pruebas y ejecución exitosa | 20 | pruebas | 2026-11-09 |
 | **Subtotal definitivo** | **240** | | |
-| **Total** | **720** | | |
+| **Total (reconstrucción inicial)** | **720** | | |
+| [DEFINITIVO] Auditoría interna posterior a la fusión del PR #1 sobre los 7 archivos de la integrante B (estimación retrospectiva, sin horario) | 30 | revision | 2026-11-09 |
+| **Total con la auditoría** | **750** | | |
 
 Las **fases** (columna `fase`) las asignó el asistente a partir del nombre de cada bloque; la integrante A puede corregirlas.
 
