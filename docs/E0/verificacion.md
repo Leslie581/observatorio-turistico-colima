@@ -30,9 +30,9 @@ Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto 
 |---|---|
 | Workflow **implementado** (`.github/workflows/captura-diaria.yml`) | Sí |
 | **Prueba local** de la lógica que el workflow ejecuta (pytest + captura simulada) | Sí (sección 1) |
-| **Ejecución manual real en GitHub** (`workflow_dispatch`) | **PENDIENTE**: requiere subir el repositorio y configurar el secreto |
-| **Ejecución programada real en GitHub** (`schedule`) | **PENDIENTE**: solo ocurre después de subir el archivo a la rama predeterminada |
-| Repositorio remoto | No se hizo push ni se accedió a GitHub autenticado (no hay `gh`) |
+| **Ejecución manual real en GitHub** (`workflow_dispatch`) | **VERIFICADO en la bitácora**: 42729922838 (fallo: sin `INEGI_TOKEN`), 42730477358 y 42733335021 (éxito, 134/134), 42732765759 y 42733220215 (omitidas por duplicado). El color de cada job se confirma en la página de la ejecución |
+| **Ejecución programada real en GitHub** (`schedule`) | **PENDIENTE**: ninguna ejecución con `disparador: schedule` todavía (la primera es ≈ 13:17 UTC) |
+| Repositorio remoto | `main` publicado; las ejecuciones las lanzó el equipo desde GitHub (esta herramienta no tiene `gh` ni acceso autenticado) |
 
 Cambios tras la revisión independiente: el paso final evalúa **captura y verificación obligatoria**; la verificación usa `--exigir-datos` (sin archivos que inspeccionar = fallo); `disponibilidad` es informativa; bash con `pipefail` para que `| tee` no oculte fallos; `pytest -rs` lista las omitidas; el bronce no se publica si la verificación falla (la bitácora sí).
 

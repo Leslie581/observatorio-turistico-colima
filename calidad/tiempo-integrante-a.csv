@@ -1,1 +1,12 @@
-fecha,inicio,fin,interrupcion_min,fase,actividad
+fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
+2026-11-08,,,,planeacion,[PROTOTIPO][ESTIMADO RETROSPECTIVO] Investigacion de fuentes y viabilidad,60
+2026-11-08,,,,codigo,[PROTOTIPO][ESTIMADO RETROSPECTIVO] Obtencion y verificacion del historico DATATUR,75
+2026-11-08,,,,codigo,[PROTOTIPO][ESTIMADO RETROSPECTIVO] Diagnostico de extraccion DATATUR y correccion del parser,135
+2026-11-08,,,,codigo,[PROTOTIPO][ESTIMADO RETROSPECTIVO] Conexion y validacion DENUE,65
+2026-11-08,,,,pruebas,[PROTOTIPO][ESTIMADO RETROSPECTIVO] Pruebas de integridad y transformaciones,65
+2026-11-08,,,,codigo,"[PROTOTIPO][ESTIMADO RETROSPECTIVO] Exploracion estadistica E1, PCA y MANOVA",80
+2026-11-09,,,,documentacion,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Organizacion del repositorio y documentacion E0,75
+2026-11-09,,,,codigo,"[DEFINITIVO][ESTIMADO RETROSPECTIVO] Integracion Git, commits y seguridad",45
+2026-11-09,,,,pruebas,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Captura local DENUE y verificacion E0,35
+2026-11-09,,,,codigo,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Configuracion y depuracion de GitHub Actions,65
+2026-11-09,,,,pruebas,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Revision de pruebas y ejecucion exitosa,20

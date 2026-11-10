@@ -14,7 +14,7 @@
 
 ## Cómo registrar
 1. Cuando decidan quién es A y quién B, renombren los archivos al formato del Kit: `defectos-<nombre>.csv` y `tiempo-<nombre>.csv` (por ejemplo con `git mv`; el contenido no cambia).
-2. **Tiempo:** una fila por bloque de trabajo. `fecha` AAAA-MM-DD, `inicio`/`fin` HH:MM (24 h), `interrupcion_min` entero, `fase` ∈ {planeacion, diseno, codigo, revision, pruebas, documentacion, entrevista}, `actividad` texto corto. Registrar al terminar el bloque, no de memoria al final.
+2. **Tiempo:** una fila por bloque de trabajo. `fecha` AAAA-MM-DD, `inicio`/`fin` HH:MM (24 h), `interrupcion_min` entero, `fase` ∈ {planeacion, diseno, codigo, revision, pruebas, documentacion, entrevista}, `actividad` texto corto, `minutos_estimados` (columna añadida a la plantilla del Kit, **al final**, igual para los dos integrantes: solo para duraciones retrospectivas sin horario; si registras `inicio` y `fin` reales, déjala vacía). Las filas retrospectivas llevan `[ESTIMADO RETROSPECTIVO]` en `actividad` y `inicio`, `fin` e `interrupcion_min` vacíos. Registrar al terminar el bloque, no de memoria al final.
 3. **Defectos:** una fila por defecto encontrado. `tipo` ∈ los diez de PSP: documentacion, sintaxis, construccion, asignacion, interfaz, verificacion, datos, funcion, sistema, entorno. `fase_introducido` y `fase_eliminado` ∈ las mismas fases que arriba. `minutos_correccion` entero. `defecto_origen`: número del defecto que causó este, si aplica. `numero` consecutivo por archivo.
 4. Cada registro se compromete en Git por quien lo hizo (el historial es la evidencia).
 
