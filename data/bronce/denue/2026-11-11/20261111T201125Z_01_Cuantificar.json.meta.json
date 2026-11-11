@@ -1,0 +1,43 @@
+{
+  "archivo": "20261111T201125Z_01_Cuantificar.json",
+  "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa",
+  "bytes": 41,
+  "capturado_utc": "2026-11-11T20:11:28+00:00",
+  "metodo": "Cuantificar",
+  "url": "https://www.inegi.org.mx/app/api/denue/v1/consulta/Cuantificar/721/06007/0/***TOKEN***",
+  "estado_http": 200,
+  "encabezados": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Date": "Wed, 11 Nov 2026 20:11:26 GMT"
+  },
+  "fuente": "INEGI DENUE API",
+  "origen": "oficial",
+  "ejecucion": "20261111T201125Z",
+  "parametros": "Colima 06 / Manzanillo 007 / subsector SCIAN 721",
+  "sha256_respuesta_original": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa",
+  "bytes_respuesta_original": 41,
+  "campos_personales_eliminados": [],
+  "campos_domicilio_eliminados": [],
+  "registros_con_campos_eliminados": 0,
+  "capturas": [
+    {
+      "capturado_utc": "2026-11-11T20:11:28+00:00",
+      "metodo": "Cuantificar",
+      "url": "https://www.inegi.org.mx/app/api/denue/v1/consulta/Cuantificar/721/06007/0/***TOKEN***",
+      "estado_http": 200,
+      "encabezados": {
+        "Content-Type": "application/json; charset=utf-8",
+        "Date": "Wed, 11 Nov 2026 20:11:26 GMT"
+      },
+      "fuente": "INEGI DENUE API",
+      "origen": "oficial",
+      "ejecucion": "20261111T201125Z",
+      "parametros": "Colima 06 / Manzanillo 007 / subsector SCIAN 721",
+      "sha256_respuesta_original": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa",
+      "bytes_respuesta_original": 41,
+      "campos_personales_eliminados": [],
+      "campos_domicilio_eliminados": [],
+      "registros_con_campos_eliminados": 0
+    }
+  ]
+}
