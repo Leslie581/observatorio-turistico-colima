@@ -252,7 +252,7 @@ Con las limitaciones anteriores, la encuesta aporta **evidencia exploratoria** a
 **Gráficas propuestas** (no incluidas en E0): barras horizontales de la Tabla 8; meses altos y bajos de la Tabla 1 superpuestos con la línea de Base70; barras apiladas de la Tabla 9; barras de la Tabla 10. Cada una indicando su `n` y la nota "muestra por conveniencia".
 
 ## 11. Requisitos de E0 relacionados
-Según [`PENDIENTES_COMPANERA_E0.md`](../../../PENDIENTES_COMPANERA_E0.md):
+Según la guía interna de pendientes (`PENDIENTES_COMPANERA_E0.md`, retirada de `main`; consta en la etiqueta `e0`):
 
 | Requisito | Estado |
 |---|---|

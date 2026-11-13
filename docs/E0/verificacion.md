@@ -21,7 +21,7 @@ Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto 
 | `tests/test_workflow.py` sobre `captura-diaria.yml` | Estructura: solo DENUE; token solo en el paso de captura; el paso final (`if: always()`) falla si captura o verificación obligatoria no fueron `success`; la evidencia se sube antes; el bronce solo se publica si la verificación pasó | VERIFICADO (estructura, **no** ejecución en GitHub) |
 | Captura DENUE real | Hay 2 capturas exitosas en GitHub Actions (manuales) y una local; esta herramienta no tiene `INEGI_TOKEN` | VERIFICADO en la bitácora |
 | Prueba de red (`TDL_RED=1`) | No ejecutada | PENDIENTE |
-| Disponibilidad de la captura (objetivo O1) | 2 de 3 = 66.7 %; objetivo de 95 % **no cumplido** | VERIFICADO (resultado real, por debajo del objetivo) |
+| Disponibilidad de la captura (objetivo O1) | 5 de 6 = 83.3 % al 2026-11-12 (66.7 % al crear la etiqueta); objetivo de 95 % **no cumplido** | VERIFICADO (resultado real, por debajo del objetivo) |
 | Descarga automática de Base70 | El servidor responde 403 a scripts; no se evade | NO VERIFICABLE por diseño |
 
 ## 2. Estado de GitHub Actions (no confundir niveles)
@@ -31,7 +31,7 @@ Nada del prototipo se cuenta como prueba de este repositorio sin haberse vuelto 
 | Workflow **implementado** (`.github/workflows/captura-diaria.yml`) | Sí |
 | **Prueba local** de la lógica que el workflow ejecuta (pytest + captura simulada) | Sí (sección 1) |
 | **Ejecución manual real en GitHub** (`workflow_dispatch`) | **VERIFICADO en la bitácora**: 42729922838 (fallo: sin `INEGI_TOKEN`), 42730477358 y 42733335021 (éxito, 134/134), 42732765759 y 42733220215 (omitidas por duplicado). El color de cada job se confirma en la página de la ejecución |
-| **Ejecución programada real en GitHub** (`schedule`) | **PENDIENTE**: ninguna ejecución con `disparador: schedule` todavía (la primera está programada para las 13:17 UTC del 2026-11-10) |
+| **Ejecución programada real en GitHub** (`schedule`) | **VERIFICADO**: 3 ejecuciones con `disparador: schedule` en verde (10, 11 y 12 de noviembre; GitHub las retrasó unas 7 horas respecto a las 13:17 UTC) |
 | Repositorio remoto | `main` publicado; las ejecuciones las lanzó el equipo desde GitHub (esta herramienta no tiene `gh` ni acceso autenticado) |
 
 Cambios tras la revisión independiente: el paso final evalúa **captura y verificación obligatoria**; la verificación usa `--exigir-datos` (sin archivos que inspeccionar = fallo); `disponibilidad` es informativa; bash con `pipefail` para que `| tee` no oculte fallos; `pytest -rs` lista las omitidas; el bronce no se publica si la verificación falla (la bitácora sí).
