@@ -40,4 +40,4 @@ El bronce del DENUE **no es byte a byte la respuesta de la API**: es la respuest
 | Cliente DENUE y controles (7) | Migrado del prototipo, 134/134 con token real en Windows [P] |
 | Sanitización previa al bronce, captura diaria idempotente, bitácora de ejecuciones | **IMPLEMENTADO**, probado con respuestas simuladas |
 | Corridas reales | **VERIFICADO**: capturas manuales en GitHub Actions (134 de 134) y una local |
-| Corrida programada (`schedule`) en GitHub Actions | **PENDIENTE** (ver `docs/E0/verificacion.md`) |
+| Corrida programada (`schedule`) en GitHub Actions | **VERIFICADO**: 3 ejecuciones exitosas del 10 al 12 de noviembre (ver `docs/E0/verificacion.md`) |

@@ -42,12 +42,12 @@ Detalle y origen de cada afirmación en [`docs/fuentes/`](../fuentes/README.md).
 | Fuente | Uso | Acceso y condiciones | Estado (2026-11-10) |
 |---|---|---|---|
 | **DATATUR · Base70centros** (SECTUR) | Histórico mensual 2016-01 a 2024-12 (Manzanillo: 108 meses; 64 centros) | Datos abiertos, **CC BY 4.0**. El servidor bloquea scripts (HTTP 403): se descarga con navegador y se verifica por SHA-256 | En bronce, con hash igual al archivo oficial |
-| **INEGI · DENUE** | Segunda fuente, **captura diaria** (hospedaje SCIAN 721) | API con token gratuito; libre uso con crédito a INEGI. Se eliminan nombre, razón social, contacto y domicilio antes de guardar | Capturas reales **manuales** en GitHub Actions (134 de 134); ejecución **programada** (`schedule`) sin evidencia todavía |
+| **INEGI · DENUE** | Segunda fuente, **captura diaria** (hospedaje SCIAN 721) | API con token gratuito; libre uso con crédito a INEGI. Se eliminan nombre, razón social, contacto y domicilio antes de guardar | Capturas reales en GitHub Actions (134 de 134): 2 manuales y **3 programadas (`schedule`)** en verde, del 10 al 12 de noviembre |
 | DATATUR · Sistema de Monitoreo (2022–2026) | Habría extendido la serie | Endpoint interno; términos de gob.mx restringen la difusión; **autorización no confirmada**. No es fuente automatizada autorizada | **Suspendida**; el histórico utilizable termina en 2024-12 |
 
 **Decisión pendiente:** pedir autorización a SECTUR/DataTur para el Sistema de Monitoreo o trabajar solo con Base70 (recomendado; `docs/fuentes/datatur.md` §7).
 
-**Verificado:** 108 meses sin huecos; integridad del bronce; privacidad del DENUE sobre 4 archivos reales; bitácora de 5 ejecuciones. **Pendiente:** ejecución `schedule`; bitácora de 7 días; disponibilidad actual **66.7 % (2 de 3), por debajo del objetivo de 95 %**; consentimiento y validación docente de la entrevista; decisión sobre DATATUR 2025–2026.
+**Verificado:** 108 meses sin huecos; integridad del bronce; privacidad del DENUE sobre 10 archivos reales; bitácora de 8 ejecuciones, con ejecución `schedule` confirmada. **Pendiente:** bitácora de 7 días (en curso); disponibilidad **83.3 % (5 de 6) al 2026-11-12, por debajo del objetivo de 95 %** (66.7 % al crear la etiqueta); consentimiento y validación docente de la entrevista; decisión sobre DATATUR 2025–2026.
 
 ## 6. Plan de recopilación y calidad
 1. **Histórico (bronce):** `Base70centros.csv` completo, sin modificar, con `.meta.json` y atribución; verificable con `python -m pipeline.verificar_e0 --solo historico`.
@@ -59,7 +59,7 @@ Detalle y origen de cada afirmación en [`docs/fuentes/`](../fuentes/README.md).
 ## 7. Limitaciones y riesgos
 - **Serie corta en el extremo:** el pronóstico de E1 será un ejercicio sobre el histórico hasta 2024-12.
 - **DENUE cambia poco:** la captura diaria demuestra la máquina de captura y la bitácora, no una serie diaria de ocupación.
-- **Disponibilidad y programación:** 66.7 % medido con ejecuciones manuales; la fiabilidad con ≥ 7 días se mide en E1.
+- **Disponibilidad y programación:** 83.3 % (5 de 6) al 2026-11-12, con un único fallo inicial (falta de token); la fiabilidad con ≥ 7 días se mide en E1.
 - **MANOVA (E3) no validado.** En el prototipo, un análisis exploratorio con tres destinos falló sus supuestos: colinealidad (r = 0.96), covarianzas heterogéneas (Box’s M, p < 0.001), no normalidad multivariada y autocorrelación de hasta 0.92. Hay que resolverlo (otras variables, observaciones anuales o trimestrales, más centros por grupo, estadísticos robustos o permutaciones) **antes** de publicar resultados multivariados; no se avanza en E0.
 - **IA generativa:** el código y los borradores se prepararon con Claude Code; cada integrante debe poder explicar y defender lo que entrega.
 
