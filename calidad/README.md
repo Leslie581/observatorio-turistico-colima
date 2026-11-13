@@ -5,6 +5,7 @@
 | `defectos-integrante-a.csv`, `defectos-integrante-b.csv` | Registro **individual** de defectos (formato del Kit TDL) | Cada integrante, solo el suyo |
 | `tiempo-integrante-a.csv`, `tiempo-integrante-b.csv` | Registro **individual** de tiempo (formato del Kit TDL) | Cada integrante, solo el suyo |
 | [`objetivos.md`](objetivos.md) | Tres objetivos de calidad medibles | Equipo |
+| [`fiabilidad_e1.json`](fiabilidad_e1.json) | Informe de fiabilidad calculado desde la bitácora (`python -m pipeline.fiabilidad --escribir`); método y límites en [`docs/E1/fiabilidad.md`](../docs/E1/fiabilidad.md) | Automática (la regenera quien mide) |
 | `bitacora_capturas.jsonl` | Una línea por ejecución de la captura (la escribe el extractor; no editar a mano). Aparece con la primera ejecución real. | Automática |
 | `revision_calidad.md` | Responsable de revisión por entrega y lista de comprobación de E0 | Equipo |
 | [`auditorias.md`](auditorias.md), [`lista_verificacion_auditoria.md`](lista_verificacion_auditoria.md) | Proceso y registro de la revisión cruzada; lista reutilizable | Quien audita |

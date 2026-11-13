@@ -1,0 +1,84 @@
+{
+  "avisos": [
+    "La bitácora cubre 2.84 días; la rúbrica pide 7. El objetivo O1 («cualquier ventana de 7 días») no es evaluable todavía.",
+    "El MTTR se calcula con 1 incidente(s): es una observación, no una estimación estable.",
+    "MTBF y disponibilidad (A) no son estimables con los incidentes observados; no se sustituyen por valores supuestos."
+  ],
+  "bitacora_sha256": "d16dfd92d37fe5d92ef86784c8c8d04720d65dba62ce87f294ddfce43ef1e855",
+  "cobertura_diaria_descriptiva": {
+    "dias_con_captura_exitosa": 4,
+    "dias_con_ejecucion": 4
+  },
+  "disponibilidad_A": {
+    "estimable": false,
+    "formula": "A = MTBF / (MTBF + MTTR)",
+    "motivo": "requiere MTBF y MTTR; falta el MTBF"
+  },
+  "ejecuciones": {
+    "exitosas": 5,
+    "fallidas": 1,
+    "omitidas_duplicadas_excluidas": 2,
+    "programadas_exitosas": 3,
+    "programadas_schedule": 3,
+    "validas": 6
+  },
+  "estado": "calculado",
+  "fuente": "calidad/bitacora_capturas.jsonl",
+  "incidentes": {
+    "abiertos": 0,
+    "cerrados": 1,
+    "detalle": [
+      {
+        "causa_registrada": "sin_token: Defina la variable de entorno INEGI_TOKEN (token gratuito de INEGI)",
+        "fallos_consecutivos": 1,
+        "inicio_utc": "2026-11-10T00:39:33+00:00",
+        "recuperacion_utc": "2026-11-10T00:44:01+00:00",
+        "reparacion_s": 268.0
+      }
+    ],
+    "total": 1
+  },
+  "mtbf": {
+    "estimable": false,
+    "motivo": "hay 1 incidente(s); se necesitan al menos 2 para tener un intervalo entre fallas",
+    "nota_tiempo_sin_fallas": "dato CENSURADO por la derecha (no se observó una segunda falla): es una cota inferior, no el MTBF",
+    "tiempo_sin_fallas_desde_la_ultima_recuperacion_s": 245075.0
+  },
+  "mttr": {
+    "estimable": true,
+    "incidentes_cerrados": 1,
+    "segundos": 268.0
+  },
+  "puntualidad_schedule": {
+    "cron_utc": "13:17",
+    "nota": "retraso = inicio real − hora programada del mismo día UTC",
+    "retrasos": [
+      {
+        "ejecucion": "20261110T202826Z",
+        "retraso_min": 431.4
+      },
+      {
+        "ejecucion": "20261111T201125Z",
+        "retraso_min": 414.4
+      },
+      {
+        "ejecucion": "20261112T204832Z",
+        "retraso_min": 451.5
+      }
+    ]
+  },
+  "registros_en_bitacora": 8,
+  "tasa_exito": {
+    "cumple_objetivo_en_lo_observado": false,
+    "evaluable_como_se_definio_O1": false,
+    "objetivo": 0.95,
+    "valor": 0.8333
+  },
+  "ventana": {
+    "cumple_dias_requeridos": false,
+    "dias": 2.84,
+    "dias_requeridos": 7,
+    "fin_utc": "2026-11-12T20:48:36+00:00",
+    "inicio_utc": "2026-11-10T00:39:33+00:00"
+  }
+}
