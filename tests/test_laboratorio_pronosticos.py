@@ -347,3 +347,104 @@ def test_sin_fuga_el_pronostico_no_depende_de_2024(referencia):
     ent2, _ = datos.partir(s2)
     p2 = mod.pronostico_ajuste(mod.ajustar_holt_winters(ent2), pru.index).media
     assert np.allclose(p1.values, p2.values)
+
+
+# ----------------------------------------------------------------------------- min-max frente a z-score
+def _tabla_simulada(n=108, semilla=7):
+    """SIMULADA: ocupación estacional y tres variables D7 de escalas muy distintas."""
+    rng = np.random.default_rng(semilla)
+    y = _serie_estacional(n, semilla=semilla)
+    return pd.DataFrame({"ocupacion_pct": y,
+                         "pct_cuartos_no_residentes": rng.normal(5, 3, n).clip(0.1),
+                         "estadia_promedio": rng.normal(2.2, 0.4, n).clip(1),
+                         "densidad_ocupacion": rng.normal(2.6, 0.25, n).clip(1)}, index=y.index)
+
+
+def test_variables_rezagadas_sin_informacion_del_mismo_mes():
+    from laboratorio.pronosticos import escalamiento as esc
+    df = _tabla_simulada()
+    X, y = esc.construir_variables(df)
+    assert list(X.columns) == esc.VARIABLES and X.index[0] == pd.Period("2017-01", "M")
+    t = pd.Period("2020-05", "M")
+    assert X.loc[t, "ocup_t-1"] == df.loc[t - 1, "ocupacion_pct"]
+    assert X.loc[t, "ocup_t-12"] == df.loc[t - 12, "ocupacion_pct"]
+    assert X.loc[t, "estadia_t-1"] == df.loc[t - 1, "estadia_promedio"]
+    assert y.loc[t] == df.loc[t, "ocupacion_pct"]
+
+
+def test_escala_rechaza_ajuste_con_2024():
+    from laboratorio.pronosticos import escalamiento as esc
+    from pipeline.transformaciones import ErrorFuga
+    X, _ = esc.construir_variables(_tabla_simulada())
+    for escala in ("minmax", "zscore"):
+        with pytest.raises(ErrorFuga):
+            esc.ajustar_escala(X, escala)  # incluye 2024
+        p = esc.ajustar_escala(X[X.index <= pd.Period("2023-12", "M")], escala)
+        assert all(v.n == 84 and v.ajustado_hasta == "2023-12" for v in p.values())
+
+
+def test_knn_sin_fuga_y_pesos_zscore_iguales():
+    """Alterar 2024 no cambia los parámetros de escala, la k elegida ni el pronóstico de enero de
+    2024 (que solo usa datos hasta diciembre de 2023). Con z-score cada variable pesa 1/5."""
+    from laboratorio.pronosticos import escalamiento as esc
+    df = _tabla_simulada()
+    r1 = esc.comparar_knn(df)
+    df2 = df.copy()
+    df2.loc[df2.index > pd.Period("2024-01", "M"), :] *= 3  # 2024-02..12 alterado
+    r2 = esc.comparar_knn(df2)
+    for escala in ("minmax", "zscore"):
+        for c, p in r1["parametros"][escala].items():
+            assert p == r2["parametros"][escala][c]
+    assert r1["tabla"].k_elegido.tolist() == r2["tabla"].k_elegido.tolist()
+    assert np.allclose(r1["pronosticos"].iloc[0, :3].to_numpy(), r2["pronosticos"].iloc[0, :3].to_numpy())
+    z = r1["tabla"].set_index("escala").loc["zscore"]
+    assert all(abs(z[f"peso_{c}"] - 0.2) < 1e-9 for c in esc.VARIABLES)
+
+
+def test_knn_escalar_corrige_una_variable_irrelevante_dominante():
+    """SIMULADO: si una variable sin relación con el objetivo tiene una escala enorme, la distancia
+    sin escalar la sigue a ella; escalar devuelve peso a los rezagos útiles."""
+    from laboratorio.pronosticos import escalamiento as esc
+    df = _tabla_simulada(semilla=11)
+    rng = np.random.default_rng(3)
+    df["estadia_promedio"] = rng.normal(0, 1000, len(df))  # ruido de escala enorme
+    t = esc.comparar_knn(df)["tabla"].set_index("escala")
+    assert t.loc["sin_escalar", "peso_estadia_t-1"] > 0.99
+    assert t.loc["zscore", "RMSE"] < t.loc["sin_escalar", "RMSE"]
+    assert t.loc["minmax", "RMSE"] < t.loc["sin_escalar", "RMSE"]
+
+
+def test_descomposicion_componentes_y_extremos():
+    s = _serie_con_tendencia(multiplicativa=False)
+    s.index = _indice(len(s), "2016-01")
+    comp, res = est.componentes_descomposicion(s)
+    assert res["clasica"]["meses_sin_componente"] == 12 and res["stl"]["meses_sin_componente"] == 0
+    assert np.allclose(comp.observado, comp.tendencia_stl + comp.estacional_stl + comp.residuo_stl)
+    ok = comp.tendencia_clasica.notna()
+    assert np.allclose(comp.observado[ok], (comp.tendencia_clasica + comp.estacional_clasica
+                                           + comp.residuo_clasico)[ok])
+    assert res["clasica"]["fuerza_estacionalidad"] > 0.9  # amplitud 8 frente a ruido 0.3
+
+
+@pytest.mark.datos
+@hay_bronce
+def test_descomposicion_real_trata_covid_como_atipico(referencia):
+    comp, res = est.componentes_descomposicion(referencia.ocupacion_pct)
+    for mes in ("2020-04", "2020-05", "2020-06"):
+        assert mes in res["stl"]["meses_peso_robusto_menor_0_5"]
+    assert res["stl"]["periodo_residuo_min"] == "2020-04"
+    assert res["clasica"]["desv_residuo_covid"] > 2 * res["clasica"]["desv_residuo_resto"]
+
+
+@pytest.mark.datos
+@hay_bronce
+def test_control_sarima_equivalencia_afin(referencia):
+    """z-score da el mismo pronóstico que la serie original; min-max también, si el optimizador
+    parte del óptimo reescalado (la diferencia por defecto es numérica, no del método)."""
+    from laboratorio.pronosticos import escalamiento as esc
+    t = esc.control_sarima(referencia.ocupacion_pct).set_index("escala")
+    assert t.loc["zscore", "dif_max_vs_sin_escalar_pp"] < 0.01
+    assert t.loc["minmax", "dif_max_reajuste_vs_sin_escalar_pp"] < 0.01
+    llf = t.loc["sin_escalar", "llf_escala_original"]
+    assert abs(t.loc["minmax", "llf_reajuste_desde_optimo"] - llf) < 0.01
+    assert t.loc["minmax", "llf_escala_original"] <= llf + 1e-6  # nunca mejor que el óptimo real

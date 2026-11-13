@@ -20,8 +20,9 @@ La ejecución dura entre 30 y 45 s (búsqueda de 72 SARIMA). Es reproducible: lo
 | Archivo | Contenido |
 |---|---|
 | `datos.py` | Carga, validación de forma, verificación oro ↔ referencia, partición 96 + 12 |
-| `estadistica.py` | Caracterización, descomposición (criterio aditiva/multiplicativa), ADF + KPSS, elección de d y D, ACF/PACF, correlación cruzada sin fuga |
+| `estadistica.py` | Caracterización, descomposición (criterio aditiva/multiplicativa; componentes clásica y STL robusta del oro), ADF + KPSS, elección de d y D, ACF/PACF, correlación cruzada sin fuga |
 | `modelos.py` | SES, Holt, Holt-Winters (ETS), SARIMA (búsqueda por AICc), métricas, residuos, criterio de selección |
+| `escalamiento.py` | Min-max frente a z-score (`pipeline.transformaciones`, parámetros solo con entrenamiento): k-NN a un paso y control de equivariancia del SARIMA |
 | `ejecutar.py` | Orquestador: tablas, figuras y metadatos en `resultados/` |
 
 ## Salidas (`resultados/`)
@@ -33,6 +34,8 @@ La ejecución dura entre 30 y 45 s (búsqueda de 72 SARIMA). Es reproducible: lo
 | `candidatos_aicc.csv` | Todas las variantes evaluadas por familia y su AICc |
 | `estacionariedad_adf_kpss.csv`, `acf_pacf_*.csv`, `correlacion_cruzada.csv` | Pruebas estadísticas (solo entrenamiento) |
 | `residuos_modelo_elegido.csv`, `resumen.json`, `ejecucion.json` | Residuos, resumen completo, procedencia y versiones |
-| `figuras/*.png` | Identificación SARIMA, comparación 2024, residuos y pronóstico. Cada figura tiene su CSV |
+| `descomposicion_componentes.csv` | Tendencia, estacionalidad, residuo (clásica y STL robusta) y peso robusto de los 108 meses |
+| `escalamiento_*.csv`, `escalamiento_parametros.json` | Comparación min-max frente a z-score: k-NN 2024, validación 2023, pronósticos, control SARIMA y parámetros |
+| `figuras/*.png` | Identificación SARIMA, comparación 2024, residuos, pronóstico y descomposición del oro. Cada figura tiene su CSV |
 
-Las gráficas exploratorias de la serie (serie completa, descomposición, ACF/PACF en niveles) corresponden a `laboratorio/exploracion/` (integrante A) y no se duplican aquí.
+Las gráficas exploratorias de la serie (serie mensual, boxplot por mes, mapa de calor y curvas por año) están en `laboratorio/exploracion/` (integrante A) y no se duplican aquí; la descomposición (tendencia, estacionalidad y residuo) está en este laboratorio.

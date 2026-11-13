@@ -27,7 +27,7 @@ Se recalcularon las cifras del contrato con `data/bronce/datatur/Base70centros.c
 
 ### 2.2 Descomposición (`estadistica.descomponer`)
 Descomposición clásica con periodo 12, aditiva y multiplicativa. Criterio explícito: (1) si el error de reconstrucción difiere ≥ 5 %, gana el menor; si no, (2) decide la correlación entre el nivel anual y la amplitud estacional (≥ 0.5 indica multiplicativa).
-Resultado: errores equivalentes (6.58 frente a 6.55 pp, 0.5 % de diferencia); correlación amplitud–nivel **−0.47**, de modo que la amplitud **no** crece con el nivel → **aditiva**. Fuerza de la tendencia 0.70 y de la estacionalidad 0.42 (aditiva). Limitación: con 6 años completos esa correlación está dominada por 2020 (nivel bajo y caída extrema), así que es evidencia débil. Las gráficas de la descomposición corresponden a la exploración de la integrante A y no se duplican.
+Resultado: errores equivalentes (6.58 frente a 6.55 pp, 0.5 % de diferencia); correlación amplitud–nivel **−0.47**, de modo que la amplitud **no** crece con el nivel → **aditiva**. Fuerza de la tendencia 0.70 y de la estacionalidad 0.42 (aditiva). Limitación: con 6 años completos esa correlación está dominada por 2020 (nivel bajo y caída extrema), así que es evidencia débil. La gráfica de la descomposición de los 108 meses del oro y sus limitaciones están en §2.6.
 
 ### 2.3 Estacionariedad (ADF + KPSS, `estacionariedad_adf_kpss.csv`)
 | Transformación | ADF p | KPSS p | Lectura |
@@ -48,6 +48,86 @@ corr(y_t, x_{t−k}), k = 0..12, entre las series con d = 1, D = 1, **solo con e
 - `estadia_promedio`: k = 2 (r = −0.33) y k = 4 (0.25) con todo; **ninguno sin COVID**.
 - `densidad_ocupacion`: contemporánea 0.47 (dependencia mecánica, §4.1); con rezago, k = 11 y 12 negativos, que no se mantienen sin COVID.
 Con 36 pruebas por escenario se esperan ≈ 2 falsos positivos al 5 %; ningún rezago es significativo en ambos escenarios. **Conclusión: no se incorporan exógenas.** La única exógena usada es `d_covid`, de calendario y conocida de antemano (0 en 2024 y 2025).
+
+### 2.6 Gráfica de la descomposición del oro (`descomposicion_oro.png`, `descomposicion_componentes.csv`)
+![Descomposición aditiva de la ocupación mensual de Manzanillo](../../laboratorio/pronosticos/resultados/figuras/descomposicion_oro.png)
+
+**Datos y método.** Son los 108 meses del oro (2016-01 a 2024-12), leídos con `pipeline.interfaz`. La descomposición es **aditiva** (elegida en §2.2) con **periodo 12** (ciclo anual de una serie mensual), calculada con dos métodos (`estadistica.componentes_descomposicion`):
+- **Clásica** (`seasonal_decompose`). La tendencia es una media móvil centrada 2×12; la estacionalidad es el promedio por mes de la serie sin tendencia, **igual cada año**; el residuo es lo que queda. Es la misma técnica del §2.2.
+- **STL robusta** (Cleveland et al., 1990; `STL(period=12, robust=True)`). Usa regresiones locales con pesos que reducen la influencia de los atípicos; la estacionalidad puede cambiar lentamente entre años.
+
+La figura es **descriptiva** e incluye 2024. Las decisiones de modelado (aditiva; d y D) se tomaron solo con el entrenamiento (§2.2 y §2.3).
+
+**Lectura.**
+| Medida (108 meses) | Clásica | STL robusta |
+|---|---|---|
+| Fuerza de la tendencia / de la estacionalidad | 0.72 / 0.42 | 0.52 / 0.27 |
+| Componente estacional promedio: julio, diciembre, septiembre | +8.9, +8.0, −12.1 pp | +10.6, +6.4, −13.1 pp |
+| Desviación del residuo: meses de COVID / resto | 11.70 / 4.41 pp | 16.64 / 2.87 pp |
+| Residuo mínimo | −27.8 pp (2020-04) | −44.7 pp (2020-04) |
+| Meses sin componente | 12 (los 6 primeros y los 6 últimos) | 0 |
+
+Ambos métodos muestran el mismo patrón estacional: picos en julio y diciembre, y un valle en septiembre, con octubre también bajo. La tendencia baja en 2018–2019, cae con COVID y se recupera hasta alrededor de 55 % en 2023–2024.
+
+**Limitaciones, sobre todo por COVID.**
+- **La clásica reparte el choque en el tiempo.** La media móvil de 13 meses "anticipa" la caída: en 2020-01 la tendencia ya es 31.5 % con un observado de 43.7 %, así que enero y febrero de 2020 quedan con residuos artificiales de +13.1 y +14.9 pp; lo mismo ocurre de forma simétrica en la recuperación (2020-09, +13.9 pp). Además, la estacionalidad clásica promedia todos los años, incluido 2020, y no tiene tendencia ni residuo en 2016-01 a 2016-06 ni en 2024-07 a 2024-12.
+- **STL robusta aísla mejor el choque, pero no lo explica.** Mantiene la tendencia cerca de 43.8 % hasta el inicio de COVID y manda la caída al residuo (−44.7 pp en 2020-04). Su peso robusto queda por debajo de 0.5 en 2020-03 a 2020-07 (y en 2017-04, 2019-08 y 2021-11), es decir, trata esos meses como atípicos. Aun así, su tendencia baja suavemente durante 2020 porque ninguna descomposición separa un cambio de nivel temporal de la tendencia sin un modelo explícito. Para eso el SARIMA usa la intervención `d_covid` (§3).
+- **La estacionalidad de STL varía entre años** (en 2020 se deforma junto con el choque); con 9 ciclos no se puede afirmar que el patrón estacional haya cambiado de forma permanente.
+- **Es una descripción, no una prueba.** La estacionalidad se evalúa formalmente con ADF/KPSS y ACF/PACF (§2.3 y §2.4). El abril alto de 2017 (peso STL bajo) coincide con Semana Santa en abril; no hay indicador de esa fecha móvil (§5).
+
+### 2.7 Normalización: min-max frente a z-score (`escalamiento.py`)
+Comparación aplicada a dos métodos, con las funciones de `pipeline/transformaciones.py` (integrante A). **Todos los parámetros de escala se ajustan solo con el entrenamiento**; 2024 se transforma con ellos sin recalcular nada.
+
+**Método principal: k vecinos más cercanos (k-NN) para pronóstico a un paso.** Se eligió porque es un método **basado en distancias**: la escala de cada variable decide cuánto pesa en la distancia y, por lo tanto, qué meses se toman como "parecidos". En los modelos de series de tiempo del §3 la escala de la serie no cambia el resultado (ver el control abajo), así que no sirven para mostrar el efecto de normalizar.
+- **Variables del mes t, todas conocidas antes de t:** ocupación en t−1 y t−12, `pct_cuartos_no_residentes`, `estadia_promedio` y `densidad_ocupacion` en t−1 (variables D7 rezagadas, como permite el contrato §4.1). El objetivo no se escala: la predicción es el promedio, en puntos porcentuales, de la ocupación de los k vecinos.
+- **Filas de entrenamiento:** 2017-01 a 2023-12 (84). 2016 solo aporta los rezagos de 12 meses.
+- **Elección de k sin ver 2024:** validación interna con escala y memoria ajustadas en 2017–2022 y error en 2023, con k ∈ {1, 3, 5, 7, 9} y criterio de menor RMSE. Después se reajusta la escala con 2017–2023 y se pronostica 2024 un mes a la vez (el mes t usa los datos observados hasta t−1).
+
+**Parámetros ajustados con 2017-01 a 2023-12** (`escalamiento_parametros.json`; n = 84, `ajustado_hasta = 2023-12` en todos):
+| Variable | Mín. | Máx. | Media | Desv. (`ddof=0`) |
+|---|---|---|---|---|
+| Ocupación t−1 | 1.4591 | 66.3399 | 44.2037 | 13.2274 |
+| Ocupación t−12 | 1.4591 | 66.3399 | 43.2384 | 12.8394 |
+| % cuartos no residentes t−1 | 0.3839 | 15.2944 | 5.0548 | 2.8345 |
+| Estadía promedio t−1 | 1.6793 | 3.0376 | 2.1882 | 0.3843 |
+| Densidad de ocupación t−1 | 1.4056 | 3.0009 | 2.6142 | 0.2455 |
+
+Ningún valor de 2024 queda fuera del rango min-max del entrenamiento.
+
+**Resultados** (`escalamiento_knn_2024.csv`, `escalamiento_knn_validacion_2023.csv`):
+| Escala | k elegido | RMSE en validación 2023 | MAE 2024 | RMSE 2024 | MAPE 2024 | Peso de los dos rezagos de ocupación en la distancia |
+|---|---|---|---|---|---|---|
+| Sin escalar | 7 | 6.64 | **2.25** | **2.99** | **4.30 %** | 97.6 % |
+| Min-max | 5 | 5.86 | 4.14 | 5.13 | 8.00 % | 36.6 % |
+| Z-score | 5 | **5.24** | 4.10 | 4.79 | 7.73 % | 40.0 % |
+
+El peso es la proporción de la varianza de cada variable escalada en el entrenamiento, que es lo que aporta a la distancia euclidiana.
+
+**Lectura.**
+- **Escalar cambia el método:** sin escalar, la distancia depende casi solo de la ocupación (97.6 %), porque las variables D7 miden en unidades pequeñas. Con min-max o z-score, las tres variables D7 pasan a pesar el 60–63 %. Los vecinos elegidos cambian: en 2024 solo coinciden el 37 % (min-max) y el 35 % (z-score) con los de la versión sin escalar.
+- **Min-max frente a z-score:** dan resultados **parecidos entre sí** (70 % de vecinos en común; RMSE 5.13 frente a 4.79 en 2024 y 5.86 frente a 5.24 en la validación). Con 12 meses, esa diferencia de 0.3 a 0.6 pp **no permite afirmar** que una sea mejor. La diferencia de fondo es que **z-score iguala el peso** de todas las variables (20 % cada una), mientras que **min-max lo hace depender de los extremos**: el mínimo de COVID (1.46 %) comprime la ocupación habitual y le da a cada rezago de ocupación solo 18–19 % del peso, mientras que la estadía, con una distribución más extendida dentro de su rango, recibe 36 %.
+- **No hay un ganador estable:** en la validación interna (2023) escalar fue mejor (RMSE 5.24 y 5.86 frente a 6.64); en la prueba (2024) fue mejor no escalar (2.99 frente a 4.79 y 5.13). El cambio de orden es coherente con §2.5: las variables D7 no tienen una relación rezagada robusta con la ocupación, y escalarlas les da un peso que no ganan con su capacidad predictiva. **Normalizar no mejora un método por sí mismo:** decide qué variables cuentan, y eso debe justificarse con su relevancia.
+- Estos errores son de **pronóstico a un paso**, con el dato real de t−1. **No son comparables** con los del §4, que son a 1–12 pasos desde 2023-12.
+
+**Control: SARIMA elegido sobre la serie transformada** (`escalamiento_control_sarima.csv`). SARIMA(1,1,1)(0,1,1)₁₂ + `d_covid` ajustado sobre la ocupación de entrenamiento original, en min-max y en z-score; el pronóstico de 2024 se invierte a puntos porcentuales.
+| Escala | RMSE 2024 | Diferencia máxima con la serie original | Log-verosimilitud (escala original) | Θ estacional |
+|---|---|---|---|---|
+| Sin escalar | 2.639 | — | −280.2228 | −0.796 |
+| Z-score | 2.639 | 0.001 pp | −280.2231 | −0.796 |
+| Min-max | 3.179 | 1.297 pp | −280.4225 | −0.981 |
+| Min-max, reajustado desde el óptimo original reescalado | 2.639 | 0.0002 pp | −280.2231 | — |
+
+- **Resultados equivalentes, como predice la teoría:** un SARIMA con diferencias es equivariante ante transformaciones afines; z-score da el mismo pronóstico. **No se fuerza una diferencia.**
+- **Min-max: la diferencia es numérica.** Con los valores iniciales por defecto, el optimizador se detiene en un óptimo local peor: verosimilitud 0.20 menor y Θ = −0.98, junto al límite de invertibilidad. Partiendo del óptimo original reescalado alcanza la misma verosimilitud y el mismo pronóstico. La serie min-max tiene una escala muy pequeña (σ² ≈ 0.01), que hace más frágil la estimación numérica. Es una **limitación práctica** de min-max en este caso, no una propiedad del modelo.
+
+**Ventajas y limitaciones.**
+| | Min-max | Z-score |
+|---|---|---|
+| Ventajas | Escala acotada [0, 1] en el entrenamiento, fácil de interpretar; conserva la forma de la distribución | Iguala la varianza de las variables (peso igual en distancias); menos dependiente de un solo valor extremo; en el SARIMA el optimizador converge igual que con la serie original |
+| Limitaciones | Depende de dos valores (aquí, el mínimo de COVID): comprime los valores habituales y reparte los pesos de forma desigual; un valor futuro fuera del rango sale de [0, 1]; escala muy pequeña que dificultó la convergencia del SARIMA | No acota los valores; media y desviación incluyen COVID; no corrige la asimetría ni la tendencia |
+| Cuándo | Métodos que exigen un rango acotado | Métodos basados en distancias o con penalización, cuando las variables deben pesar lo mismo |
+
+**Ausencia de fuga temporal.** Los parámetros se ajustan con `pipeline.transformaciones`, que rechaza cualquier mes posterior a 2023-12 (`ErrorFuga`). k se elige con la validación interna 2017–2022 → 2023. Las variables son rezagos (t−1, t−12). Las pruebas `test_escala_rechaza_ajuste_con_2024` y `test_knn_sin_fuga_y_pesos_zscore_iguales` comprueban que alterar 2024 no cambia los parámetros, la k elegida ni el pronóstico de 2024-01.
 
 ## 3. Modelos (`modelos.py`, entrenamiento 2016–2023)
 SES, Holt y Holt-Winters se ajustan como modelos ETS de error aditivo (máxima verosimilitud, AICc e intervalos analíticos). Dentro de cada familia, la variante se elige por **AICc del entrenamiento** (`candidatos_aicc.csv`):
@@ -131,7 +211,7 @@ El residuo de 2017-04 coincide con la Semana Santa en abril (en 2016 cayó en ma
 ## 8. Reproducibilidad y pruebas
 - Python 3.14.3, pandas 3.0.5, numpy 2.5.3, statsmodels 0.15.0, scipy 1.18.1, matplotlib 3.11.2 (Windows 11).
 - **Reproducibilidad:** dos ejecuciones consecutivas producen tablas y `resumen.json` idénticos byte a byte. El único componente aleatorio es el intervalo de Holt-Winters ETS(A,A,M): statsmodels lo calcula por simulación porque no tiene fórmula analítica con estacionalidad multiplicativa. Se fijaron una semilla (`SEMILLA_SIMULACION = 20261113`) y 5,000 repeticiones. Las métricas, las medias y las coberturas no dependen de esa simulación.
-- `tests/test_laboratorio_pronosticos.py`: 25 pruebas (21 con series **simuladas**, declaradas como tales, y 4 con datos reales marcadas `datos`). Incluyen las de ausencia de fuga y de construcción de `d_covid` (§3) y la de reproducibilidad de intervalos simulados. Una de las pruebas con datos reales construye un oro **simulado** válido contra el esquema completo y comprueba que la interfaz lo acepta y que el cotejo detecta una alteración coherente. Suite completa local: ver la sección de pruebas del commit.
+- `tests/test_laboratorio_pronosticos.py`: 32 pruebas (26 con series **simuladas**, declaradas como tales, y 6 con datos reales marcadas `datos`). Incluyen las de ausencia de fuga y de construcción de `d_covid` (§3) y la de reproducibilidad de intervalos simulados. Una de las pruebas con datos reales construye un oro **simulado** válido contra el esquema completo y comprueba que la interfaz lo acepta y que el cotejo detecta una alteración coherente. Suite completa local: ver la sección de pruebas del commit.
 
 ### Dependencias y CI (integradas por la integrante A en el PR #8)
 - `statsmodels`, `scipy` y `matplotlib` están fijadas en **`requirements-lab.txt`** (integrante A), con las mismas versiones con las que se desarrolló el laboratorio. Se retiró `laboratorio/pronosticos/requirements-pronosticos.txt` para dejar una sola fuente (observación O4 de la Auditoría 3).
@@ -141,5 +221,6 @@ El residuo de 2017-04 coincide con la Semana Santa en abril (en 2016 cayó en ma
 
 ## 9. Pendientes y fuera de alcance
 - Revisión recíproca de la integrante A sobre el PR de esta rama, y confirmación en Actions de que las pruebas de pronósticos se ejecutan en CI.
-- Página del pronóstico en `tablero/` (plan de trabajo) y comparación min-max frente a z-score (depende de `pipeline/transformaciones.py`, aún no publicado).
+- Página del pronóstico en `tablero/` (plan de trabajo).
+- Resueltos en la rama `e1/eimy-cierre-estadistico`: gráfica de la descomposición (§2.6) y comparación min-max frente a z-score (§2.7), que eran los riesgos R1 y R2 de la Auditoría 4.
 - Mejoras posibles, no implementadas: validación con origen móvil, indicador de Semana Santa, intervalos por bootstrap de residuos y comparación entrenando desde 2021-07.
