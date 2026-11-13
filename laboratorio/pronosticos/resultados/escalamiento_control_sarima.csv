@@ -1,0 +1,4 @@
+escala,MAE,RMSE,MAPE,sesgo_medio,dif_max_vs_sin_escalar_pp,llf_escala_original,theta_estacional,llf_reajuste_desde_optimo,dif_max_reajuste_vs_sin_escalar_pp,convergio
+sin_escalar,2.376157,2.638843,4.363464,1.722528,0.000000,-280.222781,-0.796014,-280.222781,0.000000,True
+minmax,2.873302,3.178844,5.353517,2.174993,1.296634,-280.422532,-0.981270,-280.223087,0.000204,True
+zscore,2.376780,2.639378,4.364642,1.723347,0.001265,-280.223085,-0.796044,-280.223085,0.000203,True

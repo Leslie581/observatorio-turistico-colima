@@ -95,6 +95,49 @@ def descomponer(serie: pd.Series) -> dict:
     return res
 
 
+def componentes_descomposicion(serie: pd.Series) -> tuple[pd.DataFrame, dict]:
+    """Componentes de la serie (108 meses del oro) con dos métodos, periodo 12, aditivos:
+
+    * **Clásica** (``seasonal_decompose``): tendencia = media móvil centrada 2x12, de modo que los
+      6 primeros y los 6 últimos meses no tienen tendencia ni residuo; estacionalidad = promedio por
+      mes de la serie sin tendencia, **idéntica cada año**; residuo = lo que queda.
+    * **STL robusta** (Cleveland et al., 1990; ``robust=True``): estimación local con pesos que
+      reducen la influencia de los atípicos; la estacionalidad puede cambiar lentamente entre años
+      y no pierde los extremos de la serie.
+
+    Es descriptiva: usa los 108 meses (incluido 2024). Las decisiones de modelado se tomaron con la
+    descomposición del entrenamiento (``descomponer``).
+    """
+    from statsmodels.tsa.seasonal import STL
+
+    y = serie.astype(float).copy()
+    y.index = y.index.to_timestamp()
+    clasica = seasonal_decompose(y, model="additive", period=PERIODO)
+    stl = STL(y, period=PERIODO, robust=True).fit()
+    comp = pd.DataFrame({
+        "observado": y.to_numpy(),
+        "tendencia_clasica": clasica.trend.to_numpy(), "estacional_clasica": clasica.seasonal.to_numpy(),
+        "residuo_clasico": clasica.resid.to_numpy(),
+        "tendencia_stl": stl.trend.to_numpy(), "estacional_stl": stl.seasonal.to_numpy(),
+        "residuo_stl": stl.resid.to_numpy(), "peso_robusto_stl": stl.weights.to_numpy(),
+    }, index=serie.index)
+    cov = pd.Series(indicador_covid(serie.index).astype(bool), index=serie.index)
+    res = {}
+    for m, sufijo in (("clasica", "clasico"), ("stl", "stl")):
+        r, s = comp[f"residuo_{sufijo}"], comp[f"estacional_{m}"]
+        res[m] = {
+            "fuerza_tendencia": _fuerza(comp[f"tendencia_{m}"].to_numpy(), r.to_numpy()),
+            "fuerza_estacionalidad": _fuerza(s.to_numpy(), r.to_numpy()),
+            "desv_residuo_covid": float(r[cov].std()), "desv_residuo_resto": float(r[~cov].std()),
+            "residuo_min": float(r.min()), "periodo_residuo_min": str(r.idxmin()),
+            "meses_sin_componente": int(r.isna().sum()),
+            "estacional_por_mes_promedio": {int(k): float(v) for k, v in
+                                            s.groupby(s.index.month).mean().items()},
+        }
+    res["stl"]["meses_peso_robusto_menor_0_5"] = [str(p) for p in comp.index[comp.peso_robusto_stl < 0.5]]
+    return comp, res
+
+
 def _indice_por_mes(seasonal: pd.Series) -> dict:
     s = seasonal.groupby(seasonal.index.month).mean()
     return {int(k): float(v) for k, v in s.items()}

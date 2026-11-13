@@ -1,8 +1,8 @@
 {
   "comando": "python -m laboratorio.pronosticos.ejecutar --fuente oro",
-  "inicio_utc": "2026-11-13T07:18:20+00:00",
-  "fin_utc": "2026-11-13T07:18:50+00:00",
-  "duracion_s": 29.4,
+  "inicio_utc": "2026-11-13T08:19:53+00:00",
+  "fin_utc": "2026-11-13T08:20:49+00:00",
+  "duracion_s": 55.4,
   "plataforma": "Windows-11-10.0.26200-SP0",
   "versiones": {
     "python": "3.14.3",

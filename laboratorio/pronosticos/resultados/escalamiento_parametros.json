@@ -1,0 +1,83 @@
+{
+  "ajuste": "solo filas de entrenamiento (2017-01 a 2023-12; 2016 aporta los rezagos)",
+  "n_entrenamiento": 84,
+  "n_prueba": 12,
+  "parametros": {
+    "minmax": {
+      "ocup_t-1": {
+        "minimo": 1.459077,
+        "maximo": 66.339892,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "ocup_t-12": {
+        "minimo": 1.459077,
+        "maximo": 66.339892,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "pct_no_res_t-1": {
+        "minimo": 0.383877,
+        "maximo": 15.29444,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "estadia_t-1": {
+        "minimo": 1.679261,
+        "maximo": 3.03764,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "densidad_t-1": {
+        "minimo": 1.405571,
+        "maximo": 3.000933,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      }
+    },
+    "zscore": {
+      "ocup_t-1": {
+        "media": 44.20374608333333,
+        "desviacion": 13.227414039013965,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "ocup_t-12": {
+        "media": 43.23835063095238,
+        "desviacion": 12.8394020400556,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "pct_no_res_t-1": {
+        "media": 5.054831511904762,
+        "desviacion": 2.834464873005924,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "estadia_t-1": {
+        "media": 2.1882402499999998,
+        "desviacion": 0.38432221691464513,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      },
+      "densidad_t-1": {
+        "media": 2.614192083333333,
+        "desviacion": 0.24550670921460765,
+        "n": 84,
+        "ajustado_hasta": "2023-12"
+      }
+    }
+  },
+  "coincidencia_vecinos_2024": {
+    "sin_escalar_vs_minmax": 0.369047619047619,
+    "sin_escalar_vs_zscore": 0.3452380952380952,
+    "minmax_vs_zscore": 0.6999999999999998
+  },
+  "meses_2024_fuera_del_rango_minmax": {
+    "ocup_t-1": 0,
+    "ocup_t-12": 0,
+    "pct_no_res_t-1": 0,
+    "estadia_t-1": 0,
+    "densidad_t-1": 0
+  }
+}

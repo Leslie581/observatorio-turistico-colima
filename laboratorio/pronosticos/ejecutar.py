@@ -178,6 +178,50 @@ def figura_pronostico(serie: pd.Series, retro: pd.DataFrame, futuro: pd.DataFram
     fig.savefig(ruta, dpi=150)
 
 
+def figura_descomposicion(comp: pd.DataFrame, ruta: Path) -> None:
+    """Observado, tendencia, estacionalidad y residuo (clásica y STL robusta), con COVID sombreado."""
+    import matplotlib.dates as mdates
+
+    fig, axs = _fig(4, 1, alto=9.2, ancho=10.5)
+    x = comp.index.to_timestamp()
+    ini, fin = pd.Timestamp("2020-03-01"), pd.Timestamp("2021-06-30")
+    paneles = [("Observado (oro) y tendencia", "tendencia_clasica", "tendencia_stl"),
+               ("Estacionalidad", "estacional_clasica", "estacional_stl"),
+               ("Residuo", "residuo_clasico", "residuo_stl")]
+    ax0 = axs[0, 0]
+    ax0.plot(x, comp.observado, color=TINTA, linewidth=1.6, label="Observado")
+    for i, (fila, (titulo, c_cla, c_stl)) in enumerate(zip((0, 2, 3), paneles)):
+        ax = axs[fila, 0]
+        ax.plot(x, comp[c_cla], color=COLOR["SES"], linewidth=2,
+                label="Clásica aditiva (media móvil 2×12)")
+        ax.plot(x, comp[c_stl], color=COLOR["Holt"], linewidth=2, label="STL robusta")
+        if i > 0:
+            ax.axhline(0, color=TINTA_2, linewidth=0.8)
+        ax.set_title(titulo, loc="left", fontsize=10, color=TINTA)
+        ax.set_ylabel("pp", fontsize=9, color=TINTA_2)
+    # panel 2: peso robusto de STL (qué meses trató como atípicos)
+    axp = axs[1, 0]
+    axp.bar(x, comp.peso_robusto_stl, width=20, color=COLOR["Holt"], alpha=0.85)
+    axp.set_ylim(0, 1.05)
+    axp.set_title("Peso robusto de STL por mes (1 = normal; cerca de 0 = tratado como atípico)",
+                  loc="left", fontsize=10, color=TINTA)
+    axp.set_ylabel("peso", fontsize=9, color=TINTA_2)
+    for ax in axs[:, 0]:
+        ax.axvspan(ini, fin, color=REJILLA, alpha=0.6, linewidth=0, zorder=0)
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+    ax0.text(ini + (fin - ini) / 2, 70, "COVID\n2020-03 a 2021-06", ha="center", va="top",
+             fontsize=8, color=TINTA_2)
+    ax0.set_ylim(0, 72)
+    ax0.legend(frameon=False, fontsize=8, loc="lower left", ncol=3)
+    fig.suptitle("Descomposición aditiva de la ocupación mensual de Manzanillo (oro, 2016-01 a "
+                 "2024-12, periodo 12)", x=0.01, ha="left", fontsize=11, color=TINTA)
+    fig.text(0.01, 0.005, "La clásica no tiene tendencia ni residuo en los 6 primeros y 6 últimos "
+             "meses. Banda gris: COVID.", fontsize=8, color=TINTA_2)
+    fig.tight_layout(rect=(0, 0.02, 1, 0.97))
+    fig.savefig(ruta, dpi=150, metadata={"Software": None})
+
+
 # ----------------------------------------------------------------------------- flujo
 def ejecutar(fuente: str = "auto", salida: Path = SALIDA, figuras: bool = True) -> dict:
     # statsmodels 0.15 avisa del cambio futuro de tipo de retorno (tupla → objeto); no afecta.
@@ -296,6 +340,32 @@ def ejecutar(fuente: str = "auto", salida: Path = SALIDA, figuras: bool = True) 
     _csv(pd.DataFrame({"periodo": ent.index[mod.DESCARTE_INICIAL:].astype(str),
                        "residuo": res_g.values}), salida / "residuos_modelo_elegido.csv")
 
+    # 7. Descomposición completa del oro (descriptiva, 108 meses): figura y componentes
+    comp, desc_completa = est.componentes_descomposicion(serie)
+    _csv(comp.reset_index().assign(periodo=lambda t: t.periodo.astype(str)),
+         salida / "descomposicion_componentes.csv")
+    if figuras:
+        figura_descomposicion(comp, dir_fig / "descomposicion_oro.png")
+
+    # 8. Min-max frente a z-score (parámetros solo con entrenamiento; pipeline.transformaciones)
+    from . import escalamiento as esc
+    knn = esc.comparar_knn(exog.assign(ocupacion_pct=serie))
+    control = esc.control_sarima(serie)
+    _csv(knn["tabla"], salida / "escalamiento_knn_2024.csv")
+    _csv(knn["validacion"], salida / "escalamiento_knn_validacion_2023.csv")
+    _csv(knn["pronosticos"].reset_index().assign(periodo=lambda t: t.periodo.astype(str)),
+         salida / "escalamiento_knn_pronosticos_2024.csv")
+    _csv(control, salida / "escalamiento_control_sarima.csv")
+    parametros_escala = {
+        escala: {c: {k: v for k, v in vars(p).items()} for c, p in ps.items()}
+        for escala, ps in knn["parametros"].items() if ps}
+    _json({"ajuste": "solo filas de entrenamiento (2017-01 a 2023-12; 2016 aporta los rezagos)",
+           "n_entrenamiento": knn["n_entrenamiento"], "n_prueba": knn["n_prueba"],
+           "parametros": parametros_escala,
+           "coincidencia_vecinos_2024": knn["coincidencia_vecinos"],
+           "meses_2024_fuera_del_rango_minmax": knn["meses_2024_fuera_del_rango_minmax"]},
+          salida / "escalamiento_parametros.json")
+
     resumen = {
         "advertencia": "2024 es una proyección retrospectiva contra datos observados; 2025 es "
                        "una proyección futura sin dato observado. Ninguna predicción es dato.",
@@ -303,6 +373,11 @@ def ejecutar(fuente: str = "auto", salida: Path = SALIDA, figuras: bool = True) 
         "particion": {"entrenamiento": [str(ent.index[0]), str(ent.index[-1]), len(ent)],
                       "prueba": [str(pru.index[0]), str(pru.index[-1]), len(pru)]},
         "caracterizacion": carac, "descomposicion": desc,
+        "descomposicion_completa_oro": desc_completa,
+        "comparacion_escalas": {
+            "knn_2024": knn["tabla"].to_dict("records"),
+            "control_sarima_2024": control.to_dict("records"),
+            "coincidencia_vecinos_2024": knn["coincidencia_vecinos"]},
         "diferenciacion": {"d": d, "D": D, "razon": razon_dif},
         "acf_pacf_rezagos_significativos": sig[["rezago", "acf", "pacf"]].to_dict("records"),
         "modelos": {f: {"especificacion": a.especificacion, "AICc": a.aicc, "AIC": a.aic,
