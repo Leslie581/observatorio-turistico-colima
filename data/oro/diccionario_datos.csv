@@ -1,0 +1,28 @@
+dataset,columna,tipo,unidad,definicion,fuente,regla_de_calculo
+manzanillo_ocupacion_mensual,periodo,texto AAAA-MM,mes,"Mes de referencia (clave única, ascendente)",DATATUR Base70,anio y mes del bronce
+manzanillo_ocupacion_mensual,fecha_inicio,fecha ISO,día,Primer día del mes,derivada,periodo + '-01'
+manzanillo_ocupacion_mensual,ocupacion_pct,decimal 0-100 (6 decimales),%,"Variable objetivo: ocupación hotelera de Manzanillo, categorías 2 a 5 estrellas",DATATUR Base70,"100 x suma(ocupados residentes + no residentes) / suma(disponibles) de las 4 categorías; cociente de sumas, no promedio de porcentajes"
+manzanillo_ocupacion_mensual,cuartos_disponibles,entero,cuartos-noche al mes,Oferta mensual de cuartos,DATATUR Base70,suma de las 4 categorías
+manzanillo_ocupacion_mensual,cuartos_ocupados,entero,cuartos-noche al mes,Cuartos ocupados,DATATUR Base70,residentes + no residentes
+manzanillo_ocupacion_mensual,cuartos_ocupados_residentes,entero,cuartos-noche al mes,Cuartos ocupados por residentes,DATATUR Base70,suma de las 4 categorías
+manzanillo_ocupacion_mensual,cuartos_ocupados_no_residentes,entero,cuartos-noche al mes,Cuartos ocupados por no residentes,DATATUR Base70,suma de las 4 categorías
+manzanillo_ocupacion_mensual,pct_cuartos_no_residentes,decimal 0-100,%,Variable adicional exploratoria (D7): peso de los no residentes. Riesgo de correlación mecánica con el objetivo; no es regresor por defecto,DATATUR Base70,100 x cuartos_ocupados_no_residentes / cuartos_ocupados
+manzanillo_ocupacion_mensual,llegadas_turistas,entero,personas al mes,Llegadas de turistas,DATATUR Base70,"residentes + no residentes, suma de las 4 categorías"
+manzanillo_ocupacion_mensual,turistas_noche,entero,personas-noche al mes,Turistas-noche,DATATUR Base70,"residentes + no residentes, suma de las 4 categorías"
+manzanillo_ocupacion_mensual,estadia_promedio,decimal,noches,"Variable adicional exploratoria (D7): se publica junto con el objetivo, no se conoce antes de él",DATATUR Base70,turistas_noche / llegadas_turistas
+manzanillo_ocupacion_mensual,densidad_ocupacion,decimal,personas por cuarto,Variable adicional exploratoria (D7): dependencia mecánica con el objetivo (mismo numerador en el denominador),DATATUR Base70,turistas_noche / cuartos_ocupados
+manzanillo_ocupacion_mensual,d_covid,0/1,indicador,"1 de 2020-03 a 2021-06 (regla de calendario, conocida de antemano)",derivada,periodo entre 2020-03 y 2021-06
+manzanillo_ocupacion_mensual,d_oferta_2017,0/1,indicador,1 desde 2017-06 (primer salto de la oferta; calendario). El segundo salto (2017-11) no tiene indicador en 1.0.0,derivada,periodo >= 2017-06
+manzanillo_ocupacion_mensual,diag_atipico_iqr,0/1,indicador,SOLO DIAGNÓSTICO (se calcula con toda la serie): prohibido como regresor,derivada,"ocupacion_pct fuera de [Q1 - 1.5 IQR, Q3 + 1.5 IQR]"
+manzanillo_ocupacion_mensual,categorias_incluidas,texto,-,Categorías que componen el total ('1 estrella' se excluye: solo existe 2016-01 a 2017-09),constante,2-5 estrellas
+manzanillo_ocupacion_mensual,n_categorias_fuente,entero,categorías,Categorías sumadas en cada mes,constante,4
+manzanillo_ocupacion_mensual,sha256_bronce,texto,-,SHA-256 del archivo de bronce del que proviene,procedencia,hash de Base70centros.csv
+manzanillo_ocupacion_mensual,ejecucion,texto,-,Identifica la combinación entrada + contrato (no un instante),procedencia,oro-<12 primeros hex del hash>-v<versión>
+manzanillo_ocupacion_mensual,version_contrato,texto,-,Versión del esquema del contrato de datos,procedencia,1.0.0
+manzanillo_oferta_hospedaje,fecha_captura_local,fecha ISO,día (America/Mexico_City),Día de la captura DENUE,INEGI DENUE,"capturado_utc de la ficha de bronce, en hora local"
+manzanillo_oferta_hospedaje,municipio_clave,texto,-,Clave INEGI del municipio (Manzanillo = 06007),INEGI DENUE,primeros 5 dígitos de AreaGeo
+manzanillo_oferta_hospedaje,clase_actividad,texto,-,Clase SCIAN 721 (alojamiento temporal),INEGI DENUE,Clase_actividad
+manzanillo_oferta_hospedaje,scian_clase,texto 6 dígitos,-,Código SCIAN de la clase,INEGI DENUE,CLASE_ACTIVIDAD_ID
+manzanillo_oferta_hospedaje,estrato,texto,personas ocupadas (rango),Tamaño del establecimiento por personal ocupado (NO mide cuartos),INEGI DENUE,Estrato
+manzanillo_oferta_hospedaje,establecimientos,entero,establecimientos,"Conteo en esa fecha, clase y estrato. Contexto: no se relaciona con la ocupación mensual ni con hoteles individuales",INEGI DENUE,CLEE distintos
+manzanillo_oferta_hospedaje,personal_min_total,entero,personas,Suma de los mínimos de personal ocupado del estrato (cota inferior),INEGI DENUE,suma de personal_min

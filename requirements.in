@@ -1,3 +1,4 @@
+# Raices de las dependencias (las versiones exactas estan en requirements*.txt)
 requests
 pandas
 numpy
@@ -6,3 +7,6 @@ tzdata
 pytest
 pytest-cov
 pyyaml
+pandera
+# laboratorio (requirements-lab.txt): statsmodels, scipy, matplotlib
+# desarrollo (requirements-dev.txt): ruff, pip-audit

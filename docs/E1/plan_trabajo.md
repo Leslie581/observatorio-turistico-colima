@@ -63,7 +63,7 @@ Regla: **cada archivo tiene una sola dueña por rama**. Lo compartido se toca en
 | `calidad/tiempo-integrante-a.csv`, `defectos-integrante-a.csv` | PSP de Leslie | Leslie |
 | `calidad/tiempo-integrante-b.csv`, `defectos-integrante-b.csv` | PSP de Eimy | Eimy |
 | `calidad/auditorias.md`, `calidad/revision_calidad.md` | Registro de revisiones | Cada quien registra **solo** sus revisiones |
-| `requirements.in` / `requirements.txt` | Dependencias | Leslie las agrega; Eimy pide las suyas por issue o PR pequeño |
+| `requirements.in`, `requirements.txt`, `requirements-lab.txt`, `requirements-dev.txt`, `ruff.toml` | Dependencias: núcleo (captura y pipeline), laboratorio y desarrollo, separadas a propósito (ver `pipeline.md` §6) | Leslie las administra; Eimy pide cambios por issue o PR pequeño |
 | `extractores/`, `.github/workflows/captura-diaria.yml`, `data/bronce/` | Captura de E0 | **No se modifican** en E1 (el bronce solo lo escribe el bot) |
 
 **Interfaz:** el laboratorio lee únicamente `data/oro/` mediante `pipeline/interfaz.py` (contrato §7). Mientras no exista, Eimy usa la derivación de referencia del contrato y parte de la guía del §0 (esquema exacto, fórmula, partición 96 + 12 meses y reglas de uso de las variables adicionales).
@@ -76,3 +76,15 @@ Regla: **cada archivo tiene una sola dueña por rama**. Lo compartido se toca en
 - **Revisión recíproca:** desde E1, todo cambio se integra por pull request revisado por la otra integrante (en E0 hubo fusiones sin revisión previa). El revisor deja hallazgos con archivo y línea en `calidad/auditorias.md`, y registra su propio tiempo.
 - **Evidencias para la ficha E1:** salida del pipeline (resumen de cuarentena), pruebas y CI en verde, medición de fiabilidad, reportes de seguridad, planes y requerimientos, notebooks, gráficas y la página del tablero; todo enlazado desde `docs/E1/ENTREGA.md`.
 - **Antes de congelar:** `pytest`, `ruff`, la puerta de datos y el verificador de E0 en verde, y revisión recíproca registrada.
+
+## 4. Estado al 2026-11-13 (fase L1, rama `e1/leslie-pipeline`)
+| Tema | Estado |
+|---|---|
+| Contrato de datos 1.0.0 y su revisión de documentación r1 | Fijado y corregido (`contrato_datos.md` §9) |
+| Plata, puerta de calidad y cuarentena | **Implementado y ejecutado sobre el bronce real** ([`pipeline.md`](pipeline.md)) |
+| Oro (108 meses), agregado DENUE, diccionario e interfaz | **Implementado y verificado** contra una derivación independiente |
+| Pruebas del pipeline | Implementadas (datos sintéticos y reales declarados como tales) |
+| `ci.yml` | **Preparado, sin ejecutar en GitHub** |
+| Dependencias estadísticas | Fijadas en `requirements-lab.txt`; probadas solo en esta máquina |
+| Pendiente (Leslie) | `pipeline/transformaciones.py` (min-max, z-score, discretización), fiabilidad (MTBF, MTTR), `gitleaks`, requerimientos, plan SQA y ficha E1 |
+| Para Eimy | Integrar su rama y ejecutar `python -m laboratorio.pronosticos.ejecutar --fuente oro` contra `data/oro/` |

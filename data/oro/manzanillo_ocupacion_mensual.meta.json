@@ -1,0 +1,14 @@
+{
+  "archivo": "manzanillo_ocupacion_mensual.csv",
+  "atribucion": "Secretaría de Turismo (SECTUR), DataTur, 'Ocupación hotelera en los 70 destinos principales monitoreados', licencia Creative Commons Attribution 4.0 (CC BY 4.0), https://www.datos.gob.mx/dataset/ocupacion_hotelera_70_destinos_principales_monitoreados_datatur",
+  "corrida": "e1-e6c9a995c9ed",
+  "definicion_objetivo": "100 x suma(ocupados residentes + no residentes) / suma(disponibles), categorias 2 a 5 estrellas de Manzanillo (cociente de sumas)",
+  "ejecucion": "oro-a8ca3f9bf34e-v1.0.0",
+  "fecha_proceso_utc": "2026-11-13T06:32:24+00:00",
+  "filas": 108,
+  "periodo_max": "2024-12",
+  "periodo_min": "2016-01",
+  "sha256_bronce": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
+  "sha256_csv": "135a056fac24e63d3998d7c815cd5a1f3f8b95d559a926ad6286b447d1138f9c",
+  "version_contrato": "1.0.0"
+}

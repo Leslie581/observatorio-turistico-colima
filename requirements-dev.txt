@@ -1,0 +1,23 @@
+# Herramientas de desarrollo y CI de E1: linter (ruff) y auditoria de dependencias (pip-audit).
+# Fijadas con las versiones PROBADAS el 2026-11-13 (Python 3.13.15, Windows 11, pandas 3.0.5). Generadas desde el entorno real.
+# Instalar: pip install -r requirements.txt -r requirements-dev.txt
+boolean-py==5.0
+cachecontrol==0.14.4
+cyclonedx-python-lib==11.12.0
+defusedxml==0.7.1
+license-expression==30.4.4
+markdown-it-py==4.3.0
+mdurl==0.1.2
+msgpack==1.2.4
+packageurl-python==0.17.6
+pip==26.3
+pip-api==0.0.35
+pip-audit==2.10.1
+pip-requirements-parser==32.0.1
+platformdirs==4.14.5
+py-serializable==2.2.0
+rich==15.0.0
+ruff==0.17.5
+sortedcontainers==2.4.0
+tomli==2.5.0
+tomli-w==1.2.0
