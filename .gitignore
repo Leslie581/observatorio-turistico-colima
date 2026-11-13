@@ -49,8 +49,12 @@ data/plata/*
 data/oro/*
 !data/plata/.gitkeep
 !data/oro/.gitkeep
+# E1 (D5): se versiona solo el oro publico, agregado, pequeno y reproducible (CSV y JSON); nunca Parquet ni privados
+!data/oro/*.csv
+!data/oro/*.json
 data/cuarentena/*
 !data/cuarentena/.gitkeep
+!data/cuarentena/resumen_*.json
 
 # --- Datos personales / respaldos ---
 *.sqlite
