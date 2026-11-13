@@ -1,0 +1,7 @@
+# Configuracion de Streamlit para el tablero (se lee desde la raiz del repositorio).
+[browser]
+gatherUsageStats = false   # sin telemetria de uso
+
+[theme]
+base = "light"
+primaryColor = "#0072B2"
