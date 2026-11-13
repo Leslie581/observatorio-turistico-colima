@@ -33,11 +33,12 @@ if _FALTAN:
         raise ImportError(_MOTIVO + " y TDL_EXIGIR_PRONOSTICOS=1 exige ejecutarlas")
     pytest.skip(_MOTIVO, allow_module_level=True)
 
-from laboratorio.pronosticos import datos
-from laboratorio.pronosticos import estadistica as est
-from laboratorio.pronosticos import modelos as mod
+# E402: las importaciones van después de la comprobación de dependencias a propósito.
+from laboratorio.pronosticos import datos  # noqa: E402
+from laboratorio.pronosticos import estadistica as est  # noqa: E402
+from laboratorio.pronosticos import modelos as mod  # noqa: E402
 
-from .conftest import BRONCE_BASE70
+from .conftest import BRONCE_BASE70  # noqa: E402
 
 hay_bronce = pytest.mark.skipif(not BRONCE_BASE70.exists(), reason="sin data/bronce de Base70")
 
@@ -296,21 +297,43 @@ def test_comparacion_oro_detecta_diferencias(referencia):
 @pytest.mark.datos
 @hay_bronce
 def test_carga_oro_simulado_valida_contra_referencia(referencia, tmp_path):
-    """Oro construido a partir de la referencia (simula el archivo de la integrante A)."""
-    oro = pd.DataFrame(index=referencia.index)
-    for c in datos.COLUMNAS_ORO[1:]:
-        oro[c] = referencia.get(c, 0)
-    oro["version_contrato"] = datos.VERSION_CONTRATO
-    oro = oro.reset_index()
-    oro["periodo"] = oro["periodo"].astype(str)
-    ruta = tmp_path / "oro.csv"
-    oro.round(6).to_csv(ruta, index=False)
-    c = datos.cargar_serie("oro", ruta_oro=ruta)
+    """Oro SIMULADO a partir de la referencia, válido contra el esquema completo del contrato
+    (lo valida también ``pipeline.interfaz`` si existe). Después se altera de forma coherente
+    (conteos y cociente) para que supere el esquema y lo detecte el cotejo contra la fuente."""
+    ref = referencia
+    y = ref.ocupacion_pct
+    q1, q3 = y.quantile([0.25, 0.75])
+    enteros = ["cuartos_disponibles", "cuartos_ocupados", "cuartos_ocupados_residentes",
+               "cuartos_ocupados_no_residentes", "llegadas_turistas", "turistas_noche"]
+    oro = pd.DataFrame({
+        "periodo": ref.index.astype(str),
+        "fecha_inicio": [f"{p}-01" for p in ref.index.astype(str)],
+        **{c: ref[c].values for c in ["ocupacion_pct", *enteros, "pct_cuartos_no_residentes",
+                                       "estadia_promedio", "densidad_ocupacion"]},
+        "d_covid": ref.d_covid.values, "d_oferta_2017": ref.d_oferta_2017.values,
+        "diag_atipico_iqr": ((y < q1 - 1.5 * (q3 - q1)) | (y > q3 + 1.5 * (q3 - q1))).astype(int).values,
+        "categorias_incluidas": "2-5 estrellas", "n_categorias_fuente": 4,
+        "sha256_bronce": "0" * 64, "ejecucion": "simulada", "version_contrato": datos.VERSION_CONTRATO,
+    })[datos.COLUMNAS_ORO]
+    oro[enteros] = oro[enteros].astype("int64")
+
+    def guardar(df):
+        ruta = tmp_path / "oro.csv"
+        df.round(6).to_csv(ruta, index=False, lineterminator="\n")
+        return ruta
+
+    c = datos.cargar_serie("oro", ruta_oro=guardar(oro))
     assert c.fuente == "oro" and c.detalle["verificacion_vs_referencia"]["coincide"]
-    oro.loc[10, "ocupacion_pct"] += 1
-    oro.round(6).to_csv(ruta, index=False)
+    alterado = oro.copy()
+    alterado.loc[10, "cuartos_ocupados_residentes"] += 100
+    alterado["cuartos_ocupados"] = (alterado.cuartos_ocupados_residentes
+                                    + alterado.cuartos_ocupados_no_residentes)
+    alterado["ocupacion_pct"] = 100 * alterado.cuartos_ocupados / alterado.cuartos_disponibles
+    alterado["pct_cuartos_no_residentes"] = (100 * alterado.cuartos_ocupados_no_residentes
+                                             / alterado.cuartos_ocupados)
+    alterado["densidad_ocupacion"] = alterado.turistas_noche / alterado.cuartos_ocupados
     with pytest.raises(ValueError, match="no coincide"):
-        datos.cargar_serie("oro", ruta_oro=ruta)
+        datos.cargar_serie("oro", ruta_oro=guardar(alterado))
 
 
 @pytest.mark.datos

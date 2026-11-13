@@ -71,7 +71,11 @@ def derivar_referencia(ruta_bronce: Path | str = RUTA_BRONCE_BASE70) -> pd.DataF
         "ocupacion_pct": 100 * ocupados / g.cuartos_disponibles,
         "cuartos_disponibles": g.cuartos_disponibles,
         "cuartos_ocupados": ocupados,
+        "cuartos_ocupados_residentes": g.cuartos_ocupados_residentes,
+        "cuartos_ocupados_no_residentes": g.cuartos_ocupados_no_residentes,
         "pct_cuartos_no_residentes": 100 * g.cuartos_ocupados_no_residentes / ocupados,
+        "llegadas_turistas": llegadas,
+        "turistas_noche": noches,
         "estadia_promedio": noches / llegadas,
         "densidad_ocupacion": noches / ocupados,
     })
@@ -120,8 +124,10 @@ def validar_forma(df: pd.DataFrame) -> None:
 def comparar_con_referencia(oro: pd.DataFrame, ref: pd.DataFrame,
                             tolerancia: float = TOLERANCIA_ORO) -> dict:
     """Compara oro y referencia columna por columna; devuelve las diferencias máximas."""
-    cols = ["ocupacion_pct", "pct_cuartos_no_residentes", "estadia_promedio",
-            "densidad_ocupacion", "d_covid", "d_oferta_2017"]
+    cols = ["ocupacion_pct", "cuartos_disponibles", "cuartos_ocupados",
+            "cuartos_ocupados_residentes", "cuartos_ocupados_no_residentes",
+            "pct_cuartos_no_residentes", "llegadas_turistas", "turistas_noche",
+            "estadia_promedio", "densidad_ocupacion", "d_covid", "d_oferta_2017"]
     difs = {c: float(np.max(np.abs(oro[c].astype(float).values - ref[c].astype(float).values)))
             for c in cols}
     return {"diferencia_max": difs, "tolerancia": tolerancia,
