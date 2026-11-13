@@ -77,7 +77,7 @@ Regla: **cada archivo tiene una sola dueña por rama**. Lo compartido se toca en
 - **Evidencias para la ficha E1:** salida del pipeline (resumen de cuarentena), pruebas y CI en verde, medición de fiabilidad, reportes de seguridad, planes y requerimientos, notebooks, gráficas y la página del tablero; todo enlazado desde `docs/E1/ENTREGA.md`.
 - **Antes de congelar:** `pytest`, `ruff`, la puerta de datos y el verificador de E0 en verde, y revisión recíproca registrada.
 
-## 4. Estado al 2026-11-13 (fase L2, rama `e1/leslie-l2`)
+## 4. Estado al 2026-11-13 (fases L2 y L3: `main` incluye el PR #10; L3 en la rama `e1/leslie-calidad`)
 | Tema | Estado |
 |---|---|
 | Contrato de datos 1.0.0 y su revisión de documentación r1 | Fijado y corregido (`contrato_datos.md` §9) |
@@ -88,5 +88,9 @@ Regla: **cada archivo tiene una sola dueña por rama**. Lo compartido se toca en
 | Dependencias estadísticas | Fijadas en `requirements-lab.txt` (`wrapt` estable 2.5.2); la instalación en Linux/GitHub ya corrió en CI |
 | Transformaciones (min-max, z-score, discretización) | **Implementadas** en `pipeline/transformaciones.py`, con parámetros solo del entrenamiento y pruebas de ausencia de fuga ([`transformaciones.md`](transformaciones.md)). La **reducción** que pide E1 (muestreo, agregación o selección de variables, con el porcentaje; **no** PCA, que es de E2) está cubierta por la agregación del contrato §6 (453 → 108 filas, −76.2 %); ver `transformaciones.md` §6. Pendientes: comparación min-max frente a z-score en el laboratorio (integrante B) y jerarquías conceptuales |
 | Exploración estadística | **Cuatro gráficas y estadísticas descriptivas** del oro ([`exploracion.md`](exploracion.md)). Faltan la descomposición y la correlación cruzada de la matriz de requisitos |
-| Pendiente (Leslie) | Fiabilidad (MTBF, MTTR), `gitleaks`, requerimientos, plan SQA, ficha E1 y relatoría |
+| Fiabilidad y disponibilidad | **Medidas con lo que hay** ([`fiabilidad.md`](fiabilidad.md)): tasa de éxito 83.3 % (5/6) y MTTR 268 s (n = 1). **MTBF y disponibilidad: no estimables** (1 incidente; 2.84 de 7 días de bitácora) |
+| Requerimientos verificables | **Redactados** ([`requerimientos.md`](requerimientos.md)): 36 requerimientos con su criterio y verificación; 26 cumplidos, 5 parciales, 3 no cumplidos, 1 pendiente, 1 propuesto. **Revisión de la integrante B pendiente** |
+| Plan SQA | **Borrador 1.0** con la estructura de IEEE 730 ([`plan_sqa.md`](plan_sqa.md)); pendiente de revisión de B |
+| Seguridad | `pip-audit` sin hallazgos y restauración del bronce probada ([`seguridad.md`](seguridad.md)). `gitleaks` 8.30.1 ejecutado localmente el 2026-11-13 con **0 hallazgos** (historial y árbol de trabajo); **aún no está integrado en CI** |
+| Pendiente (Leslie) | Integrar `gitleaks` en CI, ficha `docs/E1/ENTREGA.md`, relatoría `docs/relatoria-E1.md`, etiqueta `e1`, y completar la medición de fiabilidad cuando haya ≥ 7 días y ≥ 2 incidentes |
 | Laboratorio de Eimy | Integrado en `main` (PR #9, `49934ca`); calculó con la capa oro (`--fuente oro`) y su CI pasó. Las pruebas estadísticas son obligatorias en CI (`TDL_EXIGIR_PRONOSTICOS=1`) |
