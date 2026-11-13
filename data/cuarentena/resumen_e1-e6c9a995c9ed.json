@@ -1,0 +1,45 @@
+{
+  "fecha_proceso_utc": "2026-11-13T06:32:24+00:00",
+  "fuentes": {
+    "datatur_base70": {
+      "aceptados": 31145,
+      "leidos": 31147,
+      "marcados": {
+        "R-D07_faltante_turistas_noche": 1
+      },
+      "rechazados": 2,
+      "rechazos_por_regla": {
+        "R-D06": 2
+      }
+    },
+    "denue_establecimientos": {
+      "aceptados": 670,
+      "leidos": 670,
+      "marcados": {
+        "registros_aceptados_reemplazados_por_captura_posterior_del_dia": 134
+      },
+      "rechazados": 0,
+      "rechazos_por_regla": {}
+    }
+  },
+  "informativo": {
+    "datatur_base70": {
+      "R-D08": "informativo (no rechaza filas)",
+      "centros_con_menos_periodos_que_el_maximo": {
+        "El Fuerte": 96
+      }
+    },
+    "denue_establecimientos": {
+      "capturas_leidas": 5,
+      "capturas_por_dia": {
+        "2026-11-09": 2,
+        "2026-11-10": 1,
+        "2026-11-11": 1,
+        "2026-11-12": 1
+      },
+      "dias_con_captura": 4,
+      "nota": "los registros de capturas repetidas del mismo día se reemplazan por la última, no se rechazan (son fotos duplicadas, no datos erróneos)"
+    }
+  },
+  "lotes_rechazados": []
+}

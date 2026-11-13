@@ -1,22 +1,32 @@
-# Dependencias fijadas (pip freeze, Python 3.13.15, Windows, 2026-11-09). Fuente: requirements.in
+# Dependencias de captura y pipeline (las instala el workflow diario de captura; deben ser pocas y estables).
+# Fijadas con las versiones PROBADAS el 2026-11-13 (Python 3.13.15, Windows 11, pandas 3.0.5). Generadas desde el entorno real.
 # Reproducir: python -m venv .venv ; .venv\Scripts\pip install -r requirements.txt
-# pandas 3.1.1 fue bloqueado por el Control de aplicaciones de Windows en esta maquina; se fija 3.0.5 (la usada en el prototipo).
+# pandas 3.1.1 fue bloqueado por el Control de aplicaciones de Windows en esta maquina; se fija 3.0.5.
+annotated-types==0.8.0
 certifi==2026.10.23
 charset-normalizer==3.5.2
 colorama==0.4.6
 coverage==7.17.2
 idna==3.20
 iniconfig==2.3.1
+mypy-extensions==1.2.0
 numpy==2.5.3
 packaging==26.3
 pandas==3.0.5
+pandera==0.36.0
 pluggy==1.7.0
-Pygments==2.21.0
+pydantic==2.14.3
+pydantic-core==2.50.4
+pygments==2.21.0
 pytest==9.2.0
 pytest-cov==7.1.0
 python-dateutil==4.0.0
 python-dotenv==1.2.4
-PyYAML==6.0.3
+pyyaml==6.0.3
 requests==2.34.2
+typeguard==4.6.0
+typing-extensions==4.16.0
+typing-inspect==0.9.0
+typing-inspection==0.4.5
 tzdata==2026.6
 urllib3==2.8.0

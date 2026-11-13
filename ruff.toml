@@ -1,0 +1,9 @@
+# Linter de E1 (CI): errores de sintaxis y pyflakes; sin reglas de estilo para no ensuciar el codigo heredado de E0.
+line-length = 120
+target-version = "py313"
+extend-exclude = [".venv", "laboratorio/pronosticos/resultados"]
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
+# E731 (lambda asignada) y E741 (variable `l`) vienen de codigo ya entregado en E0 (analisis de la encuesta y pruebas); no se reescriben.
+ignore = ["E731", "E741"]
