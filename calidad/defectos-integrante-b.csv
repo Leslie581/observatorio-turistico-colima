@@ -1,1 +1,9 @@
 numero,fecha,tipo,fase_introducido,fase_eliminado,minutos_correccion,defecto_origen,descripcion
+1,2026-11-12,interfaz,codigo,pruebas,1,,"modelos._a_timestamp y exog_covid usaban PeriodIndex.to_timestamp(freq=""MS""), inválido en pandas 3.0.5 (ValueError en la prueba de humo); se usa to_timestamp()"
+2,2026-11-12,funcion,diseno,pruebas,2,,"estadistica.descomponer devolvía ""ambigua"" sin decidir cuando los dos criterios discrepaban; se fijó la regla explícita (diferencia de error >= 5 % y, si no, correlación amplitud-nivel >= 0.5)"
+3,2026-11-12,construccion,codigo,revision,1,,"Expresión muerta (if False else) en el índice estacional de estadistica.descomponer; eliminada en la autorrevisión"
+4,2026-11-12,verificacion,pruebas,pruebas,2,,"La prueba de ADF exigía no rechazar raíz unitaria en una sola realización simulada de paseo aleatorio (falló por azar, p=0.059); se cambió a propiedades robustas (d=1 rechaza con p<0.01 y p de niveles mayor)"
+5,2026-11-12,verificacion,pruebas,pruebas,2,,"La prueba de descomposición usaba nivel constante, donde la correlación amplitud-nivel no tiene sentido; se reemplazó por series con tendencia aditiva y multiplicativa"
+6,2026-11-12,documentacion,documentacion,revision,1,,"docs/E1/pronostico.md tenía 3 cifras incorrectas (media de entrenamiento 45.3 por 44.75, residuo 2021-08 por 2021-07, hora 05:52 por 05:51); corregidas al cotejar con resultados/"
+7,2026-11-13,funcion,codigo,pruebas,4,,"Los intervalos de Holt-Winters ETS(A,A,M) cambiaban entre ejecuciones (statsmodels los simula sin semilla) y el README afirmaba que la ejecución era determinista; se fijó semilla y 5,000 repeticiones (métricas y medias no cambiaron)"
+8,2026-11-13,interfaz,codigo,pruebas,1,7,"Se pasó random_state a ETSResults.simulate, que en statsmodels 0.15 se llama rng (TypeError al ejecutar); corregido"
