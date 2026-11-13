@@ -1,0 +1,44 @@
+{
+  "ajuste": "solo entrenamiento 2016-01 a 2023-12; 2024 se transforma con estos parámetros, sin recalcular",
+  "discretizacion_ancho_igual": {
+    "ajustado_hasta": "2023-12",
+    "bordes": [
+      23.08601533333334,
+      44.71295366666668
+    ],
+    "etiquetas": [
+      "bajo",
+      "medio",
+      "alto"
+    ],
+    "metodo": "ancho_igual",
+    "n": 96
+  },
+  "discretizacion_frecuencia_igual": {
+    "ajustado_hasta": "2023-12",
+    "bordes": [
+      41.754660666666666,
+      51.357862999999995
+    ],
+    "etiquetas": [
+      "bajo",
+      "medio",
+      "alto"
+    ],
+    "metodo": "frecuencia_igual",
+    "n": 96
+  },
+  "minmax": {
+    "ajustado_hasta": "2023-12",
+    "maximo": 66.339892,
+    "minimo": 1.459077,
+    "n": 96
+  },
+  "n_prueba_fuera_del_rango_de_entrenamiento": 0,
+  "zscore": {
+    "ajustado_hasta": "2023-12",
+    "desviacion": 12.76587767413452,
+    "media": 44.75179644791666,
+    "n": 96
+  }
+}

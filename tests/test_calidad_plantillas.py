@@ -34,7 +34,10 @@ def test_las_plantillas_de_defectos_conservan_las_columnas_del_kit():
 def test_tiempos_retrospectivos_no_inventan_horarios():
     _, filas = _leer("tiempo-integrante-a.csv")
     retro = [f for f in filas if "RETROSPECTIVO" in f["actividad"]]
-    assert retro and sum(int(f["minutos_estimados"]) for f in retro) == 750  # 480 prototipo + 240 definitivo + 30 auditoria posterior al PR #1
+    e0 = [f for f in retro if f["fecha"] < "2026-11-13"]
+    assert e0 and sum(int(f["minutos_estimados"]) for f in e0) == 750  # E0: 480 prototipo + 240 definitivo + 30 auditoria posterior al PR #1
+    e1 = [f for f in retro if f["fecha"] >= "2026-11-13"]
+    assert sum(int(f["minutos_estimados"]) for f in e1) == 240  # E1: estimacion revisada y aceptada por la integrante A (2026-11-13)
     for f in retro:
         assert f["inicio"] == f["fin"] == f["interrupcion_min"] == "" and f["fecha"]
 

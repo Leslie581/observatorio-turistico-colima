@@ -1,6 +1,6 @@
 # Plan de trabajo E1 · requisitos, organización y calidad
 
-Versión: 2026-11-13 · Rama `e1/leslie-contrato-datos` · Contrato de datos **1.0.0 fijado**; el reparto de responsables sigue siendo propuesto y se confirma con la integrante B.
+Versión: 2026-11-13 · Contrato de datos **1.0.0 fijado** (L0, PR #7); pipeline integrado en `main` (L1, PR #8); fase L2 en la rama `e1/leslie-l2`. El reparto de responsables sigue siendo propuesto y se confirma con la integrante B.
 Fuente de los requisitos: PDF oficial del Proyecto Integrador TRUSTED DATA LAB, sección E1 (págs. 14–17), rúbrica E1 (págs. 24–26) y reglas de entrega (pág. 12). **No se incluyen requisitos de E2 ni E3.**
 Responsables: **propuestos**, no asignados; se confirman con Eimy. Fecha de entrega según el PDF: **13 de noviembre de 2026**, antes de las 23:59, con la etiqueta `e1`.
 
@@ -77,14 +77,16 @@ Regla: **cada archivo tiene una sola dueña por rama**. Lo compartido se toca en
 - **Evidencias para la ficha E1:** salida del pipeline (resumen de cuarentena), pruebas y CI en verde, medición de fiabilidad, reportes de seguridad, planes y requerimientos, notebooks, gráficas y la página del tablero; todo enlazado desde `docs/E1/ENTREGA.md`.
 - **Antes de congelar:** `pytest`, `ruff`, la puerta de datos y el verificador de E0 en verde, y revisión recíproca registrada.
 
-## 4. Estado al 2026-11-13 (fase L1, rama `e1/leslie-pipeline`)
+## 4. Estado al 2026-11-13 (fase L2, rama `e1/leslie-l2`)
 | Tema | Estado |
 |---|---|
 | Contrato de datos 1.0.0 y su revisión de documentación r1 | Fijado y corregido (`contrato_datos.md` §9) |
 | Plata, puerta de calidad y cuarentena | **Implementado y ejecutado sobre el bronce real** ([`pipeline.md`](pipeline.md)) |
 | Oro (108 meses), agregado DENUE, diccionario e interfaz | **Implementado y verificado** contra una derivación independiente |
 | Pruebas del pipeline | Implementadas (datos sintéticos y reales declarados como tales) |
-| `ci.yml` | **Preparado, sin ejecutar en GitHub** |
-| Dependencias estadísticas | Fijadas en `requirements-lab.txt`; probadas solo en esta máquina |
-| Pendiente (Leslie) | `pipeline/transformaciones.py` (min-max, z-score, discretización), fiabilidad (MTBF, MTTR), `gitleaks`, requerimientos, plan SQA y ficha E1 |
-| Para Eimy | Integrar su rama y ejecutar `python -m laboratorio.pronosticos.ejecutar --fuente oro` contra `data/oro/` |
+| `ci.yml` | **Ejecutado en GitHub con éxito** (trabajos `calidad` y `auditoria-dependencias`, ejecuciones del 2026-11-13 sobre `70a26b9`, `7e64ffa` y `49934ca`; ver [`pipeline.md`](pipeline.md) §6). El paso nuevo «oro regenerado = oro versionado» **aún no ha corrido en GitHub** |
+| Dependencias estadísticas | Fijadas en `requirements-lab.txt` (`wrapt` estable 2.5.2); la instalación en Linux/GitHub ya corrió en CI |
+| Transformaciones (min-max, z-score, discretización) | **Implementadas** en `pipeline/transformaciones.py`, con parámetros solo del entrenamiento y pruebas de ausencia de fuga ([`transformaciones.md`](transformaciones.md)). Falta la **reducción** de la rúbrica (p. ej. PCA), no implementada |
+| Exploración estadística | **Cuatro gráficas y estadísticas descriptivas** del oro ([`exploracion.md`](exploracion.md)). Faltan la descomposición y la correlación cruzada de la matriz de requisitos |
+| Pendiente (Leslie) | Fiabilidad (MTBF, MTTR), `gitleaks`, requerimientos, plan SQA, ficha E1 y relatoría |
+| Laboratorio de Eimy | Integrado en `main` (PR #9, `49934ca`); calculó con la capa oro (`--fuente oro`) y su CI pasó. Las pruebas estadísticas son obligatorias en CI (`TDL_EXIGIR_PRONOSTICOS=1`) |
