@@ -8,3 +8,13 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-09,,,,documentacion,[ESTIMADO RETROSPECTIVO] Llamada con el colaborador externo para recuperar las respuestas de la entrevista (tarde),25
 2026-11-09,,,,documentacion,"[ESTIMADO RETROSPECTIVO] Documentación de la entrevista, la propuesta y E0 (tarde)",159
 2026-11-09,,,,revision,[ESTIMADO RETROSPECTIVO] Revisión personal de hallazgos y resultados de la auditoría interna de E0 sobre el trabajo de la integrante A,40
+2026-11-12,23:35,23:41,0,planeacion,"[E1][ASISTIDO POR CLAUDE CODE] Lectura del contrato 1.0.0 y plan; entorno .venv; verificación de D1, D2, D3 y D7 contra Base70",
+2026-11-12,23:41,23:47,0,codigo,"[E1][ASISTIDO POR CLAUDE CODE] laboratorio/pronosticos: datos, estadistica, modelos y ejecutar",
+2026-11-12,23:47,23:52,0,pruebas,"[E1][ASISTIDO POR CLAUDE CODE] tests/test_laboratorio_pronosticos.py (23 pruebas), ruff, corrección de defectos y regeneración de resultados",
+2026-11-12,23:52,23:56,0,documentacion,"[E1][ASISTIDO POR CLAUDE CODE] docs/E1/pronostico.md, README y requirements del laboratorio; registro PSP",
+2026-11-13,00:00,00:03,0,codigo,"[E1][ASISTIDO POR CLAUDE CODE] Ajustes solicitados en la revisión (inició 2026-11-12 23:59): prueba de d_covid sin fuga, omisión explícita y modo estricto TDL_EXIGIR_PRONOSTICOS, comparación con la referencia en resumen.json",
+2026-11-13,00:03,00:07,0,pruebas,"[E1][ASISTIDO POR CLAUDE CODE] Verificación en entorno solo con requirements.txt (omisión explícita y modo estricto); corrección de intervalos no reproducibles; doble ejecución idéntica",
+2026-11-13,00:07,00:12,0,documentacion,"[E1][ASISTIDO POR CLAUDE CODE] docs/E1/pronostico.md (SARIMA frente a la referencia, construcción de d_covid, residuos sobre entrenamiento, dependencias y CI), revisión de privacidad, pruebas finales, git diff --check y commit",
+2026-11-13,00:46,01:01,0,revision,"[E1][ASISTIDO POR CLAUDE CODE] Revisión recíproca del PR #8 (e1/leslie-pipeline, 70a26b9): código, pruebas, recálculo independiente del oro, inyección de fallas en las 14 reglas, CI en GitHub e integración simulada; corrección de los defectos propios 9 y 10",
+2026-11-13,01:01,01:04,0,documentacion,"[E1][ASISTIDO POR CLAUDE CODE] Registro de la Auditoría 3 en calidad/auditorias.md y registro PSP",
+2026-11-13,01:16,01:21,0,pruebas,"[E1][ASISTIDO POR CLAUDE CODE] Integración de origin/main (PR #8) en e1/eimy-pronosticos; validación definitiva con --fuente oro (cotejo con la referencia, partición, métricas, ingenuo, fuga, residuos); suite con TDL_EXIGIR_PRONOSTICOS=1, ruff, pipeline, verificador E0; documentación y consolidación de dependencias",

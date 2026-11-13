@@ -1,0 +1,5 @@
+familia,especificacion,MAE,RMSE,MAPE,sesgo_medio,AICc_entrenamiento,n_parametros,cobertura_IP95_2024,ljung_box_p12,ljung_box_p24,independencia_ok,varianza_estable_ok,normalidad_ok
+SES,"ETS(A,N,N)",4.785784,6.455095,9.562916,-4.187058,697.982753,2,1.000000,0.000170,0.000027,False,True,False
+Holt,"ETS(A,A,N)",5.199840,6.942625,10.380678,-4.909684,702.383276,4,1.000000,0.000170,0.000027,False,True,False
+Holt-Winters,"ETS(A,A,M)",4.634160,5.271165,8.670607,4.331332,655.754604,17,1.000000,0.214738,0.352823,True,True,False
+SARIMA,"SARIMA(1,1,1)(0,1,1)12 + d_covid",2.376157,2.638843,4.363464,1.722528,571.224783,5,1.000000,0.272988,0.685144,True,True,False

@@ -1,0 +1,5 @@
+transformacion,d,D,n,adf_regresion,adf_estadistico,adf_p,adf_rezagos,adf_critico_5pct,kpss_estadistico,kpss_p,adf_rechaza_raiz_unitaria,kpss_rechaza_estacionariedad
+niveles,0,0,83,ct,-2.127790,0.530504,12,-3.464777,0.254313,0.010000,False,True
+diferencia regular (d=1),1,0,82,c,-2.850169,0.051457,12,-2.897490,0.123872,0.100000,False,False
+diferencia estacional (D=1),0,1,71,c,-1.660779,0.451425,12,-2.903200,0.265239,0.100000,False,False
+d=1 y D=1,1,1,71,c,-4.296321,0.000451,11,-2.903200,0.041540,0.100000,True,False

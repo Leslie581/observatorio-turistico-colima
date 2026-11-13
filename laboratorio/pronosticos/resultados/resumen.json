@@ -1,0 +1,433 @@
+{
+  "advertencia": "2024 es una proyección retrospectiva contra datos observados; 2025 es una proyección futura sin dato observado. Ninguna predicción es dato.",
+  "fuente": "oro",
+  "detalle_fuente": {
+    "ruta": "data\\oro\\manzanillo_ocupacion_mensual.csv",
+    "verificacion_vs_referencia": {
+      "diferencia_max": {
+        "ocupacion_pct": 4.919455491858571e-07,
+        "cuartos_disponibles": 0.0,
+        "cuartos_ocupados": 0.0,
+        "cuartos_ocupados_residentes": 0.0,
+        "cuartos_ocupados_no_residentes": 0.0,
+        "pct_cuartos_no_residentes": 5.00000000069889e-07,
+        "llegadas_turistas": 0.0,
+        "turistas_noche": 0.0,
+        "estadia_promedio": 4.992121200864119e-07,
+        "densidad_ocupacion": 4.784648717226503e-07,
+        "d_covid": 0.0,
+        "d_oferta_2017": 0.0
+      },
+      "tolerancia": 1e-05,
+      "coincide": true
+    },
+    "n": 108,
+    "inicio": "2016-01",
+    "fin": "2024-12",
+    "min": 1.46,
+    "max": 66.34,
+    "media": 45.86,
+    "version_contrato": "1.0.0"
+  },
+  "particion": {
+    "entrenamiento": [
+      "2016-01",
+      "2023-12",
+      96
+    ],
+    "prueba": [
+      "2024-01",
+      "2024-12",
+      12
+    ]
+  },
+  "caracterizacion": {
+    "serie_completa": {
+      "n": 108,
+      "inicio": "2016-01",
+      "fin": "2024-12",
+      "media": 45.85996959259259,
+      "mediana": 49.014862,
+      "desv_est": 12.603058361357386,
+      "cv_pct": 27.481610810734296,
+      "min": 1.459077,
+      "periodo_min": "2020-04",
+      "max": 66.339892,
+      "periodo_max": "2017-04",
+      "media_covid": 25.547141375000002,
+      "media_sin_covid": 49.39263536956522,
+      "media_anual": {
+        "2016": 48.53031991666666,
+        "2017": 51.846713083333334,
+        "2018": 45.4519355,
+        "2019": 46.33161983333333,
+        "2020": 23.331784666666668,
+        "2021": 38.79816866666667,
+        "2022": 48.37791275,
+        "2023": 55.34591716666667,
+        "2024": 54.72535475
+      },
+      "perfil_mensual": {
+        "1": 44.859892888888886,
+        "2": 43.83007766666667,
+        "3": 45.728861111111115,
+        "4": 48.159961333333335,
+        "5": 45.060564444444445,
+        "6": 47.41286522222222,
+        "7": 54.63988466666667,
+        "8": 45.31675077777778,
+        "9": 34.15465255555556,
+        "10": 40.47166188888889,
+        "11": 46.69285877777778,
+        "12": 53.99160377777778
+      },
+      "perfil_mensual_sin_covid": {
+        "1": 47.4200575,
+        "2": 46.252724125,
+        "3": 50.406442857142856,
+        "4": 56.16316385714286,
+        "5": 51.252746571428574,
+        "6": 52.98692957142857,
+        "7": 58.862252999999995,
+        "8": 48.177705375,
+        "9": 35.616884,
+        "10": 42.295558625,
+        "11": 48.743568375,
+        "12": 56.18843325
+      },
+      "mes_pico_sin_covid": 7,
+      "mes_valle_sin_covid": 9
+    },
+    "entrenamiento": {
+      "n": 96,
+      "inicio": "2016-01",
+      "fin": "2023-12",
+      "media": 44.75179644791666,
+      "mediana": 48.111347,
+      "desv_est": 12.832890615803866,
+      "cv_pct": 28.675699378323564,
+      "min": 1.459077,
+      "periodo_min": "2020-04",
+      "max": 66.339892,
+      "periodo_max": "2017-04",
+      "media_covid": 25.547141375000002,
+      "media_sin_covid": 48.5927274625,
+      "media_anual": {
+        "2016": 48.53031991666666,
+        "2017": 51.846713083333334,
+        "2018": 45.4519355,
+        "2019": 46.33161983333333,
+        "2020": 23.331784666666668,
+        "2021": 38.79816866666667,
+        "2022": 48.37791275,
+        "2023": 55.34591716666667
+      },
+      "perfil_mensual": {
+        "1": 44.43926225,
+        "2": 42.765238625,
+        "3": 44.32591225,
+        "4": 46.82999125,
+        "5": 43.594618249999996,
+        "6": 45.882069375,
+        "7": 53.800897625,
+        "8": 44.318312750000004,
+        "9": 32.79588625,
+        "10": 39.3700485,
+        "11": 45.5735885,
+        "12": 53.32573175
+      },
+      "perfil_mensual_sin_covid": {
+        "1": 47.30507457142857,
+        "2": 45.38185757142857,
+        "3": 49.31544133333333,
+        "4": 55.7237375,
+        "5": 50.330182,
+        "6": 51.874879166666666,
+        "7": 58.506606142857144,
+        "8": 47.445341142857146,
+        "9": 34.27289842857143,
+        "10": 41.29712857142857,
+        "11": 47.757360857142864,
+        "12": 55.741269428571435
+      },
+      "mes_pico_sin_covid": 7,
+      "mes_valle_sin_covid": 9
+    }
+  },
+  "descomposicion": {
+    "additive": {
+      "rms_error_pp": 6.577256227220529,
+      "fuerza_tendencia": 0.6984072806719079,
+      "fuerza_estacionalidad": 0.41807006487907505,
+      "indice_estacional": {
+        "1": -0.031104539186505867,
+        "2": -1.5605326999007947,
+        "3": -1.214233086805555,
+        "4": 2.940378526289684,
+        "5": -0.7396350570436552,
+        "6": 1.2581170679563505,
+        "7": 9.75353294890873,
+        "8": -1.0743549737103193,
+        "9": -12.48907578918651,
+        "10": -5.590646771329362,
+        "11": 0.10901435367063582,
+        "12": 8.6385400203373
+      }
+    },
+    "multiplicative": {
+      "rms_error_pp": 6.546592475046485,
+      "fuerza_tendencia": 0.40558422429256824,
+      "fuerza_estacionalidad": 0.08231784598759806,
+      "indice_estacional": {
+        "1": 1.0120554354607048,
+        "2": 0.9869326520744764,
+        "3": 0.9753639376862976,
+        "4": 1.006790448242467,
+        "5": 0.9380668034837424,
+        "6": 0.9932406339219838,
+        "7": 1.2119748022586811,
+        "8": 0.9843998262767378,
+        "9": 0.7467042279874626,
+        "10": 0.8998350218355297,
+        "11": 1.0240865099993832,
+        "12": 1.2205497007725328
+      }
+    },
+    "amplitud_vs_nivel": {
+      "correlacion": -0.4658389853752752,
+      "anios": [
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022
+      ],
+      "amplitud_pp": [
+        35.05274570833333,
+        25.62887016666667,
+        30.938935583333333,
+        37.88795637500001,
+        26.158878208333316,
+        19.75398112499999
+      ],
+      "nivel_pp": [
+        51.846713083333334,
+        45.4519355,
+        46.33161983333333,
+        23.331784666666668,
+        38.79816866666667,
+        48.37791275
+      ]
+    },
+    "diferencia_relativa_error": 0.004662088736506734,
+    "eleccion": "aditiva",
+    "razon_eleccion": "errores equivalentes (6.58 y 6.55 pp, diferencia 0.5 %); correlación amplitud–nivel -0.47 < 0.5"
+  },
+  "diferenciacion": {
+    "d": 1,
+    "D": 1,
+    "razon": "d=1 y D=1: ADF p=0.0005, KPSS p=0.100"
+  },
+  "acf_pacf_rezagos_significativos": [
+    {
+      "rezago": 5,
+      "acf": -0.22787787873103835,
+      "pacf": -0.22146922381556688
+    },
+    {
+      "rezago": 11,
+      "acf": -0.28185955410392344,
+      "pacf": -0.23874032004537038
+    },
+    {
+      "rezago": 12,
+      "acf": -0.4715391995909006,
+      "pacf": -0.3925680423090418
+    }
+  ],
+  "modelos": {
+    "SES": {
+      "especificacion": "ETS(A,N,N)",
+      "AICc": 697.9827526296724,
+      "AIC": 697.721883064455,
+      "BIC": 705.4149276388586,
+      "parametros": {
+        "smoothing_level": 0.9999,
+        "initial_level": 48.35156053270542
+      },
+      "residuos": {
+        "n": 83,
+        "media": 0.062436798764804124,
+        "desv_est": 8.83357926836262,
+        "ljung_box": {
+          "12": {
+            "estadistico": 37.73542699566232,
+            "p": 0.00016962372085316363
+          },
+          "24": {
+            "estadistico": 62.62226920657047,
+            "p": 2.698852264273049e-05
+          }
+        },
+        "independencia_ok": false,
+        "arch_lm_p": 0.5805740910657362,
+        "levene_mitades_p": 0.10100442775129712,
+        "varianza_estable_ok": true,
+        "jarque_bera_p": 0.03564935530939358,
+        "normalidad_ok": false
+      }
+    },
+    "Holt": {
+      "especificacion": "ETS(A,A,N)",
+      "AICc": 702.3832757357392,
+      "AIC": 701.7166090690725,
+      "BIC": 714.5383500264118,
+      "parametros": {
+        "smoothing_level": 0.9999,
+        "smoothing_trend": 9.999000000000001e-05,
+        "initial_level": 48.24026834735453,
+        "initial_trend": 0.11116297299382669
+      },
+      "residuos": {
+        "n": 83,
+        "media": -0.04772005872475583,
+        "desv_est": 8.834027585483053,
+        "ljung_box": {
+          "12": {
+            "estadistico": 37.73486809622568,
+            "p": 0.0001696593347534381
+          },
+          "24": {
+            "estadistico": 62.621217078946756,
+            "p": 2.6997950015711476e-05
+          }
+        },
+        "independencia_ok": false,
+        "arch_lm_p": 0.5864866550964343,
+        "levene_mitades_p": 0.10101312854223662,
+        "varianza_estable_ok": true,
+        "jarque_bera_p": 0.035655764229069464,
+        "normalidad_ok": false
+      }
+    },
+    "Holt-Winters": {
+      "especificacion": "ETS(A,A,M)",
+      "AICc": 655.7546036873528,
+      "AIC": 646.8714868042359,
+      "BIC": 693.029754250657,
+      "parametros": {
+        "smoothing_level": 0.9999,
+        "smoothing_trend": 9.999000000000001e-05,
+        "smoothing_seasonal": 9.999999999998898e-09,
+        "initial_level": 48.49166372812421,
+        "initial_trend": 0.02832393681878978,
+        "initial_seasonal.0": 1.1779448768997505,
+        "initial_seasonal.1": 1.0090415819778873,
+        "initial_seasonal.2": 0.8677682826270328,
+        "initial_seasonal.3": 0.7249464308583787,
+        "initial_seasonal.4": 0.9826931079866371,
+        "initial_seasonal.5": 1.1945108401792108,
+        "initial_seasonal.6": 1.0402726224140058,
+        "initial_seasonal.7": 0.9994304189983948,
+        "initial_seasonal.8": 1.0859114995457786,
+        "initial_seasonal.9": 0.9961045203507489,
+        "initial_seasonal.10": 0.9685398898635412,
+        "initial_seasonal.11": 1.0
+      },
+      "residuos": {
+        "n": 83,
+        "media": -0.0958779802926908,
+        "desv_est": 5.825233711640021,
+        "ljung_box": {
+          "12": {
+            "estadistico": 15.509711520040618,
+            "p": 0.21473761622778548
+          },
+          "24": {
+            "estadistico": 26.006732028597156,
+            "p": 0.35282342841379216
+          }
+        },
+        "independencia_ok": true,
+        "arch_lm_p": 0.2169097556188457,
+        "levene_mitades_p": 0.779807870066919,
+        "varianza_estable_ok": true,
+        "jarque_bera_p": 2.1035337160530626e-13,
+        "normalidad_ok": false
+      }
+    },
+    "SARIMA": {
+      "especificacion": "SARIMA(1,1,1)(0,1,1)12 + d_covid",
+      "AICc": 571.2247827682726,
+      "AIC": 570.4455619890518,
+      "BIC": 582.5397650280348,
+      "parametros": {
+        "d_covid": -12.859832668331554,
+        "ar.L1": 0.7089641884185521,
+        "ma.L1": -0.9258753502773164,
+        "ma.S.L12": -0.7960137947403957,
+        "sigma2": 42.89288044062965,
+        "usa_d_covid": 1.0
+      },
+      "residuos": {
+        "n": 83,
+        "media": 0.18215119222033052,
+        "desv_est": 7.124406532496815,
+        "ljung_box": {
+          "12": {
+            "estadistico": 11.039846943289403,
+            "p": 0.2729875206471155
+          },
+          "24": {
+            "estadistico": 17.423381520434813,
+            "p": 0.6851442314219803
+          }
+        },
+        "independencia_ok": true,
+        "arch_lm_p": 0.9760384787454978,
+        "levene_mitades_p": 0.505475477353535,
+        "varianza_estable_ok": true,
+        "jarque_bera_p": 4.35690463443594e-12,
+        "normalidad_ok": false
+      }
+    }
+  },
+  "referencia_ingenuo_estacional": {
+    "MAE": 2.2030075833333327,
+    "RMSE": 2.7524616864651503,
+    "MAPE": 4.0127851798589464,
+    "sesgo_medio": -0.6205624166666664
+  },
+  "elegido_frente_a_referencia": {
+    "MAE": {
+      "elegido": 2.3761573561685854,
+      "ingenuo": 2.2030075833333327,
+      "elegido_es_mejor": false
+    },
+    "RMSE": {
+      "elegido": 2.6388430079315452,
+      "ingenuo": 2.7524616864651503,
+      "elegido_es_mejor": true
+    },
+    "MAPE": {
+      "elegido": 4.363464132841805,
+      "ingenuo": 4.0127851798589464,
+      "elegido_es_mejor": false
+    }
+  },
+  "nota_seleccion": "La selección compara solo los cuatro modelos obligatorios. El ingenuo estacional es una referencia externa a la selección: ser el mejor de los cuatro no implica superar a la referencia en todas las métricas.",
+  "criterio_seleccion": "1) Menor RMSE en la prueba 2024 (penaliza errores grandes, en puntos porcentuales). 2) El modelo elegido no debe rechazar Ljung-Box al 5 % en los rezagos 12 y 24 sobre sus residuos de entrenamiento; si el de menor RMSE la rechaza, se pasa al siguiente que la cumpla. 3) Empates (diferencia de RMSE < 0.1 pp): menor MAE y luego el modelo más simple. Si ningún modelo cumple 2), se elige por 1) y se declara la limitación.",
+  "elegido": {
+    "familia": "SARIMA",
+    "especificacion": "SARIMA(1,1,1)(0,1,1)12 + d_covid",
+    "motivo": "mejor de los 4 modelos obligatorios: menor RMSE (2.64 pp) entre los que tienen residuos sin autocorrelación significativa (Ljung-Box)",
+    "parametros_reajuste_2016_2024": {
+      "d_covid": -13.30041647641516,
+      "ar.L1": 0.7016667563860466,
+      "ma.L1": -0.9265645940415944,
+      "ma.S.L12": -0.7977262367086162,
+      "sigma2": 38.01360948863027
+    }
+  }
+}
