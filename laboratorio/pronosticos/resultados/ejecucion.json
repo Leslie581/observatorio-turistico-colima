@@ -1,8 +1,8 @@
 {
-  "comando": "python -m laboratorio.pronosticos.ejecutar",
-  "inicio_utc": "2026-11-13T06:10:08+00:00",
-  "fin_utc": "2026-11-13T06:10:42+00:00",
-  "duracion_s": 34.1,
+  "comando": "python -m laboratorio.pronosticos.ejecutar --fuente oro",
+  "inicio_utc": "2026-11-13T07:18:20+00:00",
+  "fin_utc": "2026-11-13T07:18:50+00:00",
+  "duracion_s": 29.4,
   "plataforma": "Windows-11-10.0.26200-SP0",
   "versiones": {
     "python": "3.14.3",
@@ -12,8 +12,8 @@
     "scipy": "1.18.1",
     "matplotlib": "3.11.2"
   },
-  "fuente": "referencia_contrato_s7",
+  "fuente": "oro",
   "sha256_bronce_base70": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
-  "sha256_oro": null,
+  "sha256_oro": "135a056fac24e63d3998d7c815cd5a1f3f8b95d559a926ad6286b447d1138f9c",
   "version_contrato": "1.0.0"
 }

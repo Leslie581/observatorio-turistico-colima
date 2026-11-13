@@ -28,7 +28,7 @@ import pytest
 _FALTAN = [m for m in ("statsmodels", "scipy") if importlib.util.find_spec(m) is None]
 if _FALTAN:
     _MOTIVO = (f"PRUEBAS DE PRONÓSTICOS NO EJECUTADAS: faltan {', '.join(_FALTAN)} "
-               "(laboratorio/pronosticos/requirements-pronosticos.txt)")
+               "(instalar requirements-lab.txt)")
     if os.environ.get("TDL_EXIGIR_PRONOSTICOS") == "1":
         raise ImportError(_MOTIVO + " y TDL_EXIGIR_PRONOSTICOS=1 exige ejecutarlas")
     pytest.skip(_MOTIVO, allow_module_level=True)

@@ -1,8 +1,8 @@
 # Pronóstico de la ocupación hotelera de Manzanillo · E1
 
 Responsable: Eimy Melissa Urbina Meza (integrante B) · Rama `e1/eimy-pronosticos` · Contrato de datos 1.0.0.
-Estado: **borrador para revisión de la Quality Lead (Leslie Valadez Macías)**. Resultados obtenidos con la **derivación de referencia del contrato §7**, porque la capa oro todavía no existe. La evaluación definitiva se repite con `--fuente oro` cuando el oro esté integrado (ver §6).
-Código y comandos: [`laboratorio/pronosticos/`](../../laboratorio/pronosticos/README.md). Todas las cifras de este documento salen de `laboratorio/pronosticos/resultados/` (ejecución del 2026-11-13 06:10 UTC, 34.1 s).
+Estado: **evaluación definitiva con la capa oro** (`data/oro/manzanillo_ocupacion_mensual.csv`, integrada en `main` por el PR #8), pendiente de la revisión recíproca de la integrante A. El oro se validó contra la derivación de referencia del contrato §7 antes de evaluar (§7).
+Código y comandos: [`laboratorio/pronosticos/`](../../laboratorio/pronosticos/README.md). Todas las cifras de este documento salen de `laboratorio/pronosticos/resultados/`, ejecución `python -m laboratorio.pronosticos.ejecutar --fuente oro` del 2026-11-13 07:18 UTC (29.4 s; `ejecucion.json`: `fuente = "oro"`, SHA-256 del oro `135a056f…`).
 
 > **Aviso de interpretación.** Los valores de 2024 que aparecen como "pronóstico" son una **proyección retrospectiva**: modelos entrenados solo con 2016–2023 y comparados contra el dato observado de 2024. Los valores de 2025 son una **proyección futura**: no existe dato observado en la base usada (Base70 termina en 2024-12). Ninguna predicción se presenta como dato.
 
@@ -119,22 +119,27 @@ El residuo de 2017-04 coincide con la Semana Santa en abril (en 2016 cayó en ma
 **Por qué los intervalos son tan anchos (semiancho de 12 a 23 pp):** la varianza del modelo se estima con un entrenamiento que incluye COVID, y la cobertura de 12/12 en 2024 muestra que, para años normales, los intervalos son **conservadores**. Es preferible a intervalos estrechos que fallen, pero limita su uso operativo.
 
 ## 7. Integración con la capa oro
-- `datos.cargar_serie("auto")` usa el oro en cuanto existe `data/oro/manzanillo_ocupacion_mensual.csv` (o `pipeline.interfaz.cargar_oro_mensual`), valida las 20 columnas del contrato, las 108 filas, el orden, la ausencia de huecos, el rango 0–100 y `version_contrato = 1.0.0`, y **compara el oro con la derivación §7** columna por columna (`ocupacion_pct`, las tres variables D7, `d_covid`, `d_oferta_2017`; tolerancia 1e-5). Si no coinciden, se detiene.
-- **Pendiente:** cuando Leslie integre el oro, ejecutar `python -m laboratorio.pronosticos.ejecutar --fuente oro` y comprobar en `ejecucion.json` que `fuente = "oro"`. Solo entonces estos resultados son definitivos. Mientras tanto, `fuente = "referencia_contrato_s7"`.
-- Este laboratorio no modifica `pipeline/`, `extractores/`, `data/bronce/` ni archivos de la integrante A. La derivación §7 lee bronce solo porque el contrato la prescribe como sustituto temporal del oro.
+- `datos.cargar_serie("oro")` lee el oro con `pipeline.interfaz.cargar_oro_mensual` (que valida el esquema `pandera`, los 108 meses y la fórmula) y **lo compara con la derivación §7** en 12 columnas: `ocupacion_pct`, los cinco conteos, `pct_cuartos_no_residentes`, `llegadas_turistas`, `turistas_noche`, las dos variables D7 restantes, `d_covid` y `d_oferta_2017`. La tolerancia es 1e-5. Si no coinciden, se detiene.
+- **Resultado de la validación definitiva (2026-11-13):**
+  - El oro coincide con la referencia. Diferencia máxima: 5.0e-7, por el redondeo a 6 decimales del oro; los conteos son idénticos.
+  - 108 meses; partición de 96 + 12 idéntica con `pipeline.interfaz.partir_entrenamiento_prueba` y con `datos.partir`.
+  - Sin fuga: con 2024 alterado en una copia del oro, la proyección de 2024 de los cuatro modelos no cambia; `d_covid` vale 0 en todo el horizonte; el laboratorio no usa `diag_atipico_iqr`.
+  - Dos ejecuciones con el oro dan tablas idénticas byte a byte.
+- **Cambios frente a la evaluación con la derivación §7.** Los mismos modelos, especificaciones, parámetros a 4 decimales y conclusiones de las pruebas de residuos. Diferencia máxima en MAE, RMSE o MAPE: **SES 0, Holt 8.4e-5, SARIMA 3.4e-5 y Holt-Winters 4.8e-3** (por ejemplo, su RMSE pasa de 5.268 a 5.271). **Causa:** el oro redondea los cocientes a 6 decimales (diferencias ≤ 5.0e-7 en la serie) y el ajuste de Holt-Winters, que está en la frontera de sus parámetros (§3), amplifica esa diferencia en el optimizador. Todas las cifras de este documento, redondeadas a 2 decimales, no cambian.
+- Este laboratorio no modifica `pipeline/`, `extractores/`, `data/bronce/` ni archivos de la integrante A. La derivación §7 se conserva solo como cotejo independiente del oro.
 
 ## 8. Reproducibilidad y pruebas
 - Python 3.14.3, pandas 3.0.5, numpy 2.5.3, statsmodels 0.15.0, scipy 1.18.1, matplotlib 3.11.2 (Windows 11).
 - **Reproducibilidad:** dos ejecuciones consecutivas producen tablas y `resumen.json` idénticos byte a byte. El único componente aleatorio es el intervalo de Holt-Winters ETS(A,A,M): statsmodels lo calcula por simulación porque no tiene fórmula analítica con estacionalidad multiplicativa. Se fijaron una semilla (`SEMILLA_SIMULACION = 20261113`) y 5,000 repeticiones. Las métricas, las medias y las coberturas no dependen de esa simulación.
-- `tests/test_laboratorio_pronosticos.py`: 25 pruebas (21 con series **simuladas**, declaradas como tales, y 4 con datos reales marcadas `datos`). Incluyen las de ausencia de fuga y de construcción de `d_covid` (§3) y la de reproducibilidad de intervalos simulados. Suite completa local: ver la sección de pruebas del commit.
+- `tests/test_laboratorio_pronosticos.py`: 25 pruebas (21 con series **simuladas**, declaradas como tales, y 4 con datos reales marcadas `datos`). Incluyen las de ausencia de fuga y de construcción de `d_covid` (§3) y la de reproducibilidad de intervalos simulados. Una de las pruebas con datos reales construye un oro **simulado** válido contra el esquema completo y comprueba que la interfaz lo acepta y que el cotejo detecta una alteración coherente. Suite completa local: ver la sección de pruebas del commit.
 
-### Dependencias y CI: pendiente de integración (integrante A)
-- `statsmodels`, `scipy` y `matplotlib` **todavía no están en el entorno general** (`requirements.txt`, que administra la integrante A, y que este laboratorio no modifica). Versiones probadas: `laboratorio/pronosticos/requirements-pronosticos.txt`.
-- **Comportamiento actual sin esas dependencias:** el módulo de pruebas se omite con el motivo explícito `PRUEBAS DE PRONÓSTICOS NO EJECUTADAS: faltan statsmodels, scipy`, visible con `pytest -rs`, como se ejecuta en el workflow. Se comprobó en un entorno instalado solo con `requirements.txt`: 91 aprobadas y 3 omitidas, una de ellas este módulo. **Una omisión no es una ejecución:** mientras aparezca ese motivo, las pruebas de pronósticos no cuentan como verificadas en CI.
-- **Para que se ejecuten realmente en CI, sin omisiones:** (1) agregar las tres dependencias a `requirements.in`/`requirements.txt`; (2) en el workflow de CI de E1 (`ci.yml`, a cargo de la integrante A), fijar `TDL_EXIGIR_PRONOSTICOS=1`. Con esa variable, la falta de dependencias produce un **error**, no una omisión (comprobado localmente). No se hace fallar con la sola variable `CI` porque `captura-diaria.yml` ejecuta pytest antes de capturar, y una falla por dependencias detendría la captura diaria.
-- Ni `requirements.txt` ni los workflows se modificaron en esta rama.
+### Dependencias y CI (integradas por la integrante A en el PR #8)
+- `statsmodels`, `scipy` y `matplotlib` están fijadas en **`requirements-lab.txt`** (integrante A), con las mismas versiones con las que se desarrolló el laboratorio. Se retiró `laboratorio/pronosticos/requirements-pronosticos.txt` para dejar una sola fuente (observación O4 de la Auditoría 3).
+- **`ci.yml`** instala `requirements.txt`, `requirements-lab.txt` y `requirements-dev.txt` y fija `TDL_EXIGIR_PRONOSTICOS=1`. Con esa variable, la falta de dependencias es un **error**, no una omisión, así que en CI las pruebas de pronósticos **se ejecutan o el trabajo falla**. Hay que confirmarlo en la ejecución de Actions del PR: no debe aparecer el motivo "PRUEBAS DE PRONÓSTICOS NO EJECUTADAS".
+- **`captura-diaria.yml`** instala solo `requirements.txt` a propósito (las dependencias del laboratorio no deben poder detener la captura). Allí el módulo se omite con su motivo explícito, visible con `-rs`, y esa omisión **no cuenta** como ejecución. Comprobado en un entorno instalado solo con `requirements.txt`.
+- Ni `requirements*.txt` ni los workflows se modificaron en esta rama.
 
 ## 9. Pendientes y fuera de alcance
-- Re-ejecución con el oro (§7) y revisión recíproca de la integrante A.
+- Revisión recíproca de la integrante A sobre el PR de esta rama, y confirmación en Actions de que las pruebas de pronósticos se ejecutan en CI.
 - Página del pronóstico en `tablero/` (plan de trabajo) y comparación min-max frente a z-score (depende de `pipeline/transformaciones.py`, aún no publicado).
 - Mejoras posibles, no implementadas: validación con origen móvil, indicador de Semana Santa, intervalos por bootstrap de residuos y comparación entrenando desde 2021-07.

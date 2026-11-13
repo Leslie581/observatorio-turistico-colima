@@ -5,17 +5,16 @@ Responsable: Eimy Melissa Urbina Meza (integrante B). Metodología y resultados:
 ## Ejecutar
 ```bash
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt -r laboratorio/pronosticos/requirements-pronosticos.txt
-.venv/Scripts/python -m laboratorio.pronosticos.ejecutar                 # oro si existe; si no, derivación §7
+.venv/Scripts/python -m pip install -r requirements.txt -r requirements-lab.txt
 .venv/Scripts/python -m laboratorio.pronosticos.ejecutar --fuente oro    # evaluación definitiva (exige el oro)
-.venv/Scripts/python -m pytest tests/test_laboratorio_pronosticos.py -q
+TDL_EXIGIR_PRONOSTICOS=1 .venv/Scripts/python -m pytest tests/test_laboratorio_pronosticos.py -q
 ```
 La ejecución dura entre 30 y 45 s (búsqueda de 72 SARIMA). Es reproducible: lo único simulado es el intervalo de Holt-Winters con estacionalidad multiplicativa, con semilla fija (`modelos.SEMILLA_SIMULACION`).
 
-**Dependencias:** `statsmodels`, `scipy` y `matplotlib` aún no están en `requirements.txt` (integrante A). Sin ellas, las pruebas se omiten con el motivo `PRUEBAS DE PRONÓSTICOS NO EJECUTADAS`. Con `TDL_EXIGIR_PRONOSTICOS=1`, su falta es un error, que es como debe correr el CI de E1. Detalle: `docs/E1/pronostico.md` §8.
+**Dependencias:** `statsmodels`, `scipy` y `matplotlib` están en `requirements-lab.txt` (lo administra la integrante A). Sin ellas, las pruebas se omiten con el motivo `PRUEBAS DE PRONÓSTICOS NO EJECUTADAS` (así ocurre, a propósito, en `captura-diaria.yml`). Con `TDL_EXIGIR_PRONOSTICOS=1`, su falta es un error, y así corre `ci.yml`. Detalle: `docs/E1/pronostico.md` §8.
 
 ## Fuente de datos
-`datos.cargar_serie("auto")` lee `data/oro/manzanillo_ocupacion_mensual.csv` si existe (con `pipeline.interfaz.cargar_oro_mensual` cuando la integrante A lo publique), valida el esquema del contrato 1.0.0 y **compara el oro con la derivación de referencia del contrato §7** (tolerancia 1e-5). Si no coinciden, la ejecución se detiene. Sin oro, usa la derivación §7. `resultados/ejecucion.json` registra qué fuente se usó, las huellas SHA-256 y las versiones.
+`datos.cargar_serie("oro")` lee `data/oro/manzanillo_ocupacion_mensual.csv` con `pipeline.interfaz.cargar_oro_mensual` (esquema del contrato 1.0.0) y **lo compara con la derivación de referencia del contrato §7** en 12 columnas (tolerancia 1e-5). Si no coinciden, la ejecución se detiene. Con `"auto"`, la opción por defecto, usa el oro si existe y, si no, la derivación §7. `resultados/ejecucion.json` registra qué fuente se usó, las huellas SHA-256 y las versiones.
 
 ## Módulos
 | Archivo | Contenido |
