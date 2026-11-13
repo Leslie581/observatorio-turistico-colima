@@ -44,6 +44,18 @@ Todas están en `tests/test_pipeline_transformaciones.py` (series sintéticas, d
 - Con el oro real, los parámetros tienen n = 96 y `ajustado_hasta = 2023-12`.
 - Se comprobó que el candado es el que detecta la fuga: al desactivarlo a propósito en una copia, fallaron 6 pruebas; luego se restauró el archivo original.
 
-## 6. Pendiente
-- **Reducción de dimensionalidad** (el tercer elemento de ese criterio de la rúbrica): no está implementada; las variables adicionales del oro son provisionales (contrato D7).
-- La comparación min-max frente a z-score «con análisis comparativo» sobre un modelo la hace el laboratorio.
+## 6. Reducción de datos: qué exige E1 y qué hay
+**Requisito (PDF del Proyecto Integrador, pág. 15, Ingeniería de Datos; rúbrica, pág. 24: «Normalización, discretización y reducción», 15 puntos, «las tres aplicadas con análisis comparativo»):** «Reducción de datos: muestreo, agregación o selección de variables, con el porcentaje de reducción logrado y lo que se pierde». **E1 no exige una técnica de reducción de dimensionalidad como PCA**; los componentes principales y MANOVA aparecen como contenido de **E2** (págs. 5 y 12 del PDF). Por eso no se implementó PCA: con una sola variable objetivo y variables adicionales aún provisionales (contrato D7) no habría una justificación estadística, y adelantar E2 sería trabajo sin propósito.
+
+**Lo que cubre el proyecto (agregación y selección de variables), con cifras verificadas sobre la plata real (2026-11-13):**
+| Reducción | Antes | Después | Porcentaje | Lo que se pierde |
+|---|---|---|---|---|
+| Agregación categoría × mes a mes (Manzanillo), contrato §6 | 453 filas | 108 | **−76.2 %** | El detalle por categoría de estrellas. Esas 453 filas incluyen 21 de 1 estrella que se excluyen; las 432 filas de 2 a 5 estrellas pasan a 108 (−75.0 %) |
+| Desde todo Base70 (plata) | 31,145 filas (31,147 leídas) | 108 | **−99.65 %** | Los demás destinos y categorías (alcance del proyecto: Manzanillo) |
+
+La selección de variables del oro (el objetivo, sus componentes y tres variables adicionales **provisionales**, decisión D7) y la exclusión de columnas constantes de DENUE están descritas en [`contrato_datos.md`](contrato_datos.md) §4 y §6. Este documento **no** añade un reporte automático del porcentaje: las cifras de arriba son una medición puntual. **Pendiente de confirmar** si basta con esta evidencia o si el pipeline debe imprimir esos porcentajes en cada corrida.
+
+## 7. Pendientes
+- **Jerarquías conceptuales** (el PDF las nombra junto a la discretización, por ejemplo colonia → municipio → estado): el contrato §6 las diseña para DENUE y la plata conserva `colonia`, `localidad` y `municipio_clave`, pero **no hay una tabla de jerarquía materializada en el oro**. Cobertura parcial; pendiente de decidir si se materializa.
+- **Comparación min-max frente a z-score «con análisis comparativo»** sobre un modelo: no la hace este módulo. [`pronostico.md`](pronostico.md) (integrante B) la lista como pendiente y dependiente de `pipeline/transformaciones.py`, que ya está disponible tras esta rama. Sin esa comparación, el criterio de la rúbrica no queda completo.
+- El PDF (pág. 16) lista como tema de estudio la discretización «por ancho, por frecuencia y supervisada». Aquí se implementaron las dos primeras; la supervisada no.
