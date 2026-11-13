@@ -11,3 +11,11 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-09,,,,codigo,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Configuracion y depuracion de GitHub Actions,65
 2026-11-09,,,,pruebas,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Revision de pruebas y ejecucion exitosa,20
 2026-11-09,,,,revision,[DEFINITIVO][ESTIMADO RETROSPECTIVO] Auditoria interna posterior a la fusion del PR #1 sobre los 7 archivos de la integrante B,30
+2026-11-13,,,,planeacion,[ESTIMADO RETROSPECTIVO] Lectura de los requisitos de E1 en el PDF y matriz de requisitos,25
+2026-11-13,,,,codigo,[ESTIMADO RETROSPECTIVO] Diagnostico de Base70 y DENUE con datos reales,30
+2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] Contrato de datos 1.0.0 y su revision r1,40
+2026-11-13,,,,revision,[ESTIMADO RETROSPECTIVO] Revision de las tres observaciones de Eimy sin fusionar su rama,15
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Plata de Base70 y DENUE, reglas R-D01 a R-E06 y cuarentena",45
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Capa oro, diccionario, interfaz, orquestador y validacion contra derivacion independiente",30
+2026-11-13,,,,pruebas,"[ESTIMADO RETROSPECTIVO] Pruebas del pipeline, de la interfaz, de la reproducibilidad y de ci.yml",35
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Dependencias fijadas, ruff.toml, ci.yml y revision de wrapt",20

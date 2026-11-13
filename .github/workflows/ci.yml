@@ -1,9 +1,8 @@
 name: ci
 
 # Integración continua de E1: linter, pruebas y puerta de calidad de datos en cada push y pull request.
-# ESTADO: PREPARADO, SIN EJECUTAR EN GITHUB. Nada de lo que hace este flujo se da por probado hasta que
-# exista una ejecución real (enlace en docs/E1/ENTREGA.md). Es independiente de captura-diaria.yml, que NO
-# instala las dependencias opcionales del laboratorio y no debe fallar por ellas.
+# Es independiente de captura-diaria.yml, que NO instala las dependencias opcionales del laboratorio y no debe fallar por
+# ellas. El historial de ejecuciones reales está en la pestaña Actions; los resultados de E1 se documentan en docs/E1/pipeline.md.
 on:
   push:
   pull_request:
@@ -21,9 +20,9 @@ jobs:
     timeout-minutes: 20
     env:
       PYTHONUNBUFFERED: "1"
-      # Con esta variable las pruebas del laboratorio de pronósticos FALLAN si faltan statsmodels o scipy
-      # (en vez de omitirse en silencio). Surte efecto cuando la rama e1/eimy-pronosticos esté integrada;
-      # hoy no hay pruebas de pronósticos en main, así que no cambia nada todavía.
+      # Con esta variable las pruebas del laboratorio (tests/test_laboratorio_*.py y tests/test_exploracion.py) FALLAN si
+      # faltan statsmodels, scipy o matplotlib, en vez de omitirse en silencio. Solo este flujo las exige; la captura diaria
+      # no instala esas librerías y por eso omite esas pruebas.
       TDL_EXIGIR_PRONOSTICOS: "1"
     defaults:
       run:
@@ -50,6 +49,11 @@ jobs:
       # La puerta de datos: bronce -> plata -> oro con cuarentena. Sale con código 2 si no hay salida confiable.
       - name: Puerta de calidad de datos (pipeline bronce, plata y oro)
         run: python -m pipeline.ejecutar
+
+      # Tras regenerar el oro, debe coincidir con el versionado (git show HEAD:...). Se excluyen los campos de hora de los
+      # .meta.json y la oferta DENUE, que cambia con cada captura diaria (detalle en pipeline/verificar_oro.py).
+      - name: El oro regenerado coincide con el oro versionado
+        run: python -m pipeline.verificar_oro
 
       - name: Verificador de E0 (histórico, integridad y privacidad)
         run: python -m pipeline.verificar_e0 --solo historico --solo integridad --solo privacidad --exigir-datos

@@ -1,0 +1,64 @@
+{
+  "anio_mas_alto": {
+    "anio": 2023,
+    "media": 55.34591716666667
+  },
+  "anio_mas_bajo": {
+    "anio": 2020,
+    "media": 23.331784666666668
+  },
+  "atipicos_iqr": [
+    "2020-04",
+    "2020-05",
+    "2020-06"
+  ],
+  "avisos": [
+    "Descriptivo: no se explican causas.",
+    "Las pruebas de estacionariedad, ACF/PACF y los pronósticos son de laboratorio/pronosticos."
+  ],
+  "covid": {
+    "fin": "2021-06",
+    "inicio": "2020-03",
+    "media_covid": 25.547141375000002,
+    "media_resto": 49.39263536956522,
+    "n_meses": 16
+  },
+  "estacionalidad_sin_covid": {
+    "amplitud_pp": 23.245368999999997,
+    "mes_mas_alto": {
+      "media": 58.862252999999995,
+      "mes": "Jul"
+    },
+    "mes_mas_bajo": {
+      "media": 35.616884,
+      "mes": "Sep"
+    }
+  },
+  "figuras": [
+    "01_serie_mensual_ocupacion.png",
+    "02_boxplot_ocupacion_por_mes.png",
+    "03_mapa_calor_anio_mes.png",
+    "04_curvas_mensuales_por_anio.png"
+  ],
+  "fuente": "data/oro/manzanillo_ocupacion_mensual.csv",
+  "maximo": {
+    "periodo": "2017-04",
+    "valor": 66.339892
+  },
+  "minimo": {
+    "periodo": "2020-04",
+    "valor": 1.459077
+  },
+  "oferta_diaria_implicita": {
+    "cambio_2017_06_pct": 30.53514882837238,
+    "cambio_2017_11_pct": 16.973604332094894,
+    "nota": "cuartos_disponibles / dias del mes, 2 a 5 estrellas; es oferta medida por el reporte, no causa"
+  },
+  "periodo": [
+    "2016-01",
+    "2024-12",
+    108
+  ],
+  "sha256_bronce": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671",
+  "version_contrato": "1.0.0"
+}
