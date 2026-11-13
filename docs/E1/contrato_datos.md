@@ -1,10 +1,10 @@
 # Contrato de datos E1 · bronce → plata → oro
 
 Versión del contrato: **1.0.0 (fijada el 2026-11-13)** · 2026-11-13 · Rama `e1/leslie-contrato-datos` · Responsable: Leslie Valadez Macías (integrante A, datos). Consumidora principal: Eimy Melissa Urbina Meza (integrante B, pronósticos).
-**Estado: fijado (1.0.0).** Lo descrito en §1 y en las verificaciones de §1.1 se **midió sobre los archivos reales** de `data/bronce/` el 2026-11-13; lo de §2 a §7 es **diseño aprobado**, todavía no implementado (el pipeline se escribe en esta rama contra este contrato). Decisiones tomadas (D1 a D7, con sus condiciones) y riesgos abiertos: §8. Los cambios incompatibles se acuerdan antes de implementarse (§7).
+**Estado: fijado (1.0.0).** Lo descrito en §1 y en las verificaciones de §1.1 se **midió sobre los archivos reales** de `data/bronce/` el 2026-11-13; lo de §2 a §7 es el diseño aprobado, **implementado en `pipeline/`** (rama `e1/leslie-pipeline`, 2026-11-13). Decisiones tomadas (D1 a D7, con sus condiciones) y riesgos abiertos: §8. Correcciones posteriores a la primera fijación: §9. Los cambios incompatibles se acuerdan antes de implementarse (§7).
 
 ## 0. Para Eimy: lo mínimo para empezar
-**Qué leer:** un solo archivo, `data/oro/manzanillo_ocupacion_mensual.csv` (todavía por generar; hasta entonces usa la derivación de §7, que da exactamente la misma serie). **No leas bronce ni plata.**
+**Qué leer:** un solo archivo, `data/oro/manzanillo_ocupacion_mensual.csv` (se genera con `python -m pipeline.ejecutar`; la derivación de §7 da la misma serie con diferencias menores de 1e-6, por el redondeo a 6 decimales). **No leas bronce ni plata.**
 **Esquema exacto** (columnas en este orden, CSV UTF-8, `,`, finales de línea LF, 108 filas, `periodo` ascendente y sin huecos, números con 6 decimales):
 `periodo`, `fecha_inicio`, `ocupacion_pct`, `cuartos_disponibles`, `cuartos_ocupados`, `cuartos_ocupados_residentes`, `cuartos_ocupados_no_residentes`, `pct_cuartos_no_residentes`, `llegadas_turistas`, `turistas_noche`, `estadia_promedio`, `densidad_ocupacion`, `d_covid`, `d_oferta_2017`, `diag_atipico_iqr`, `categorias_incluidas`, `n_categorias_fuente`, `sha256_bronce`, `ejecucion`, `version_contrato`.
 **Variable objetivo (fórmula exacta):** para cada mes y las categorías `2 estrellas`, `3 estrellas`, `4 estrellas` y `5 estrellas` de Manzanillo,
@@ -13,7 +13,7 @@ Es un cociente de sumas (cuartos-noche), **no** un promedio de porcentajes por c
 **Partición temporal:** entrenamiento `2016-01` a `2023-12` (**96 meses**); prueba `2024-01` a `2024-12` (**12 meses**). Nada de 2024 se usa para ajustar, normalizar ni elegir parámetros.
 **Quiebres que debes señalar, no borrar:** `d_oferta_2017` (1 desde 2017-06) y `d_covid` (1 de 2020-03 a 2021-06). Los valores extremos de 2020-04 a 2020-06 son reales: no se eliminan.
 **Variables adicionales:** `pct_cuartos_no_residentes`, `estadia_promedio` y `densidad_ocupacion` son **exploratorias**. No son regresores por defecto (riesgo de correlación mecánica y de disponibilidad, §4.1). Para ARIMA/SARIMA con exógenas solo se permiten **rezagadas** y justificadas.
-**Interfaz prevista** (`pipeline/interfaz.py`, la implementa Leslie): `cargar_oro_mensual(ruta=None)`, `serie_objetivo(df=None)`, `partir_entrenamiento_prueba(serie, h=12)`. Tu código vive en `laboratorio/pronosticos/` y tus pruebas en `tests/test_laboratorio_*.py`.
+**Interfaz** (`pipeline/interfaz.py`, implementada en la rama `e1/leslie-pipeline`; `cargar_oro_mensual` valida el archivo antes de entregarlo): `cargar_oro_mensual(ruta=None)`, `serie_objetivo(df=None)`, `partir_entrenamiento_prueba(serie, h=12)`. Tu código vive en `laboratorio/pronosticos/` y tus pruebas en `tests/test_laboratorio_*.py`.
 **Si algo no cuadra con el contrato**, avisa antes de adaptarlo por tu cuenta: se corrige aquí con un incremento de versión.
 
 ## 1. Diagnóstico de las fuentes reales
@@ -26,11 +26,11 @@ Es un cociente de sumas (cuartos-noche), **no** un promedio de porcentajes por c
 | Identificador de destino | No hay código: el destino es el **texto** `centro` (64 valores). `Manzanillo` aparece con una sola grafía, tipo `Centros de Playa` / subtipo `Tradicionales` |
 | Periodicidad y cobertura | Mensual, 2016-01 a 2024-12. **Manzanillo: 108 periodos, sin huecos y sin duplicados** `(anio, mes, categoria)`; 453 filas |
 | Categorías de Manzanillo | `2`, `3`, `4` y `5 estrellas`: 108 meses cada una. **`1 estrella`: solo 21 meses (2016-01 a 2017-09)** y desaparece: la composición del total cambia en 2017-10 |
-| Unidades | Los `cuartos_*` son **totales mensuales en cuartos-noche**; `llegada_*` son personas; `turistas_noche_*` son personas-noche. Se ve en que la oferta diaria implícita (`cuartos_disponibles` / días del mes) es estable (≈ 3,551 cuartos al día en 2016-01) |
+| Unidades | Los `cuartos_*` son **totales mensuales en cuartos-noche**; `llegada_*` son personas; `turistas_noche_*` son personas-noche. Se ve en que la oferta diaria implícita (`cuartos_disponibles` / días del mes) es del orden de 3,373 cuartos al día en 2016-01 con 2 a 5 estrellas (3,551 con las 5 categorías) |
 | Faltantes (todo el archivo) | **1 celda vacía** de 31,147 × 7: `turistas_noche_residentes` de Mexicali, 5 estrellas, 2020-03. **El Fuerte** no tiene los 12 meses de 2024 (96 periodos). 4 centros incluyen la categoría `Sin categoría`. **Manzanillo: sin faltantes** |
 | Rangos y anomalías | 0 negativos. **2 filas con ocupados > disponibles**, ambas de Ciudad Juárez, 2 estrellas: 2021-07 y 2022-06. Manzanillo: 0 |
 | Variable objetivo | `ocupacion_pct` = 100 × (ocupados residentes + no residentes) / disponibles, agregando categorías. Con **2 a 5 estrellas**: media 45.86, mín. 1.46 (2020-04), máx. 66.34 |
-| Quiebres visibles | **Oferta:** +29.6 % en 2017-06 y +17.0 % en 2017-11 (cambio de marco, no crecimiento). **COVID:** 2020-03 a 2021-06, ocupación media 25.5 % frente a 49.1 % en el resto. Atípicos por IQR: 2020-04, 2020-05 y 2020-06 (eventos reales, no errores) |
+| Quiebres visibles (**2 a 5 estrellas**) | **Oferta diaria implícita:** +30.5 % en 2017-06 y +17.0 % en 2017-11 (cambio de marco, no crecimiento; en el total mensual de cuartos-noche son +26.3 % y +13.2 %). **COVID:** 2020-03 a 2021-06, ocupación media 25.55 % frente a 49.39 % en el resto. Atípicos por IQR: 2020-04, 2020-05 y 2020-06 (eventos reales, no errores) |
 | Viabilidad para pronóstico | **Sí.** 108 meses útiles (supera los 36 exigidos). Series homogéneas más cortas: 2018-01 a 2024-12 (84 meses) y 2021-07 a 2024-12 (42 meses) |
 
 ### 1.1b Verificación de la variable objetivo (2026-11-13)
@@ -103,7 +103,7 @@ Herramienta propuesta: **pandera** (pendiente de instalar; ver riesgos). Cada re
 **Atípicos.** Método: IQR 1.5 sobre `ocupacion_pct`. Decisión: **marcar, no corregir ni eliminar**, 2020-04 a 2020-06 (COVID, evento real); filas con ocupados > disponibles: **cuarentena** (error de captura).
 
 ## 3. Cuarentena
-- Ubicación: `data/cuarentena/<fuente>/<ejecucion>/rechazados.csv` y `data/cuarentena/resumen_<ejecucion>.json`. El bronce **no se modifica nunca**.
+- Ubicación: `data/cuarentena/<fuente>/<corrida>/rechazados.csv` y `data/cuarentena/resumen_<corrida>.json`, con `fuente` = `datatur_base70` o `denue_establecimientos` y `corrida` = `e1-` más 12 caracteres del hash de las entradas (determinista). El bronce **no se modifica nunca**.
 - Cada fila rechazada conserva **todas** las columnas originales más: `regla_id`, `motivo_rechazo` (texto legible), `fila_origen`, `archivo_bronce`, `sha256_bronce`, `fecha_proceso_utc`. Los lotes rechazados completos (R-D01, R-E02, R-E05) dejan solo el resumen y el motivo.
 - El resumen JSON cuenta, por regla: registros leídos, aceptados y rechazados. Es la evidencia que muestra “cuántos registros rechazó y por qué”. **Ningún registro se borra en silencio**: lo leído = aceptado + rechazado + marcado.
 
@@ -121,19 +121,23 @@ Una fila por mes, **108 filas esperadas**, ordenadas por `periodo` ascendente, s
 | `estadia_promedio` | decimal | `turistas_noche` / `llegadas_turistas` (noches) |
 | `densidad_ocupacion` | decimal | `turistas_noche` / `cuartos_ocupados` (personas por cuarto) |
 | `d_covid` | 0/1 | 1 de 2020-03 a 2021-06 (regla de calendario, conocida de antemano) |
-| `d_oferta_2017` | 0/1 | 1 desde 2017-06 (salto de la oferta; calendario) |
+| `d_oferta_2017` | 0/1 | 1 desde 2017-06 (primer salto de la oferta; calendario). El segundo salto (2017-11) **no** tiene columna en 1.0.0; ver la nota de abajo |
 | `diag_atipico_iqr` | 0/1 | **solo diagnóstico**: se calcula con toda la serie, **no usar como regresor** |
 | `categorias_incluidas`, `n_categorias_fuente` | texto, entero | `2-5 estrellas` y 4 |
 | `sha256_bronce`, `ejecucion`, `version_contrato` | texto | procedencia y versión |
 
 Además: `data/oro/manzanillo_ocupacion_mensual.meta.json` (filas, periodo mínimo y máximo, hash de bronce, versión del contrato, fecha de proceso) y `data/oro/diccionario_datos.csv` (columna, tipo, unidad, definición, fuente, regla de cálculo), que es el diccionario exigido por la rúbrica.
+**Segundo salto de oferta (2017-11, +17.0 %).** No hay un indicador específico en 1.0.0. Verificado con 2 a 5 estrellas: la ocupación, que es un cociente, **no muestra un cambio de nivel** en esas fechas (media 2017-06 a 2017-10: 48.5 % frente a 47.6 % en los mismos meses de 2016; 2017-11 a 2018-03: 51.9 % frente a 52.1 %), así que no afecta a los modelos de ocupación. La regla de calendario `periodo >= 2017-11` la puede derivar cualquier consumidor (por ejemplo, para analizar la oferta absoluta, que sí está en `cuartos_disponibles`). Si se necesita como columna del oro, será un cambio de esquema (1.1.0) y no se hace ahora para no invalidar el laboratorio, validado contra 1.0.0.
+
 **Variables adicionales (D7, aceptadas provisionalmente).** Todas existen o se derivan de columnas reales; ninguna tiene nulos ni denominadores cero en los 108 meses. **Ninguna es regresor predictivo por defecto.**
-| Variable | Fórmula | Unidad | Rango observado | Disponibilidad y riesgos |
+| Variable | Fórmula | Unidad | Rango observado (108 meses, descriptivo) | Disponibilidad y riesgos |
 |---|---|---|---|---|
-| `pct_cuartos_no_residentes` | 100 × `cuartos_ocupados_no_residentes` / `cuartos_ocupados` | % | 0.38 – 16.24 | Comparte numerador y denominador con el objetivo (`ocupacion_pct` = componente residente + no residente sobre los mismos disponibles). Correlación contemporánea con el objetivo 0.216, pero **0.006 sin los meses de COVID**: el vínculo lo genera la pandemia |
-| `estadia_promedio` | `turistas_noche` / `llegadas_turistas` | noches | 1.68 – 3.04 | Se publica en el mismo reporte y mes que el objetivo, así que **no se conoce antes** de él. Correlación con el objetivo 0.161 |
-| `densidad_ocupacion` | `turistas_noche` / `cuartos_ocupados` | personas por cuarto | 1.41 – 3.00 | Tiene `cuartos_ocupados` en el denominador, el mismo numerador del objetivo: **dependencia mecánica**. Correlación 0.558 (0.355 sin COVID) |
-**Riesgos comunes.** (1) **Correlación mecánica:** el objetivo es casi idéntico a su componente residente (`cuartos_ocupados_residentes` / `cuartos_disponibles` correlaciona 0.994 con él), así que **no deben usarse como regresores los componentes del mismo mes**. (2) **Disponibilidad:** Base70 se publica con rezago (la versión usada, de julio de 2025, termina en 2024-12); el rezago mínimo operativo **no está verificado**. (3) **Uso permitido en E1:** correlación cruzada **exploratoria** (requisito de E1) y, si se justifica, regresores **rezagados**; con rezago 1 las correlaciones con el objetivo son 0.203, 0.043 y 0.321. No hay variable climática: no se capturó.
+| `pct_cuartos_no_residentes` | 100 × `cuartos_ocupados_no_residentes` / `cuartos_ocupados` | % | 0.38 – 16.24 | Comparte numerador y denominador con el objetivo (`ocupacion_pct` = componente residente + no residente sobre los mismos disponibles). Correlación contemporánea con el objetivo 0.191 (solo entrenamiento), pero **−0.022 sin los meses de COVID**: el vínculo lo genera la pandemia |
+| `estadia_promedio` | `turistas_noche` / `llegadas_turistas` | noches | 1.68 – 3.04 | Se publica en el mismo reporte y mes que el objetivo, así que **no se conoce antes** de él. Correlación con el objetivo 0.223 (solo entrenamiento; 0.111 sin COVID) |
+| `densidad_ocupacion` | `turistas_noche` / `cuartos_ocupados` | personas por cuarto | 1.41 – 3.00 | Tiene `cuartos_ocupados` en el denominador, el mismo numerador del objetivo: **dependencia mecánica**. Correlación 0.650 (solo entrenamiento; 0.516 sin COVID) |
+**Todas las correlaciones de esta tabla usan solo el entrenamiento (2016-01 a 2023-12, 96 meses)**; la versión inicial las calculaba con los 108 meses, incluida la prueba, y esas cifras no deben usarse para elegir regresores. Los rangos observados describen los 108 meses y no se usan para ajustar nada.
+
+**Riesgos comunes.** (1) **Correlación mecánica:** el objetivo es casi idéntico a su componente residente (`cuartos_ocupados_residentes` / `cuartos_disponibles` correlaciona 0.994 con él, solo entrenamiento), así que **no deben usarse como regresores los componentes del mismo mes**. (2) **Disponibilidad:** Base70 se publica con rezago (la versión usada, de julio de 2025, termina en 2024-12); el rezago mínimo operativo **no está verificado**. (3) **Uso permitido en E1:** correlación cruzada **exploratoria** (requisito de E1) y, si se justifica, regresores **rezagados**; con rezago 1 las correlaciones con el objetivo (solo entrenamiento) son 0.181, 0.102 y 0.403. No hay variable climática: no se capturó.
 
 ### 4.2 Restricciones contra fuga de información
 1. El oro **no contiene transformaciones ajustadas con toda la serie** (media, desviación, mínimos, máximos). Normalizar (min-max, z-score) se hace en el laboratorio, ajustando los parámetros **solo con el tramo de entrenamiento**.
@@ -168,11 +172,11 @@ Solo datos **públicos, agregados, pequeños y reproducibles**: `data/oro/*.csv`
 
 ## 7. Interfaz entre el módulo de datos y el estadístico
 - **Contrato de lectura:** el laboratorio de pronósticos **solo lee** `data/oro/manzanillo_ocupacion_mensual.csv` (y su `.meta.json`); no importa nada de plata ni de bronce.
-- **Módulo de interfaz** (a implementar por Leslie): `pipeline/interfaz.py` con
+- **Módulo de interfaz** (implementado): `pipeline/interfaz.py` con
   - `cargar_oro_mensual(ruta=None) -> DataFrame` indexado por `PeriodIndex` mensual (`periodo`), ordenado, con las columnas de §4.1;
   - `serie_objetivo(df=None) -> Series` (`ocupacion_pct`);
   - `partir_entrenamiento_prueba(serie, h=12) -> (entrenamiento, prueba)`.
-  Hasta que exista, la equivalencia se obtiene con esta derivación de referencia, **verificada el 2026-11-13** (devuelve 108 meses; mín. 1.46, máx. 66.34, media 45.86):
+  La derivación de referencia, útil para contrastar el oro de forma independiente y **verificada el 2026-11-13** (devuelve 108 meses; mín. 1.46, máx. 66.34, media 45.86):
 ```python
 from extractores.datatur import leer_base70
 df = leer_base70("data/bronce/datatur/Base70centros.csv")
@@ -203,3 +207,12 @@ Decisiones aprobadas por la integrante A el 2026-11-13, con las condiciones indi
 | R3 | Dependencias nuevas (`pandera`, `statsmodels`, `matplotlib`, `scipy`, `pip-audit`, `ruff`) | La resolución con `pandas 3.0.5` funciona en simulación (`pip --dry-run`); **falta comprobar que se importen** en esta máquina (el Control de aplicaciones de Windows ya bloqueó `pandas 3.1.1`) |
 | R4 | `gitleaks` es un binario externo | Verificar si puede ejecutarse localmente o solo en CI |
 | R5 | Base70 es una versión del 15-jul-2025 y puede tener revisiones retroactivas | Se verifica el hash antes de procesar |
+
+## 9. Registro de cambios
+| Fecha | Cambio | Versión del esquema |
+|---|---|---|
+| 2026-11-13 | Contrato fijado (L0), con las condiciones D1 a D7 | **1.0.0** |
+| 2026-11-13 | **Revisión de documentación r1** (L1), a partir de las tres observaciones de la integrante B, verificadas con los datos: (1) las cifras de oferta y COVID de §1.1 se habían calculado con las 5 categorías y se recalcularon con 2 a 5 estrellas; (2) se documenta que el segundo salto de oferta (2017-11) no tiene indicador y por qué no hace falta; (3) las correlaciones de §4.1 se recalcularon solo con el entrenamiento | **1.0.0** (sin cambio) |
+| 2026-11-13 | Aclaración de implementación: `ejecucion` del oro es un identificador determinista de entrada + contrato (`oro-<12 hex del hash de bronce>-v1.0.0`), no un instante; el instante va en `meta.json` | 1.0.0 (sin cambio) |
+
+**Por qué la versión del esquema sigue en 1.0.0.** La versión (`version_contrato`) identifica el **esquema, las fórmulas y las decisiones** del oro, y el laboratorio de pronósticos valida el archivo contra `1.0.0`. Las tres correcciones corrigen cifras descriptivas y aclaran reglas, sin tocar columnas, fórmulas ni decisiones, de modo que subir la versión habría invalidado sin motivo el trabajo ya validado. Un cambio de columnas, de fórmula o de una decisión (por ejemplo, un indicador `d_oferta_2017_11`) incrementará la versión (1.1.0 o 2.0.0) y se acordará antes con la integrante B.

@@ -1,0 +1,10 @@
+{
+  "archivo": "manzanillo_oferta_hospedaje.csv",
+  "atribucion": "Fuente: INEGI, Directorio Estadístico Nacional de Unidades Económicas (DENUE), API de consulta; términos de libre uso del INEGI. Agregado propio; no es un producto del INEGI.",
+  "corrida": "e1-e6c9a995c9ed",
+  "fecha_proceso_utc": "2026-11-13T06:32:24+00:00",
+  "filas": 88,
+  "nota": "contexto agregado por municipio, sin coordenadas ni CLEE; no se asigna ocupación a establecimientos",
+  "sha256_csv": "864f48f82bac426177aec411630ab1e04317f68e791779c3052b9b2b81433fad",
+  "version_contrato": "1.0.0"
+}
