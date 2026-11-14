@@ -24,7 +24,10 @@
     ],
     "meses_ajuste": 80,
     "meses_excluidos": 16,
-    "p_valor_permutacion": 0.002
+    "p_valor_en_el_limite_de_resolucion": true,
+    "p_valor_minimo_alcanzable": 0.001996,
+    "p_valor_permutacion": 0.001996,
+    "permutaciones_con_ganancia_igual_o_mayor": 0
   },
   "supervisada_todo_entrenamiento": {
     "cortes": [
@@ -42,7 +45,10 @@
     ],
     "meses_ajuste": 96,
     "meses_excluidos": 0,
-    "p_valor_permutacion": 0.002
+    "p_valor_en_el_limite_de_resolucion": true,
+    "p_valor_minimo_alcanzable": 0.001996,
+    "p_valor_permutacion": 0.001996,
+    "permutaciones_con_ganancia_igual_o_mayor": 0
   },
   "variable_discretizada": "ocupacion_pct"
 }

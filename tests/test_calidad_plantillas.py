@@ -52,7 +52,8 @@ def test_tiempos_aceptados_de_e1_por_bloque_y_suma_coherente():
     cierre = [f for f in e1 if "(cierre documental)" in f["actividad"]]
     assert (suma(l0_l1), suma(l2), suma(l3)) == (240, 150, 270)  # estimaciones aceptadas por la integrante A (2026-11-13)
     assert (len(l0_l1), len(l2), len(l3)) == (8, 5, 8)
-    assert suma(e1) == suma(l0_l1) + suma(l2) + suma(l3) + suma(cierre) >= 660  # el cierre documental se agrega despues
+    assert (len(cierre), suma(cierre)) == (7, 720)  # cierre documental: 7 actividades, estimaciones retrospectivas aceptadas por la integrante A (2026-11-13)
+    assert suma(e1) == suma(l0_l1) + suma(l2) + suma(l3) + suma(cierre) == 1380  # E1 = 240 + 150 + 270 + 720; con E0 (750): 2,130
 
 
 def test_defectos_a_usan_tipos_psp_y_no_inventan_minutos():

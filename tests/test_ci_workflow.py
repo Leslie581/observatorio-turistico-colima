@@ -217,3 +217,12 @@ def test_la_captura_diaria_conserva_solo_el_permiso_de_escritura_que_necesita():
     assert wf["permissions"] == {"contents": "write"}                                       # el bot guarda la bitácora y el bronce
     texto = CAPTURA.read_text(encoding="utf-8")
     assert texto.count("secrets.") == 1 and "secrets.INEGI_TOKEN" in texto                  # un solo secreto, el del extractor
+
+
+def test_la_accion_correctiva_de_revision_recíproca_esta_preparada_en_el_repositorio():
+    """Plantilla de PR con la lista de revisión y CODEOWNERS con las dos integrantes; la protección de `main` requiere administración."""
+    plantilla = (RAIZ / ".github" / "pull_request_template.md").read_text(encoding="utf-8")
+    for exigido in ("no** fusiona", "antes** de fusionar", "calidad/auditorias.md", "PSP", "secretos"):
+        assert exigido in plantilla, exigido
+    owners = [x for x in (RAIZ / ".github" / "CODEOWNERS").read_text(encoding="utf-8").splitlines() if x.strip() and not x.startswith("#")]
+    assert owners == ["*  @Leslie581 @eimymuz"]

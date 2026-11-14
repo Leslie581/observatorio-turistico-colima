@@ -20,8 +20,8 @@ Estados: **CUMPLE** (evidencia verificable), **PARCIAL** (existe, pero con una b
 | S5 | Residuos y comunicación (15) | CUMPLE con salvedad | Residuos no normales (intervalos aproximados); el tablero público ya sirve la versión integrada (2026-11-14 04:25 UTC) |
 | Q1 | Fiabilidad y disponibilidad (25) | PARCIAL | 3.83 de 7 días y no hay historia real recuperable ([`fiabilidad.md`](fiabilidad.md) §4.2); MTBF y A exploratorios; objetivo del 95 % no cumplido |
 | Q2 | Seguridad (15) | CUMPLE con salvedades | Respaldo con restauración probada, bloqueo con hashes y acciones por SHA: comprobados en local; CI nuevo sin ejecutar en GitHub; `main` sin protección; respaldo en el mismo equipo |
-| Q3 | Requerimientos (10) | CUMPLE | Los 7 agregados el 2026-11-14 sin revisión de B |
-| Q4 | Plan SQA (25) | CUMPLE con salvedades | Nueve PR fusionados sin revisión previa; acción correctiva y excepción de E1 no implementadas |
+| Q3 | Requerimientos (10) | CUMPLE | Los 7 agregados el 2026-11-14 los revisó técnicamente B (Auditoría 8) |
+| Q4 | Plan SQA (25) | CUMPLE con salvedades | Once PR fusionados sin revisión previa (diez hacia `main`; el #17 por error hacia la rama de integración); acción correctiva y excepción de E1 no implementadas |
 | Q5 | Integración continua (15) | PARCIAL | `main` en verde en `ac9c88d` tras 3 ejecuciones fallidas; el CI nuevo no se ejecutó en GitHub; sin protección de `main` |
 | R | Relatoría de etapa (10 en cada materia) | PARCIAL | [`relatoria-E1.md`](../relatoria-E1.md) está redactada; falta la revisión y conformidad de las dos integrantes |
 
@@ -34,7 +34,7 @@ Estados: **CUMPLE** (evidencia verificable), **PARCIAL** (existe, pero con una b
 | Repositorio con ambos integrantes | CUMPLE | Contribuyentes `Leslie581` y `eimymuz` |
 | Los tres docentes como colaboradores | DECLARADO, no verificable | La titular informó el 2026-11-13 que los tres ya tienen acceso; la API pública no lista colaboradores |
 | Issues de los docentes con etiqueta de materia | NO VERIFICABLE | Hay 0 issues públicos (2026-11-14) |
-| Relatoría ≤ 2 páginas con las seis preguntas en orden | PARCIAL | 730 palabras (≈ 1.8 páginas estimadas: ~80 líneas de 45 por página), con las seis preguntas en orden; falta la conformidad de las integrantes |
+| Relatoría ≤ 2 páginas con las seis preguntas en orden | PARCIAL | 889 palabras; exportada a PDF A4 (Edge, 11 pt, márgenes de 2 cm): **2 páginas**, la segunda con ≈ 20 % de uso, con las seis preguntas en orden; falta la conformidad de las integrantes |
 | Registros PSP individuales, uno de los dos con la revisión | PARCIAL | Véase C3 |
 | Uso de IA declarado | CUMPLE | En `ENTREGA.md` y en la relatoría |
 | Preparación de E2: ruta del experimento (no se califica) | PARCIAL | [`ruta_experimento_e2.md`](ruta_experimento_e2.md): ruta ingeniería y matriz 2³; falta la conformidad de B |

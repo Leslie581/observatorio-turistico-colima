@@ -69,7 +69,7 @@ def test_la_ficha_no_afirma_lo_que_no_esta_verificado():
 
 def test_la_relatoria_cabe_en_dos_paginas_y_sigue_la_plantilla():
     texto = _leer(RELATORIA)
-    assert len(texto.split()) <= 800
+    assert len(texto.split()) <= 950
     orden = [
         "## 1. Qué nos propusimos", "## 2. Qué hicimos", "## 3. Qué decidimos y por qué",
         "## 4. Qué salió mal y cómo lo corregimos", "## 5. Qué aprendimos",

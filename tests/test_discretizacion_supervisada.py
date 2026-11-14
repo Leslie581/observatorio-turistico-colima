@@ -170,3 +170,15 @@ def test_la_linea_de_comandos_escribe_los_dos_archivos(tmp_path, capsys):
     assert comparar.main(["--salida", str(tmp_path)]) == 0
     assert sorted(p.name for p in tmp_path.iterdir()) == ["comparacion_metodos.csv", "resumen.json"]
     assert '"p_valor_permutacion"' in capsys.readouterr().out
+
+
+def test_el_valor_p_se_reporta_como_limite_de_resolucion_y_no_como_desigualdad():
+    """(b + 1) / (B + 1) con 500 permutaciones y 0 excedencias es 1/501 ≈ 0.002: el mínimo alcanzable, no un valor exacto."""
+    _, resumen = comparar.calcular()
+    for clave in ("supervisada_sin_covid", "supervisada_todo_entrenamiento"):
+        r = resumen[clave]
+        assert r["permutaciones_con_ganancia_igual_o_mayor"] == 0
+        assert r["p_valor_permutacion"] == pytest.approx(1 / 501, abs=1e-6) == pytest.approx(r["p_valor_minimo_alcanzable"], abs=1e-6)
+        assert r["p_valor_en_el_limite_de_resolucion"] is True
+    d = comparar._valor_p(11 / 501)
+    assert d["permutaciones_con_ganancia_igual_o_mayor"] == 10 and d["p_valor_en_el_limite_de_resolucion"] is False

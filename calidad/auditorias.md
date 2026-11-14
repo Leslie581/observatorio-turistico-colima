@@ -19,6 +19,7 @@ Usar [`lista_verificacion_auditoria.md`](lista_verificacion_auditoria.md). No se
 | 5 | PR #11 `e1/leslie-calidad` (commit `809cfa3`; fusión `1712d17`) | Integrante A (`Leslie581`) | Integrante B (`eimymuz`) | **Revisión recíproca posterior a la fusión** (se pidió como previa; el PR #11 se fusionó 9 s después de abrirse, sin revisiones; el PR #12 de la integrante B, 13 s después) | 2026-11-13 | 1 mayor de proceso (recurrente: PR #8 a #12), 3 menores de documentación y 7 observaciones; **ningún defecto técnico bloqueante**; detalle en [Auditoría 5](#auditoría-5-pr-11-l3-requerimientos-fiabilidad-seguridad-y-plan-sqa-revisión-recíproca-posterior) | Pendientes | **Aprobado con correcciones menores**; la fusión ya ocurrió sin revisión previa |
 | 6 | PR #12 `e1/eimy-cierre-estadistico` (commit `c47d4e4`; fusión `c7302f8`) | Integrante B (`eimymuz`) | Integrante A (`Leslie581`) | **Revisión recíproca posterior a la fusión** (se pidió como previa; el PR #12 se fusionó 13 s después de abrirse, sin revisiones) | 2026-11-13 | 1 mayor de proceso (recurrente) y 8 observaciones; **ningún defecto técnico bloqueante**; detalle en [Auditoría 6](#auditoría-6-pr-12-cierre-estadístico-de-b-revisión-recíproca-posterior) | Pendientes | **Aprobado técnicamente con observaciones menores**; la fusión ya ocurrió sin revisión previa |
 | 7 | PR #15 `e1/eimy-tablero` (commits `80d8b5b` y `eb8f606`; fusión `ac9c88d`) | Integrante B (`eimymuz`) | Integrante A (`Leslie581`) | **Revisión recíproca posterior a la fusión** (se pidió como previa; el PR #15 se fusionó 11 s después de abrirse, sin revisiones) | 2026-11-14 (02:59 a 03:10 UTC) | 1 mayor de proceso (recurrente), 3 importantes y 5 observaciones; **ningún defecto técnico bloqueante**; detalle en [Auditoría 7](#auditoría-7-pr-15-cierre-del-tablero-de-b-revisión-recíproca-posterior) | Ver «Seguimiento de la Auditoría 7» | **Aprobado técnicamente con observaciones**; la fusión ya ocurrió sin revisión previa |
+| 8 | PR #16 `e1/cierre-documental` (commits `4242ea5` y `7f8f315`; fusión `628136b`) y el commit posterior `372a6ab` de la misma rama | Integrante A (`Leslie581`) | Integrante B (`eimymuz`) | **Mixta:** `4242ea5` revisado **antes** de la fusión, pero el dictamen no llegó al PR; `7f8f315` revisado **después** (el PR #16 se fusionó 13 s después de abrirse, con 0 revisiones); `372a6ab` revisado **antes** de integrarse | 2026-11-13 (22:33 a 22:58, hora de la Ciudad de México) | 1 mayor de proceso (D1, recurrente), 3 menores de documentación | Pendientes (de A) | Aprobado técnicamente con observaciones menores |
 
 ## Auditoría 1: PR #1, posterior a la fusión
 **Tipo:** auditoría **posterior**. El PR #1 (rama `b/validacion-usuarios-e0`, autora `eimymuz`) se fusionó el 2026-11-10 a las 05:10 **UTC** mediante `6038081`; esa fecha corresponde al horario UTC, y en México (UTC-6) todavía era el **2026-11-09 a las 23:10**. Las fechas del evento son las reales y no se modificaron. La auditoría es **posterior** a esa fusión y **sin revisión previa** (0 revisiones y 0 comentarios en GitHub). Esta revisión no se presenta como control previo a la integración.
@@ -457,3 +458,66 @@ Redactada por la autora del PR #11; **no modifica el texto de la auditora**. «C
 | O3 | **Corregido en la rama** por la integrante A, **en un archivo de B** (B debe revisarlo) | `docs/E1/tablero.md` |
 | O4 | **Abierta** (de B) | `calidad/tiempo-integrante-b.csv` |
 | Nota | Los textos «el CI de `main` está en rojo» de la respuesta a la Auditoría 5 y de las Auditorías 5 y 6 eran verdaderos en su fecha de corte y se conservan; hoy el CI de `main` está en verde en `ac9c88d` | Ejecución 43548657495 |
+
+## Auditoría 8: PR #16 (cierre documental de A) y commit posterior `372a6ab`, revisión recíproca con cronología mixta
+**Tipo:** revisión recíproca de la integrante B sobre el cierre documental de la integrante A. **No fue una revisión previa completa:** una parte se hizo antes de la fusión y otra después (cronología abajo). El PR #16 (`e1/cierre-documental`, commits `4242ea5` y `7f8f315`) se abrió el 2026-11-14 a las 04:38:45 UTC y se fusionó a las 04:38:58 UTC (`628136b`), **13 s después, con 0 revisiones** (API pública de GitHub), desde la cuenta `Leslie581`.
+**Autora:** integrante A (`Leslie581`). **Auditora:** integrante B (`eimymuz`), con asistencia de Claude Code para ejecutar las verificaciones (la asistencia no cuenta como revisión independiente). **Tiempo personal de la auditora:** **no registrado**; B no indicó cuánto tiempo dedicó personalmente y no se estima (las horas de la cronología son las de la sesión asistida, no tiempo personal de B).
+**Alcance:** `4242ea5` (73 archivos, +5,082 −227 frente a `main` en `f8811ac`), `7f8f315` (10 documentos, +42 −42) y `372a6ab` (21 archivos, +205 −95), además del commit `f8811ac` de A en `main` (`.devcontainer/devcontainer.json`). **Método:** `git diff`; lectura de requerimientos, rúbrica, relatoría, `ENTREGA.md`, plan SQA, ruta de E2 y discretización; *worktree* desacoplado en `4242ea5` con la réplica local del CI (Windows, Python 3.14.3, dependencias fijadas); línea base SHA-256 de los resultados tomada antes de revisar; recuento independiente de estados y de pruebas; API pública de GitHub para el PR y las ejecuciones.
+
+### Cronología real (hora de la Ciudad de México, UTC−6; marcas de archivos y de Git)
+| Hora | Hecho | Respecto de la fusión del PR #16 |
+|---|---|---|
+| 22:26 | Línea base SHA-256 de los 28 resultados versionados de `laboratorio/` y `data/oro/` en `main` (`f8811ac`) | Antes |
+| 22:32:21 | A crea `4242ea5` | Antes |
+| 22:33:02 | La rama aparece en el remoto; empieza la revisión de `4242ea5` | Antes |
+| 22:33 a 22:37:33 | Revisión de `4242ea5` y réplica local del CI (terminó a las 22:37:33). El dictamen («aprobado técnicamente con observaciones menores» y seis correcciones) se entregó **a B** en ese intervalo | Antes, pero **el dictamen no llegó a A ni al PR** |
+| 22:37:03 | A crea `7f8f315` | Antes |
+| 22:38:45 y 22:38:58 | Se abre y se fusiona el PR #16 (`628136b`), sin revisiones | — |
+| 22:39 a 22:41 | Revisión de `7f8f315` | **Después** |
+| 22:53:19 | A crea `372a6ab` en `e1/cierre-documental` (no está en `main` al cierre de esta auditoría) | — |
+| 22:54 a 22:58 | Revisión de `372a6ab` y sus pruebas | **Antes de integrarse** |
+
+### Resultados verificados
+| # | Verificación | Resultado |
+|---|---|---|
+| V1 | Las transformaciones nuevas no alteran el laboratorio | De los 28 resultados de la línea base, **27 idénticos byte a byte** en `4242ea5`; el único distinto, `data/oro/diccionario_datos.csv`, solo **agrega** 18 líneas (0 borradas). `7f8f315` y `372a6ab` no tocan `laboratorio/pronosticos/` ni `data/`. Pronóstico, métricas y tablero sin cambios |
+| V2 | Réplica local del CI sobre `4242ea5` | `ruff` sin hallazgos; **402 aprobadas, 2 omitidas** (red); cobertura **84.03 %** (piso 75 %); `pipeline.ejecutar`, `pipeline.verificar_oro` y el verificador de E0 con código 0. Coincide con lo que reporta A |
+| V3 | CI en GitHub | `4242ea5`: ejecución 43557153021, éxito en `calidad`, `secretos`, `bloqueo-tablero` y `auditoria-dependencias`. `7f8f315`: 43557547843, éxito. `main` tras la fusión (`628136b`): 43557697492, éxito |
+| V4 | Siete requerimientos nuevos (RF-13 a RF-15, RNF-SEG-06 a RNF-SEG-08 y RNF-MAN-04) | Cada uno es necesario, medible, verificable y rastreable, con su limitación declarada. Cifras cotejadas: bloqueo de 34 paquetes y 946 hashes; manifiesto del bronce de 28 archivos y 3,345,350 bytes; pruebas: 17, 12, 15, 8 y 24. RF-13 decía 13 pruebas y son **16** (corregido en `372a6ab`) |
+| V5 | Recuento de estados de `requerimientos.md` | Recuento independiente: **35 cumplidos, 3 parciales, 4 no cumplidos, 1 propuesto** (43). `evaluacion_rubrica.md` decía 34 y 4 (corregido en `372a6ab`) |
+| V6 | Discretización supervisada | Cortes ajustados solo con 2016–2023; objetivo de calendario (no circular); el criterio MDL acepta solo uno de los dos cortes y se declara; **no generaliza a 2024** (exactitud 0.50 frente a 0.75) y no se presenta como mejor método. El valor p (0.002) era el mínimo alcanzable con 500 permutaciones: `372a6ab` lo reporta como 1/501 con el límite de resolución explícito. Interpretación y limitaciones correctas |
+| V7 | Evaluación de las rúbricas | Prudente: separa lo implementado, lo comprobado en local y lo ejecutado en GitHub, y se declara autoevaluación, no calificación |
+| V8 | Relatoría | Los 118 min en 23 intervalos de B son correctos (recalculados de inicio y fin). En `372a6ab` la autoría de `9489dc5` sigue a Git (A) y se aclara la hora local frente a UTC |
+| V9 | Cambios de A en archivos de B | `pronostico.md` §2.7 (alcance del k-NN y supuesto del dato de t−1), §8 (tolerancia entre Python 3.13 y 3.14), `tablero.md` y las pruebas del tablero (`.env.example` solo sin credenciales; `TDL_EXIGIR_TABLERO`): **correctos**. Atienden las Auditorías 6 (O2, O3) y 7 (O1, O3) |
+| V10 | `f8811ac` (devcontainer) | Usaba Python 3.11 (el CI usa 3.13), instalaba `streamlit` sin versión fijada y desactivaba CORS y XSRF. **Los tres puntos quedan resueltos en `372a6ab`** (3.13, instalación desde el bloqueo con `--require-hashes` y protecciones por defecto) |
+| V11 | `7f8f315` | Solo documentación: registra la ejecución 43557153021. Es un reemplazo mecánico que dejó una frase contradictoria (m2) |
+| V12 | `372a6ab` | Atiende las correcciones 1, 2, 4, 5 y 6 de la revisión de `4242ea5`; agrega `CODEOWNERS`, la plantilla de PR, la prueba del devcontainer y la nota de E2 (O1). Local (Python 3.14.3, `TDL_EXIGIR_PRONOSTICOS=1` y `TDL_EXIGIR_TABLERO=1`): `ruff` sin hallazgos y **408 aprobadas, 2 omitidas** (red) |
+
+### Hallazgos
+**Mayor (de proceso, recurrente)**
+- **D1. El PR #16 se fusionó sin revisión previa**, 13 s después de abrirse y antes de que el dictamen de B llegara al PR. Es el **décimo** PR de E1 en esa situación (#7 a #16), contra `plan_trabajo.md` §3 y el plan SQA §5. `CODEOWNERS` (`372a6ab`) no lo impide mientras `main` no tenga protección.
+
+**Menores (documentación; pendientes en `372a6ab`, de A)**
+- **m1.** `docs/E1/requerimientos.md:64-65` (RNF-SEG-07 y RNF-SEG-08) siguen diciendo que el CI «aún no se ejecutó en GitHub»; ya se ejecutó (V3).
+- **m2.** `docs/E1/seguridad.md:107`: la frase «Lo que no se ha podido verificar» afirma a la vez que el trabajo está «verificado en GitHub» y deja negritas mal cerradas (introducido por `7f8f315`).
+- **m3.** `docs/E1/ENTREGA.md:4`: «sin commit ni fusión todavía»; el PR #16 ya está en `main` (`628136b`).
+
+**Observaciones**
+- **O1 (E2: la tasa de error como respuesta).** Si las corridas se ejecutan contra una copia local estable de las respuestas ya capturadas, la tasa de error será casi con seguridad **0 en las 16 corridas**: una respuesta sin variación no le da nada que analizar al ANOVA. Antes de correr hay que definir qué es un error y su denominador, y provocar errores de forma controlada (fallas inyectadas y declaradas) o elegir otra respuesta principal. Se documenta sin desarrollar E2; la matriz 2³ no cambia. A lo dejó anotado en [`ruta_experimento_e2.md`](../docs/E1/ruta_experimento_e2.md) §5.
+- **O2.** Los documentos fechan el corte el «2026-11-14», que es la fecha UTC; en hora local todo ocurrió el 13 de noviembre, antes del plazo de las 23:59. `ENTREGA.md` y la relatoría lo aclaran.
+- **O3.** La copia del bronce (RNF-SEG-06) está en el mismo equipo; A ya lo declara como límite.
+
+### Conformidad de la integrante B (decisiones personales, 2026-11-13)
+| Tema | Decisión de B |
+|---|---|
+| Relatoría | De acuerdo con el contenido, **sujeto a revisar la versión corregida** antes de la aprobación definitiva |
+| Plan SQA v1.1 | **Aceptado**, con el **reconocimiento formal de la desviación del proceso de E1**: diez PR (#7 a #16) se fusionaron sin revisión previa. No se atribuye ninguna autorización a los docentes. Acción correctiva acordada: **revisiones previas obligatorias** |
+| Ruta de E2 | **De acuerdo** con la ruta de ingeniería (2³ sobre el extractor propio, 16 corridas en 2 bloques), conservando la observación O1 |
+
+### PSP de la integrante B (cierre de E1)
+- **Confirmado por B:** los **118 min en 23 intervalos** de [`tiempo-integrante-b.csv`](tiempo-integrante-b.csv), «siempre que correspondan a las actividades que realmente realizó». Atiende la Auditoría 6 (O6) y la Auditoría 7 (O4).
+- **No registrado:** el diagnóstico del tablero de 14:38 a 14:42 (B no confirmó haberlo hecho personalmente) y el tiempo de esta revisión (B no lo indicó). No se estiman.
+- **Defectos de B en esta auditoría:** ninguno. Los CSV de B no cambian.
+
+### Dictamen
+**Aprobado técnicamente con observaciones menores** para la versión `372a6ab` de `e1/cierre-documental`. El código, los datos y los resultados son correctos y no alteran el laboratorio. Quedan tres correcciones menores de documentación (m1 a m3), que no bloquean la entrega. El proceso **no** cumplió la revisión previa en el PR #16 (D1). Cualquier commit posterior a `372a6ab` requiere revisarse antes de darlo por aprobado.

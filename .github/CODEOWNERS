@@ -1,0 +1,3 @@
+# Cada cambio pide la revision de las dos integrantes del equipo; con la proteccion de `main` activa ("Require review from Code Owners")
+# la persona que abre el pull request no puede aprobar el suyo, asi que la revision recae en la otra. Ver docs/E1/plan_sqa.md §5.1.
+*  @Leslie581 @eimymuz
