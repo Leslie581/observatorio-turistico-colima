@@ -51,16 +51,27 @@ retro = elegido[elegido["tipo"] == cg.TIPO_RETRO]
 proy = elegido[elegido["tipo"] == cg.TIPO_PROYECCION]
 textos = cg.textos_cliente(d)
 generacion = cg.fecha_generacion(d.ejecucion)
+fechas = cg.fechas_clave(d)
 meses_dentro, meses_eval = cg.cobertura_ip95(retro)
 sar = comp.set_index("familia").loc["SARIMA"]
 
 st.title(TITULO)
 st.caption("Nombre provisional · Ocupación mensual de hoteles de 2 a 5 estrellas · Datos de DataTur (Secretaría de Turismo) hasta diciembre de 2024")
 st.info(
-    f"Los datos observados llegan hasta **diciembre de 2024**. Los resultados se generaron el {generacion}. "
+    f"Los datos observados llegan hasta **{fechas['ultimo_observado']}**. "
     "La proyección de 2025 es una **proyección histórica** calculada con la información disponible hasta diciembre de 2024; "
     "**no es un pronóstico vigente**."
 )
+with st.container(border=True):
+    st.markdown("#### Resumen ejecutivo")
+    st.markdown(textos["ejecutivo"])
+    f1, f2, f3 = st.columns(3)
+    f1.markdown(f"**Último mes con datos observados**  \n{fechas['ultimo_observado']}")
+    f2.markdown(f"**Resultados estadísticos generados**  \n{fechas['resultados']}")
+    if "capa_oro" in fechas:
+        f3.markdown(f"**Capa oro generada**  \n{fechas['capa_oro']}")
+    st.caption("Fechas tomadas de los archivos versionados. El tablero no muestra una fecha de actualización propia porque no puede verificarla "
+               "desde sus archivos.")
 
 tab_resumen, tab_2024, tab_modelos, tab_2025, tab_leer, tab_fuentes = st.tabs(
     ["Resumen", "Pronóstico 2024", "Comparación de modelos", "Proyección 2025", "Cómo leerlo", "Fuentes y datos"])
@@ -76,22 +87,42 @@ with tab_resumen:
     c3.metric(f"Mes más bajo ({minimo['mes_texto']})", f"{minimo['ocupacion_pct']:.1f} %", help="El valor mensual más bajo de toda la serie.")
     c4.metric("Meses de 2024 dentro del intervalo", f"{meses_dentro} de {meses_eval}",
               help="Meses en que el valor real cayó dentro del intervalo de predicción del 95 % del SARIMA.")
-    st.altair_chart(gr.grafica_historica(oro), width="stretch")
-    st.caption("Franja naranja: periodo de COVID (marzo de 2020 a junio de 2021). Franja gris: 2024, el año que se usó para probar los modelos.")
+    clave = st.radio("Periodo que se muestra en la gráfica", options=list(cg.PERIODOS_HISTORICOS),
+                     format_func=lambda k: cg.PERIODOS_HISTORICOS[k][0], horizontal=True, key="periodo_historico",
+                     help="Solo cambia lo que se dibuja. No modifica el entrenamiento, los parámetros ni los resultados de los modelos.")
+    vista = cg.filtrar_periodo(oro, clave)
+    rp = cg.resumen_periodo(vista)
+    p1, p2, p3 = st.columns(3)
+    p1.metric("Media del periodo seleccionado", f"{rp['media']:.1f} %", help=f"{rp['n']} meses, de {rp['desde']} a {rp['hasta']}.")
+    p2.metric(f"Mínimo del periodo ({rp['mes_min']})", f"{rp['min']:.1f} %")
+    p3.metric(f"Máximo del periodo ({rp['mes_max']})", f"{rp['max']:.1f} %")
+    st.altair_chart(gr.grafica_historica(vista), width="stretch")
+    st.caption("Franja naranja: periodo de COVID (marzo de 2020 a junio de 2021). Franja gris: 2024, el año que se usó para probar los modelos. "
+               "Enero y febrero de 2020 solo aparecen en «Toda la serie».")
     st.markdown(
         "**Qué se ve.** La ocupación sigue un patrón anual, con julio y diciembre como meses altos y septiembre como el más bajo, "
-        "y una caída excepcional en 2020. Los modelos de este tablero usan esa historia para proyectar los meses siguientes.")
-    with st.expander("Ver los datos en tabla"):
-        st.dataframe(oro[["mes_texto", "ocupacion_pct", "conjunto"]].rename(columns={"mes_texto": "Mes", "ocupacion_pct": "Ocupación (%)", "conjunto": "Uso en el análisis"}),
+        "y una caída excepcional en 2020.")
+    st.markdown(textos["historia"])
+    with st.expander("Ver los datos del periodo en tabla"):
+        st.dataframe(vista[["mes_texto", "ocupacion_pct", "conjunto"]].rename(columns={"mes_texto": "Mes", "ocupacion_pct": "Ocupación (%)", "conjunto": "Uso en el análisis"}),
                      hide_index=True, column_config={"Ocupación (%)": st.column_config.NumberColumn(format="%.1f")})
 
 # ------------------------------------------------------------------ Pronóstico 2024
 with tab_2024:
     st.subheader("Pronóstico SARIMA para 2024 frente a lo que ocurrió")
     st.markdown(textos["resultado_2024"])
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("MAE del SARIMA", f"{sar['MAE']:.2f} pp", help="Error absoluto medio en 2024, en puntos porcentuales de ocupación.")
+    m2.metric("RMSE del SARIMA", f"{sar['RMSE']:.2f} pp", help="Raíz del error cuadrático medio: castiga más los errores grandes.")
+    m3.metric("MAPE del SARIMA", f"{sar['MAPE']:.2f} %", help="Error medio como porcentaje del valor observado.")
+    m4.metric("Meses dentro del intervalo del 95 %", f"{meses_dentro} de {meses_eval}")
     st.altair_chart(gr.grafica_retrospectiva(retro), width="stretch")
     st.caption("Línea negra: ocupación observada. Línea azul discontinua: pronóstico del SARIMA, entrenado solo con datos hasta diciembre de 2023. "
                "Franja azul: intervalo de predicción del 95 %.")
+    st.markdown(
+        "**Limitaciones de esta evaluación.** Es un solo año de prueba (12 meses), así que las métricas tienen mucha incertidumbre propia. "
+        "Que los 12 meses cayeran dentro del intervalo indica que la franja es **conservadora** (amplia, por la variación que dejó el COVID en el "
+        "entrenamiento), no que el modelo acierte con precisión. Los errores son de un pronóstico hecho de una vez para todo 2024, desde diciembre de 2023.")
     tabla = retro[["mes_texto", "observado", "media", "li", "ls"]].copy()
     tabla["dentro"] = ((tabla["observado"] >= tabla["li"]) & (tabla["observado"] <= tabla["ls"])).map({True: "Sí", False: "No"})
     with st.expander("Ver los valores mes por mes"):
@@ -107,6 +138,7 @@ with tab_modelos:
         "Se compararon cuatro modelos estadísticos (SES, Holt, Holt-Winters y SARIMA) y una **referencia ingenua estacional**, "
         "que simplemente repite el valor del mismo mes del año anterior. Todos se entrenaron con datos de 2016 a 2023 y se evaluaron en 2024. "
         "**Menor error es mejor.**")
+    st.info(textos["destacado"])
     col_a, col_b, col_c = st.columns(3)
     col_a.altair_chart(gr.barras_metrica(comp, "MAE", "MAE (puntos porcentuales)"), width="stretch")
     col_b.altair_chart(gr.barras_metrica(comp, "RMSE", "RMSE (puntos porcentuales)"), width="stretch")
@@ -146,6 +178,7 @@ with tab_2025:
 # ------------------------------------------------------------------ Cómo leerlo
 with tab_leer:
     st.subheader("Cómo leer este tablero")
+    st.markdown(textos["historia"])
     st.markdown(textos["intervalo"])
     st.markdown(textos["resultado_2024"])
     st.markdown(textos["comparacion"])

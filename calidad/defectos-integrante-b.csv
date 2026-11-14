@@ -12,3 +12,4 @@ numero,fecha,tipo,fase_introducido,fase_eliminado,minutos_correccion,defecto_ori
 11,2026-11-13,funcion,codigo,revision,1,,"descomposicion_oro.png: la etiqueta COVID se encimaba con la leyenda del primer panel; se movió a la parte superior de la banda (detectado al revisar la figura)"
 12,2026-11-13,documentacion,documentacion,revision,1,,"laboratorio/pronosticos/README.md decía que la descomposición correspondía a la exploración de la integrante A; quedó falso al añadir §2.6 y se corrigió"
 13,2026-11-13,documentacion,documentacion,revision,1,,"pronostico.md §2.6 llamaba pico a abril; en STL abril (+4.4) y junio (+4.3) son equivalentes; se reescribió como picos en julio y diciembre y valle en septiembre"
+14,2026-11-13,construccion,pruebas,pruebas,1,,"tests/test_tablero_app.py importaba test_tablero_cargador como módulo absoluto; tests/ es un paquete y la importación debía ser relativa (ModuleNotFoundError al ejecutar)"

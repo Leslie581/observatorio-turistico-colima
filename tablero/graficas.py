@@ -52,15 +52,26 @@ def _bandas(fechas: list, etiqueta: str, color: str, y_texto: float) -> alt.Laye
 
 
 # ---------------------------------------------------------------- 1. serie histórica
+def bandas_visibles(oro: pd.DataFrame) -> list:
+    """Bandas (COVID y año de prueba) recortadas al rango de fechas de ``oro``; se omiten las que no se cruzan con él.
+
+    Sin el recorte, Altair extendería el eje hasta 2024 aunque la serie filtrada termine en 2019.
+    """
+    desde, hasta = oro["fecha"].min(), oro["fecha"].max() + pd.offsets.MonthEnd(0)
+    candidatas = [("COVID", pd.Timestamp(COVID_INICIO + "-01"), pd.Timestamp(COVID_FIN + "-01") + pd.offsets.MonthEnd(0), NARANJA),
+                  ("Año de prueba", pd.Timestamp("2024-01-01"), pd.Timestamp("2024-12-31"), GRIS)]
+    return [(etq, max(ini, desde), min(fin, hasta), color) for etq, ini, fin, color in candidatas if ini <= hasta and fin >= desde]
+
+
 def grafica_historica(oro: pd.DataFrame) -> alt.LayerChart:
-    """Ocupación mensual 2016-01 a 2024-12, con el periodo de COVID y el año de prueba sombreados."""
+    """Ocupación mensual (toda la serie o el periodo filtrado), con el periodo de COVID y el año de prueba sombreados si son visibles."""
     d = oro.rename(columns={"ocupacion_pct": "valor"})
-    covid = _bandas([pd.Timestamp(COVID_INICIO + "-01"), pd.Timestamp(COVID_FIN + "-28")], "COVID", NARANJA, 73)
-    prueba = _bandas([pd.Timestamp("2024-01-01"), pd.Timestamp("2024-12-31")], "Año de prueba", GRIS, 73)
-    base = alt.Chart(d).encode(x=alt.X("fecha:T", axis=_eje_anio()), y=_eje_y(),
+    corta = len(d) <= 24  # en periodos cortos el eje muestra meses; en largos, años
+    base = alt.Chart(d).encode(x=alt.X("fecha:T", axis=_eje_mes() if corta else _eje_anio()), y=_eje_y(),
                                tooltip=[alt.Tooltip("mes_texto:N", title="Mes"), alt.Tooltip("valor:Q", title="Ocupación (%)", format=".1f")])
-    linea = base.mark_line(color=AZUL, strokeWidth=2) + base.mark_point(color=AZUL, filled=True, size=26)
-    return _estilo((covid + prueba + linea).properties(height=ALTURA))
+    capas = [_bandas([ini, fin], etq, color, 73) for etq, ini, fin, color in bandas_visibles(oro)]
+    capas.append(base.mark_line(color=AZUL, strokeWidth=2) + base.mark_point(color=AZUL, filled=True, size=26))
+    return _estilo(alt.layer(*capas).properties(height=ALTURA))
 
 
 # ---------------------------------------------------------------- 2. SARIMA 2024 frente a lo observado
