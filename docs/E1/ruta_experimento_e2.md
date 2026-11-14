@@ -1,6 +1,6 @@
 # Ruta del experimento de E2 (preparación; no se califica en E1)
 
-Corte 2026-11-14 · Redacta: integrante A. **Conformidad de la integrante B: pendiente** (la decisión «de las dos» que pide [`plan_trabajo.md`](plan_trabajo.md) §1 exige que B la confirme). PDF, pág. 16: «elijan la ruta de su experimento. Si es la ruta negocio, confirmen esta semana el acuerdo con su cliente» y pág. 17: «un experimento factorial real. Elijan una de dos rutas (la eligieron en E1)».
+Corte 2026-11-14 · Redacta: integrante A. **Conformidad de la integrante A: confirmada el 2026-11-13 (comunicada por Leslie en la conversación de trabajo). Conformidad de la integrante B: pendiente** (la decisión «de las dos» que pide [`plan_trabajo.md`](plan_trabajo.md) §1 exige que B la confirme). PDF, pág. 16: «elijan la ruta de su experimento. Si es la ruta negocio, confirmen esta semana el acuerdo con su cliente» y pág. 17: «un experimento factorial real. Elijan una de dos rutas (la eligieron en E1)».
 
 ## 1. Decisión: ruta ingeniería sobre el extractor propio
 | Elemento | Decisión | Evidencia |

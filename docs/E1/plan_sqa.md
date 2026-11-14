@@ -98,8 +98,8 @@ Es el defecto de proceso **D1 de las Auditorías 3 a 7**, recurrente. El plan de
 
 | Conformidad con la acción correctiva y con la excepción de E1 (§5.1) | Fecha |
 |---|---|
-| Leslie Valadez Macías (A): ☐ conforme | |
-| Eimy Melissa Urbina Meza (B): ☐ conforme | |
+| Leslie Valadez Macías (A): ☒ **conforme** con el plan SQA v1.1, con la acción correctiva preparada y con el **reconocimiento formal** de que los diez PR de E1 (#7 a #16) se fusionaron sin revisión previa registrada en GitHub, contra la regla de `plan_trabajo.md` §3 (comunicado por Leslie en la conversación de trabajo; no es una firma manuscrita) | 2026-11-13 |
+| Eimy Melissa Urbina Meza (B): ☐ pendiente (la registra ella) | |
 
 **Excepción explícita para la entrega E1 (texto listo; se declara en `docs/E1/ENTREGA.md` cuando ambas den su conformidad en la tabla de arriba):**
 - **Alcance:** el criterio 5 de §7 («cada PR integrado tiene su revisión recíproca registrada») **se incumple** para los PR #7 a #16 y se acepta **solo para la etiqueta `e1`**; no es un precedente para E2.

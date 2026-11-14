@@ -40,7 +40,7 @@ Repositorio: https://github.com/Leslie581/tdl-turistico-colima (el nombre anteri
 | **Seguridad** (15): `gitleaks` y `pip-audit` sin hallazgos; respaldo probado | [`seguridad.md`](seguridad.md), [`calidad/evidencia/`](../../calidad/evidencia/), [`test_evidencia_gitleaks.py`](../../tests/test_evidencia_gitleaks.py), [`test_respaldo_bronce.py`](../../tests/test_respaldo_bronce.py), [`test_bloqueo_tablero.py`](../../tests/test_bloqueo_tablero.py) | CUMPLE con salvedades | `gitleaks` 8.30.1 sin hallazgos (local y automatizado en CI); `pip-audit` sin vulnerabilidades, también en las transitivas del tablero; **respaldo del bronce con manifiesto SHA-256 y restauración automatizada probada** (28 archivos); bloqueo con hashes del tablero; acciones fijadas por SHA. Salvedades: el CI nuevo **verificado en GitHub (ejecución 43557153021 de `ci.yml` sobre `4242ea5`: éxito en `calidad`, `auditoria-dependencias`, `bloqueo-tablero` y `secretos`)**, la copia del bronce **está en el mismo equipo** y `main` **no tiene protección** |
 | **Requerimientos** (10): verificables, cada uno con su comprobación | [`requerimientos.md`](requerimientos.md), [`test_requerimientos.py`](../../tests/test_requerimientos.py) | CUMPLE | 43: 35 cumplidos, 3 parciales, 4 no cumplidos, 0 pendientes, 1 propuesto (los 7 últimos aún sin revisión de B) |
 | **Plan SQA** (25): estructura IEEE 730 adaptada | [`plan_sqa.md`](plan_sqa.md), [`auditorias.md`](../../calidad/auditorias.md) (Auditorías 1 a 7) | CUMPLE con salvedades | Plan completo (versión 1.1). La acción correctiva de D1 y la excepción de E1 están **preparadas** (plantilla de PR y CODEOWNERS en `.github/`); faltan la conformidad personal de ambas y la protección de `main` |
-| **Integración continua** (15): pruebas, linter y puerta de datos en cada push | [`ci.yml`](../../.github/workflows/ci.yml), [`test_ci_workflow.py`](../../tests/test_ci_workflow.py), [`pipeline.md`](pipeline.md) §6 | **PARCIAL** | `main` está en **verde** (`ac9c88d`: ejecución 43548657495; `628136b`, tras fusionar el PR #16: 43557697492); de 30 ejecuciones, 3 fallaron (`9489dc5`, corregidas en `eb8f606`). `ci.yml` de esta rama instala las dependencias del tablero y **exige** sus pruebas, mide cobertura (piso de 75 %; medida 84 %), audita el bloqueo y las transitivas del tablero, ejecuta `gitleaks` y fija las acciones por SHA; la suite local da **408 aprobadas y 2 omitidas** (las 2 de red). **Ejecución en GitHub: `ci.yml` pasó en GitHub con los cuatro trabajos (`calidad`, `auditoria-dependencias`, `bloqueo-tablero` y `secretos`) en éxito: ejecución 43557153021 (`4242ea5`), 43557547843 (push) y 43557683882 (pull request) de `7f8f315`, y 43557697492 (push a `main`, `628136b`)** |
+| **Integración continua** (15): pruebas, linter y puerta de datos en cada push | [`ci.yml`](../../.github/workflows/ci.yml), [`test_ci_workflow.py`](../../tests/test_ci_workflow.py), [`pipeline.md`](pipeline.md) §6 | **PARCIAL** | `main` está en **verde** (`ac9c88d`: ejecución 43548657495; `628136b`, tras fusionar el PR #16: 43557697492); de 30 ejecuciones, 3 fallaron (`9489dc5`, corregidas en `eb8f606`). `ci.yml` de esta rama instala las dependencias del tablero y **exige** sus pruebas, mide cobertura (piso de 75 %; medida 84 %), audita el bloqueo y las transitivas del tablero, ejecuta `gitleaks` y fija las acciones por SHA; la suite local da **408 aprobadas y 2 omitidas** (las 2 de red). **Ejecución en GitHub: `ci.yml` pasó en GitHub con los cuatro trabajos (`calidad`, `auditoria-dependencias`, `bloqueo-tablero` y `secretos`) en éxito: ejecución 43557153021 (`4242ea5`), 43557547843 (push) y 43557683882 (pull request) de `7f8f315`, 43557697492 (push a `main`, `628136b`) y 43558845112 (`372a6ab`)** |
 
 ## Relatoría de etapa
 [`docs/relatoria-E1.md`](../relatoria-E1.md) (máximo dos páginas; **pendiente de la revisión y conformidad de ambas integrantes**).
@@ -59,19 +59,33 @@ La API pública de GitHub (2026-11-14) devuelve **0 issues** en el repositorio (
 Ambas integrantes usaron Claude Code (Anthropic) para escribir y revisar código, pruebas y documentos, ejecutar verificaciones y redactar auditorías; los PSP de B lo marcan fila por fila. La asistencia **no cuenta como revisión independiente**. Cada integrante debe poder explicar lo que entrega en la defensa del 17 y 18 de noviembre.
 
 ## Pendientes declarados
-| Pendiente | Estado |
+### A. Obligatorios para la entrega (PDF, págs. 5 y 12; antes de las 23:59 del 13 de noviembre)
+| Pendiente | Estado | Quién |
+|---|---|---|
+| Fusionar el PR de las correcciones **después** de que B lo revise y lo apruebe en GitHub (primera revisión previa real) y de que su CI esté en verde | Pendiente | B revisa; A fusiona con autorización |
+| **Etiqueta `e1`** sobre un commit de `main` (con esta ficha y la relatoría dentro) | **No creada** | A, con autorización |
+| **Registro del enlace de la etiqueta en el formulario de entregas** (un solo registro; cuenta para las tres materias) | **No verificable** desde el repositorio | A |
+| Los tres docentes como colaboradores del repositorio | **Declarado por la titular** (2026-11-13); no verificable desde la API pública | A (comprobarlo en Settings → Collaborators) |
+| Relatoría y registros PSP **de cada integrante** (el tiempo y los defectos son individuales) | Relatoría redactada, 2 páginas verificadas; **PSP de A: falta el tiempo del cierre documental; PSP de B y su Auditoría 8: los registra B en su rama** | A y B, cada una lo suyo |
+| Conformidad personal de cada integrante con el plan SQA v1.1 y el reconocimiento de los diez PR sin revisión previa | **A: registrada** (2026-11-13); **B: pendiente** ([`plan_sqa.md`](plan_sqa.md) §5.1) | B |
+
+### B. Mejoras opcionales (no las exige el PDF)
+| Mejora | Estado |
 |---|---|
-| Etiqueta `e1` | **No creada**; requiere autorización y los commits de esta rama fusionados |
-| Registro del enlace en el formulario de entregas | **No verificable** desde el repositorio |
-| Docentes como colaboradores del repositorio | **Declarado por la titular** (2026-11-13); no verificable desde la API pública |
-| Primera ejecución en GitHub del CI nuevo (`secretos`, tablero obligatorio, auditoría ampliada) | **Pendiente del push**; comprobado solo en local |
-| Tablero público con la versión integrada | **Resuelto** (verificado el 2026-11-14 04:25 UTC); repetir la lectura después de la integración definitiva |
-| Revisión previa y protección de `main` | Acción correctiva **preparada** (plantilla de PR y CODEOWNERS); **falta** la conformidad personal de ambas y activar la protección (`protected: false`; requiere ser propietaria) |
-| Bitácora de 7 días y MTBF/disponibilidad definitivos | La ventana que fija el PDF (6 al 13 de noviembre) **ya no se puede completar**: la primera captura registrada es del 9 de noviembre (hora local; fue la ejecución fallida por falta de `INEGI_TOKEN`); solo una captura posterior alargaría la bitácora. Regenerar [`fiabilidad_e1.json`](../../calidad/fiabilidad_e1.json) si llega otra captura antes de etiquetar |
-| Cierre cuando haya commit: repetir `gitleaks` sobre el commit a etiquetar | Pendiente |
-| **Plazo de la etiqueta `e1`** | **Antes de las 23:59 del 13 de noviembre**; lo que llegue después se evalúa sobre 70 en las tres materias (PDF, pág. 5) |
-| Preparación de E2 (no se califica en E1) | Ruta ingeniería elegida y matriz 2³ generada ([`ruta_experimento_e2.md`](ruta_experimento_e2.md)); **falta la conformidad de B**; no se ha corrido ninguna corrida; la observación de B sobre la tasa de error como respuesta está anotada en §5 de ese documento |
-| Hashes para las otras tres listas de dependencias; una copia del bronce fuera del equipo; protección de `main` | No implementados (la protección requiere permisos de administración) |
-| PSP de A: tiempo del cierre documental | Pendiente de registrar: el trabajo no ha terminado (el defecto de la prueba del tablero ya está registrado como defecto 22) |
-| PSP de B: confirmación de sus tiempos | Pendiente de B; no se tocó |
-| Observaciones abiertas de las Auditorías 5, 6 y 7 | Véase [`auditorias.md`](../../calidad/auditorias.md) |
+| Protección de `main` con los cuatro trabajos como comprobaciones obligatorias | No activada; **no hacerla antes de la etiqueta** ([`seguridad.md`](seguridad.md) §7: bloquea la captura diaria salvo bypass) |
+| Copia del respaldo del bronce fuera del equipo | Pendiente de A ([`seguridad.md`](seguridad.md) §6.2) |
+| Hashes para las otras tres listas de dependencias; fijar las imágenes por *digest* | No implementados |
+| Revisión de B sobre los 7 requerimientos agregados el 2026-11-14 | En su Auditoría 8 |
+| Isolation Forest, unión mes a mes, nuevas fuentes | No aplican / no viables |
+
+### C. Incumplimientos históricos que ya no se pueden corregir antes de la entrega
+| Incumplimiento | Evidencia |
+|---|---|
+| Los **diez PR de E1 (#7 a #16)** se fusionaron sin revisión previa registrada en GitHub, contra `plan_trabajo.md` §3 | [`plan_sqa.md`](plan_sqa.md) §5.1; Auditorías 3 a 7 |
+| El CI de `main` estuvo en rojo (3 ejecuciones del commit `9489dc5`) | [`plan_sqa.md`](plan_sqa.md) §6; corregido en `eb8f606` |
+| La bitácora cubre **3.83 de 7 días**: MTBF y disponibilidad solo exploratorios; el objetivo del 95 % no se cumple. La ventana del PDF (6 al 13 de noviembre) no se puede completar hacia atrás | [`fiabilidad.md`](fiabilidad.md) §4.2 |
+| El mecanismo de la única celda vacía de Base70 (Mexicali) no se puede determinar | [`faltantes_y_atipicos.md`](faltantes_y_atipicos.md) §1 |
+| Un solo año de prueba (12 meses) y el ingenuo estacional supera al SARIMA en MAE y MAPE | [`pronostico.md`](pronostico.md) §4 |
+
+### D. Para después de E1
+Regenerar [`fiabilidad_e1.json`](../../calidad/fiabilidad_e1.json) con las capturas nuevas; repetir `gitleaks` y la lectura de la URL del tablero sobre el commit etiquetado; correr el experimento de E2 ([`ruta_experimento_e2.md`](ruta_experimento_e2.md): ruta ingeniería, **confirmada por A**, pendiente de B).

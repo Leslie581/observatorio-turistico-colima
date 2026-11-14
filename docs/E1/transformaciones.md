@@ -63,7 +63,7 @@ La selección de variables del oro (el objetivo, sus componentes y tres variable
 - **Discretización supervisada** (el PDF, pág. 16, pide «por ancho, por frecuencia y supervisada»): **implementada** en §8, comparada con las otras dos. Las dos primeras no cambiaron.
 
 ## 8. Discretización supervisada y comparación con ancho y frecuencia
-Código: [`pipeline/discretizacion_supervisada.py`](../../pipeline/discretizacion_supervisada.py) y [`laboratorio/exploracion/discretizacion.py`](../../laboratorio/exploracion/discretizacion.py). Resultados: [`laboratorio/exploracion/resultados/discretizacion_supervisada/`](../../laboratorio/exploracion/resultados/discretizacion_supervisada/) (`comparacion_metodos.csv` y `resumen.json`). Pruebas: [`tests/test_discretizacion_supervisada.py`](../../tests/test_discretizacion_supervisada.py) (17). Se regenera con `python -m laboratorio.exploracion.discretizacion`.
+Código: [`pipeline/discretizacion_supervisada.py`](../../pipeline/discretizacion_supervisada.py) y [`laboratorio/exploracion/discretizacion.py`](../../laboratorio/exploracion/discretizacion.py). Resultados: [`laboratorio/exploracion/resultados/discretizacion_supervisada/`](../../laboratorio/exploracion/resultados/discretizacion_supervisada/) (`comparacion_metodos.csv` y `resumen.json`). Pruebas: [`tests/test_discretizacion_supervisada.py`](../../tests/test_discretizacion_supervisada.py) (18). Se regenera con `python -m laboratorio.exploracion.discretizacion`.
 
 ### 8.1 Qué se discretiza, con qué objetivo y por qué no es circular
 | Elemento | Decisión |
