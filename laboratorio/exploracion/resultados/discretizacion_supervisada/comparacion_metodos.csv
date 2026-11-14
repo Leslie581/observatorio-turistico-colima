@@ -1,0 +1,7 @@
+escenario,metodo,cortes,meses_por_nivel_ajuste,meses_por_nivel_2024,ganancia_bits_ajuste,exactitud_ajuste,exactitud_referencia_ajuste,ganancia_bits_2024,exactitud_2024,exactitud_referencia_2024,mdlp_acepta_cortes
+sin_covid,ancho_igual,40.0518 | 53.1958,15 / 41 / 24,0 / 4 / 8,0.086345,0.737500,0.737500,0.174989,0.750000,0.750000,no aplica
+sin_covid,frecuencia_igual,45.4802 | 52.3086,27 / 26 / 27,1 / 2 / 9,0.094321,0.737500,0.737500,0.122556,0.750000,0.750000,no aplica
+sin_covid,supervisada_entropia,48.6354 | 55.3713,34 / 30 / 16,2 / 3 / 7,0.200376,0.812500,0.737500,0.078217,0.500000,0.750000,no / sí
+todo_entrenamiento,ancho_igual,23.0860 | 44.7130,6 / 33 / 57,0 / 0 / 12,0.057569,0.750000,0.750000,0.000000,0.750000,0.750000,no aplica
+todo_entrenamiento,frecuencia_igual,41.7547 | 51.3579,32 / 32 / 32,0 / 3 / 9,0.064870,0.750000,0.750000,0.122556,0.750000,0.750000,no aplica
+todo_entrenamiento,supervisada_entropia,48.6354 | 55.3713,50 / 30 / 16,2 / 3 / 7,0.156220,0.812500,0.750000,0.078217,0.500000,0.750000,no / sí

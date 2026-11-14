@@ -26,3 +26,21 @@ manzanillo_oferta_hospedaje,scian_clase,texto 6 dígitos,-,Código SCIAN de la c
 manzanillo_oferta_hospedaje,estrato,texto,personas ocupadas (rango),Tamaño del establecimiento por personal ocupado (NO mide cuartos),INEGI DENUE,Estrato
 manzanillo_oferta_hospedaje,establecimientos,entero,establecimientos,"Conteo en esa fecha, clase y estrato. Contexto: no se relaciona con la ocupación mensual ni con hoteles individuales",INEGI DENUE,CLEE distintos
 manzanillo_oferta_hospedaje,personal_min_total,entero,personas,Suma de los mínimos de personal ocupado del estrato (cota inferior),INEGI DENUE,suma de personal_min
+dim_tiempo,periodo,texto AAAA-MM,mes,Nivel mes. Clave: enlaza con manzanillo_ocupacion_mensual.periodo,DATATUR Base70,periodo del oro mensual
+dim_tiempo,fecha_inicio,fecha ISO,día,Primer día del mes,derivada,periodo + '-01'
+dim_tiempo,anio,entero,año,Nivel año (el más general de la jerarquía temporal),derivada,año de periodo
+dim_tiempo,trimestre,entero 1-4,trimestre,Nivel trimestre dentro del año (calendario: T1 = enero a marzo),derivada,(mes - 1) // 3 + 1
+dim_tiempo,anio_trimestre,texto AAAA-Tn,trimestre,Identificador único del trimestre (año + trimestre),derivada,anio + '-T' + trimestre
+dim_tiempo,mes,entero 1-12,mes,Número del mes dentro del año,derivada,mes de periodo
+dim_tiempo,nombre_mes,texto,-,"Nombre del mes en español, en minúsculas",derivada,tabla fija de 12 nombres
+dim_geografia,entidad_clave,texto 2 dígitos,-,Nivel estado. Clave geoestadística del INEGI,INEGI DENUE,primeros 2 dígitos de municipio_clave
+dim_geografia,entidad,texto,-,Nombre del estado (nivel más general). Base70 y DENUE no traen el nombre: tabla fija del contrato §5,contrato §5,clave 06 = Colima
+dim_geografia,municipio_clave,texto 5 dígitos,-,Nivel municipio. Clave geoestadística (entidad + municipio),INEGI DENUE,AreaGeo (regla R-E03)
+dim_geografia,municipio,texto,-,Nombre del municipio. Tabla fija del contrato §5,contrato §5,clave 06007 = Manzanillo
+dim_geografia,centro_turistico,texto,-,Nivel centro turístico (el más específico). Solo se afirma su pertenencia al municipio para Manzanillo,DATATUR Base70,columna centro
+dim_geografia,tipo_centro,texto,-,Clasificación del centro turístico en DATATUR,DATATUR Base70,columna tipo_centro
+dim_geografia,subtipo_centro,texto,-,Subclasificación del centro turístico en DATATUR,DATATUR Base70,columna subtipo_centro
+dim_ubicacion_denue,entidad_clave,texto 2 dígitos,-,Nivel estado de los establecimientos de DENUE,INEGI DENUE,primeros 2 dígitos de municipio_clave
+dim_ubicacion_denue,municipio_clave,texto 5 dígitos,-,Nivel municipio de los establecimientos de DENUE,INEGI DENUE,AreaGeo (regla R-E03)
+dim_ubicacion_denue,localidad,texto,-,Nivel localidad dentro del municipio,INEGI DENUE,columna localidad
+dim_ubicacion_denue,colonia,texto,-,"Nivel colonia dentro de la localidad (el más específico). Sin conteos, coordenadas ni CLEE: no identifica establecimientos",INEGI DENUE,columna colonia

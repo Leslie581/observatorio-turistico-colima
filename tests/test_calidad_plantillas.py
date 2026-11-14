@@ -36,10 +36,23 @@ def test_tiempos_retrospectivos_no_inventan_horarios():
     retro = [f for f in filas if "RETROSPECTIVO" in f["actividad"]]
     e0 = [f for f in retro if f["fecha"] < "2026-11-13"]
     assert e0 and sum(int(f["minutos_estimados"]) for f in e0) == 750  # E0: 480 prototipo + 240 definitivo + 30 auditoria posterior al PR #1
-    e1 = [f for f in retro if f["fecha"] >= "2026-11-13"]
-    assert sum(int(f["minutos_estimados"]) for f in e1) == 240  # E1: estimacion revisada y aceptada por la integrante A (2026-11-13)
     for f in retro:
         assert f["inicio"] == f["fin"] == f["interrupcion_min"] == "" and f["fecha"]
+
+
+def test_tiempos_aceptados_de_e1_por_bloque_y_suma_coherente():
+    """Los bloques aceptados (L0 y L1, L2 y L3) no cambian; el total de E1 puede crecer con el cierre documental."""
+    _, filas = _leer("tiempo-integrante-a.csv")
+    e1 = [f for f in filas if f["fecha"] >= "2026-11-13" and "RETROSPECTIVO" in f["actividad"]]
+    def suma(fs):
+        return sum(int(f["minutos_estimados"]) for f in fs)
+    l2 = [f for f in e1 if f["actividad"].rstrip().endswith("(L2)")]
+    l3 = [f for f in e1 if f["actividad"].rstrip().endswith("(L3)")]
+    l0_l1 = [f for f in e1 if f not in l2 and f not in l3 and "(cierre documental)" not in f["actividad"]]
+    cierre = [f for f in e1 if "(cierre documental)" in f["actividad"]]
+    assert (suma(l0_l1), suma(l2), suma(l3)) == (240, 150, 270)  # estimaciones aceptadas por la integrante A (2026-11-13)
+    assert (len(l0_l1), len(l2), len(l3)) == (8, 5, 8)
+    assert suma(e1) == suma(l0_l1) + suma(l2) + suma(l3) + suma(cierre) >= 660  # el cierre documental se agrega despues
 
 
 def test_defectos_a_usan_tipos_psp_y_no_inventan_minutos():

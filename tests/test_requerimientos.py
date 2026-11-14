@@ -60,6 +60,6 @@ def test_lo_no_comprobado_no_figura_como_cumplido():
     """Reglas de honestidad del documento: lo que no se cumple o no existe no figura como cumplido."""
     por_id = {re.sub(r"\*+", "", f[0]): _estado(f[4]) for f in _filas()}
     assert por_id["RNF-SEG-01"] == "CUMPLIDO"         # gitleaks 8.30.1 se ejecutó el 2026-11-13 (seguridad.md §3)
-    assert por_id["RNF-DIS-01"] == "NO CUMPLIDO"      # 83.3 % y ventana insuficiente
-    assert por_id["RF-10"] == "PENDIENTE"             # el tablero no existe
+    assert por_id["RNF-DIS-01"] == "NO CUMPLIDO"      # 85.7 % y ventana insuficiente
+    assert por_id["RF-10"] == "CUMPLIDO"              # el tablero está en main y la URL pública sirve la versión integrada (2026-11-14)
     assert por_id["RNF-DIS-02"] == "PROPUESTO"        # un solo incidente: sin conclusión

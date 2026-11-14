@@ -107,3 +107,27 @@ def test_con_datos_reales_el_oro_regenerado_coincide_con_el_versionado(tmp_path)
     csv = raiz / "data/oro/manzanillo_ocupacion_mensual.csv"
     csv.write_bytes(csv.read_bytes().replace(b"2016-01,2016-01-01,48.359551", b"2016-01,2016-01-01,48.359552", 1))
     assert not v.comparar(raiz)["ok"]
+
+
+# ---------------------------------------------------------------- dimensiones de las jerarquías conceptuales (SINTÉTICAS)
+def test_las_dimensiones_aun_no_versionadas_se_informan_como_pendientes_y_no_como_diferencia(tmp_path):
+    raiz = _repo(tmp_path)
+    (raiz / "data/oro/dim_tiempo.csv").write_bytes(b"periodo\n2016-01\n")          # existe en el área de trabajo, no en el commit
+    r = v.comparar(raiz)
+    assert r["ok"] and "data/oro/dim_tiempo.csv" not in [d["archivo"] for d in r["diferencias"]]
+    assert set(r["pendientes_de_versionar"]) == set(v.ESTRICTOS_SI_VERSIONADOS)
+
+
+def test_una_dimension_versionada_se_compara_byte_a_byte_y_si_falta_es_diferencia(tmp_path):
+    raiz = _repo(tmp_path)
+    for n in ("dim_tiempo.csv", "dim_geografia.csv"):
+        (raiz / "data/oro" / n).write_bytes(b"a,b\n1,2\n")
+    _git(raiz, "add", "-A")
+    _git(raiz, "commit", "-q", "-m", "dimensiones")
+    assert v.comparar(raiz)["ok"] and v.comparar(raiz)["pendientes_de_versionar"] == []
+    (raiz / "data/oro/dim_tiempo.csv").write_bytes(b"a,b\n1,3\n")
+    assert [d["archivo"] for d in v.comparar(raiz)["diferencias"]] == ["data/oro/dim_tiempo.csv"]
+    (raiz / "data/oro/dim_tiempo.csv").write_bytes(b"a,b\n1,2\n")
+    (raiz / "data/oro/dim_geografia.csv").unlink()
+    d = v.comparar(raiz)["diferencias"]
+    assert [x["archivo"] for x in d] == ["data/oro/dim_geografia.csv"] and "no lo regeneró" in d[0]["motivo"]

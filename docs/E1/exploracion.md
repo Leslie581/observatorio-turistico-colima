@@ -12,6 +12,7 @@ Reproducir: `python -m laboratorio.exploracion.explorar` (requiere `requirements
 - Los PNG se generan sin marcas de tiempo; la misma versión de matplotlib produce los mismos bytes (probado en dos corridas). Con otra versión o sistema pueden variar pixeles; las cifras (CSV y JSON) no.
 
 ## 1. Estadísticas descriptivas ([`estadisticas_descriptivas.csv`](../../laboratorio/exploracion/resultados/estadisticas_descriptivas.csv))
+La «Desv. est.» de esta sección es la desviación estándar **muestral** (`ddof=1`). El z-score de [`transformaciones.md`](transformaciones.md) usa la **poblacional** (`ddof=0`): en el entrenamiento, 12.7659 frente a 12.83 aquí.
 | Grupo | n | Media | Desv. est. | Mín. | Mediana | Máx. | Asimetría |
 |---|---|---|---|---|---|---|---|
 | Todo (2016–2024) | 108 | 45.86 | 12.60 | 1.46 | 49.01 | 66.34 | −1.24 |
@@ -20,7 +21,7 @@ Reproducir: `python -m laboratorio.exploracion.explorar` (requiere `requirements
 | Sin los meses de COVID | 92 | 49.39 | 8.49 | 26.91 | 50.40 | 66.34 | −0.48 |
 | Meses de COVID | 16 | 25.55 | 13.39 | 1.46 | 24.41 | 47.62 | −0.31 |
 
-Lectura: la serie es asimétrica a la izquierda por los meses de COVID (la asimetría pasa de −1.24 a −0.48 sin ellos). El año de prueba tiene **menos variación** (desviación 5.13 frente a 12.60 del total y 8.62 del entrenamiento sin COVID) y una media 10 puntos porcentuales mayor que la del entrenamiento. Es una característica de los datos que conviene tener presente al interpretar el error de 2024; no es un juicio sobre ningún modelo. Tablas por año ([`estadisticas_por_anio.csv`](../../laboratorio/exploracion/resultados/estadisticas_por_anio.csv)) y por mes ([`estadisticas_por_mes.csv`](../../laboratorio/exploracion/resultados/estadisticas_por_mes.csv)).
+Lectura: la serie es asimétrica a la izquierda por los meses de COVID (la asimetría pasa de −1.24 a −0.48 sin ellos). El año de prueba tiene **menos variación** (desviación muestral 5.13 frente a 12.60 del total y 8.62 del entrenamiento sin COVID) y una media 10 puntos porcentuales mayor que la del entrenamiento. Es una característica de los datos que conviene tener presente al interpretar el error de 2024; no es un juicio sobre ningún modelo. Tablas por año ([`estadisticas_por_anio.csv`](../../laboratorio/exploracion/resultados/estadisticas_por_anio.csv)) y por mes ([`estadisticas_por_mes.csv`](../../laboratorio/exploracion/resultados/estadisticas_por_mes.csv)).
 
 ## 2. Gráfica 1 · Serie temporal mensual
 ![Serie mensual de ocupación y oferta diaria implícita](../../laboratorio/exploracion/resultados/figuras/01_serie_mensual_ocupacion.png)
@@ -64,5 +65,5 @@ Lectura: la serie es asimétrica a la izquierda por los meses de COVID (la asime
 
 ## 6. Limitaciones de esta exploración
 - Una sola serie de un solo destino y categorías 2 a 5 estrellas; sin intervalos de confianza para las tablas descriptivas.
-- Faltan, de la matriz de requisitos, la **descomposición** (tendencia, estacionalidad, residuo) y la **correlación cruzada** con una segunda variable en esta carpeta; la integrante B publica estacionariedad, ACF/PACF y correlación cruzada en `laboratorio/pronosticos/resultados/`. No se duplicaron.
+- La **descomposición** (clásica y STL robusta, con su figura) y la **correlación cruzada** con una segunda variable **ya existen** en el laboratorio de la integrante B ([`pronostico.md`](pronostico.md) §2.5 y §2.6, `laboratorio/pronosticos/resultados/descomposicion_oro.png`); junto con la estacionariedad y la ACF/PACF. No se duplicaron aquí.
 - Las figuras no sustituyen una prueba estadística; son descriptivas y están pensadas para el informe y la presentación.

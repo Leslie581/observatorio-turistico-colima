@@ -1,0 +1,4 @@
+periodo,ocupacion_pct,z_robusto,iqr,z_robusto_mayor_3_5,d_covid,tipo,decision
+2020-04,1.4591,-4.665,True,True,True,"evento real (COVID, regla de calendario)",MARCAR y conservar (no es un error: es el hallazgo)
+2020-05,2.6851,-4.545,True,True,True,"evento real (COVID, regla de calendario)",MARCAR y conservar (no es un error: es el hallazgo)
+2020-06,8.1914,-4.004,True,True,True,"evento real (COVID, regla de calendario)",MARCAR y conservar (no es un error: es el hallazgo)

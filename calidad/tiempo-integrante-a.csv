@@ -19,3 +19,16 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Capa oro, diccionario, interfaz, orquestador y validacion contra derivacion independiente",30
 2026-11-13,,,,pruebas,"[ESTIMADO RETROSPECTIVO] Pruebas del pipeline, de la interfaz, de la reproducibilidad y de ci.yml",35
 2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Dependencias fijadas, ruff.toml, ci.yml y revision de wrapt",20
+2026-11-13,,,,codigo,[ESTIMADO RETROSPECTIVO] Exploracion: estadisticas y cuatro graficas del oro (L2),40
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Transformaciones sin fuga: min-max, z-score y discretizacion (L2)",40
+2026-11-13,,,,pruebas,[ESTIMADO RETROSPECTIVO] Pruebas de exploracion y de transformaciones (L2),25
+2026-11-13,,,,codigo,[ESTIMADO RETROSPECTIVO] verificar_oro y su paso en ci.yml (L2),25
+2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] transformaciones.md y textos de CI (L2),20
+2026-11-13,,,,planeacion,[ESTIMADO RETROSPECTIVO] Lectura de los requisitos de Calidad en el PDF y comparacion con lo existente (L3),25
+2026-11-13,,,,codigo,[ESTIMADO RETROSPECTIVO] pipeline/fiabilidad.py y sus pruebas (L3),35
+2026-11-13,,,,pruebas,"[ESTIMADO RETROSPECTIVO] Evidencia operativa: API de Actions, cotejo con la bitacora, restauracion del bronce, busqueda de secretos, pip-audit y permisos (L3)",40
+2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] requerimientos.md (36 requerimientos) y su prueba de consistencia (L3),45
+2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] fiabilidad.md y seguridad.md (L3),40
+2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] plan_sqa.md y actualizacion de plan_trabajo.md y README (L3),35
+2026-11-13,,,,pruebas,"[ESTIMADO RETROSPECTIVO] Validacion: suite, ruff, verificador E0 y pipeline (L3)",10
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Cierre de observaciones: gitleaks, evaluacion del UUID, horarios y defectos 17 y 18 (L3)",40
