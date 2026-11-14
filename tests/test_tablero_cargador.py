@@ -218,10 +218,160 @@ def test_requirements_del_tablero_son_minimos_y_estan_fijados():
     assert {x.split("==")[0]: x.split("==")[1] for x in lineas}["pandas"] == "3.0.5"  # misma versión que el resto del proyecto
 
 
+CARPETAS_PUBLICADAS = ("tablero", ".streamlit")  # lo que Streamlit Community Cloud despliega del repositorio para el tablero
+SUFIJOS_NO_PUBLICABLES = {".pyc", ".pyo", ".log", ".tmp", ".bak", ".env", ".swp"}
+NOMBRES_NO_PUBLICABLES = {"secrets.toml", ".DS_Store", "Thumbs.db"}
+PATRON_SECRETOS = re.compile(r"(?i)(INEGI_TOKEN\s*=|api[_-]?key|password|ghp_[A-Za-z0-9]{10,}|github_pat_)")
+
+
+def archivos_no_publicables(rutas) -> list:
+    """REGLA (no depende del disco): rutas que nunca deben versionarse ni desplegarse junto al tablero."""
+    # Ojo: Path(".env").suffix es "" (Python lo trata como nombre sin extensión); por eso .env se revisa por nombre.
+    return [p for p in map(Path, rutas)
+            if p.suffix in SUFIJOS_NO_PUBLICABLES or p.name in NOMBRES_NO_PUBLICABLES or "__pycache__" in p.parts
+            or p.name == ".env" or p.name.startswith(".env.")]
+
+
+def inventario_publicable() -> list:
+    """INVENTARIO: archivos que pueden llegar al despliegue, es decir, los versionados más los nuevos que Git NO ignora
+    (se podrían confirmar por error). Lo que Git ignora (``__pycache__``, que Python crea al importar) no se publica.
+
+    Antes la prueba recorría el disco y fallaba con ``tablero/__pycache__``, que el propio ``import cargador`` crea:
+    así quedó en rojo el CI de ``main`` en ``06452fd``.
+    """
+    import subprocess
+    r = subprocess.run(["git", "-C", str(RAIZ), "ls-files", "--cached", "--others", "--exclude-standard", "--", *CARPETAS_PUBLICADAS],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        pytest.skip("git no está disponible: no se puede saber qué archivos se publican")
+    return [RAIZ / x for x in r.stdout.split()]
+
+
 def test_no_hay_secretos_ni_archivos_temporales_en_el_tablero():
-    for p in (RAIZ / "tablero").rglob("*"):
-        if p.is_file():
-            assert p.suffix not in {".pyc", ".log", ".tmp", ".bak", ".env"} and "__pycache__" not in p.parts, p
-    for p in (RAIZ / "tablero").glob("*.py"):
-        assert not re.search(r"(?i)(INEGI_TOKEN|api[_-]?key|password|ghp_|github_pat_)", p.read_text(encoding="utf-8")), p.name
+    archivos = inventario_publicable()
+    assert any(p.name == "streamlit_app.py" for p in archivos), "el inventario no incluye la aplicación"
+    assert archivos_no_publicables(archivos) == []
+    for p in archivos:
+        if p.suffix in {".py", ".toml", ".txt", ".md"} and p.is_file():
+            assert not PATRON_SECRETOS.search(p.read_text(encoding="utf-8")), p.name
     assert not (RAIZ / ".streamlit" / "secrets.toml").exists()
+
+
+def test_la_regla_detecta_cada_tipo_de_archivo_no_publicable():
+    """La regla no se debilitó: detecta cachés, temporales, registros, respaldos, .env y secretos de Streamlit."""
+    malos = ["tablero/__pycache__/cargador.cpython-313.pyc", "tablero/__pycache__/x.cpython-314.opt-1.pyc", "tablero/x.pyo",
+             "tablero/depuracion.log", "tablero/x.tmp", "tablero/app.py.bak", "tablero/.env", "tablero/.env.local",
+             ".streamlit/secrets.toml", "tablero/.DS_Store"]
+    assert [p.as_posix() for p in archivos_no_publicables(malos)] == malos
+    assert archivos_no_publicables(["tablero/streamlit_app.py", "tablero/requirements.txt", ".streamlit/config.toml"]) == []
+    assert PATRON_SECRETOS.search("INEGI_TOKEN = 'abc'") and PATRON_SECRETOS.search("ghp_" + "a" * 20)
+
+
+def test_un_pycache_real_en_el_disco_no_rompe_la_prueba_pero_si_se_versionara_se_detectaria():
+    """Reproduce la causa del CI en rojo: hay un ``__pycache__`` real en ``tablero/`` (lo crea Python al importar; si el entorno
+    no escribe bytecode, se crea aquí). No entra al inventario porque Git lo ignora, y la regla lo marcaría si se versionara."""
+    import py_compile
+    cache = RAIZ / "tablero" / "__pycache__"
+    creado = None
+    if not any(cache.glob("*.pyc")):
+        creado = Path(py_compile.compile(str(RAIZ / "tablero" / "cargador.py"), doraise=True))
+    try:
+        en_disco = sorted(cache.glob("*.pyc"))
+        assert en_disco, "debe existir al menos un .pyc para reproducir el caso"
+        inventario = {p.resolve() for p in inventario_publicable()}
+        assert not any(p.resolve() in inventario for p in en_disco)  # ignorado por Git: no se publica
+        assert archivos_no_publicables([p.relative_to(RAIZ) for p in en_disco])  # y la regla sí lo detecta
+    finally:
+        if creado is not None:
+            creado.unlink(missing_ok=True)
+
+
+# ---------------------------------------------------------------- filtro histórico, fechas y textos de cierre de E1
+def test_el_filtro_historico_cubre_cada_periodo_y_no_modifica_el_oro():
+    d = cg.cargar_todo()
+    antes = d.oro.copy()
+    esperado = {"todo": (108, "2016-01", "2024-12"), "pre_covid": (48, "2016-01", "2019-12"),
+                "covid": (16, "2020-03", "2021-06"), "recuperacion": (42, "2021-07", "2024-12")}
+    for clave, (n, ini, fin) in esperado.items():
+        v = cg.filtrar_periodo(d.oro, clave)
+        assert (len(v), v["periodo"].iloc[0], v["periodo"].iloc[-1]) == (n, ini, fin), clave
+        assert v["periodo"].is_monotonic_increasing and not v["periodo"].duplicated().any()
+    covid = cg.filtrar_periodo(d.oro, "covid")
+    assert (covid["d_covid"] == 1).all() and len(covid) == int(d.oro["d_covid"].sum())  # mismo periodo que la regla del contrato
+    pd.testing.assert_frame_equal(d.oro, antes)  # el filtro no altera los datos
+    with pytest.raises(ValueError):
+        cg.filtrar_periodo(d.oro, "2025")
+
+
+def test_el_filtro_no_cambia_resultados_ni_textos_de_los_modelos():
+    d = cg.cargar_todo()
+    t1 = cg.textos_cliente(d)
+    for clave in cg.PERIODOS_HISTORICOS:
+        cg.filtrar_periodo(d.oro, clave)
+    assert cg.textos_cliente(d) == t1
+    d2 = cg.cargar_todo()
+    pd.testing.assert_frame_equal(d.comparacion, d2.comparacion)
+    pd.testing.assert_frame_equal(d.elegido, d2.elegido)
+
+
+def test_resumen_del_periodo_coincide_con_el_oro():
+    d = cg.cargar_todo()
+    r = cg.resumen_periodo(cg.filtrar_periodo(d.oro, "covid"))
+    assert r["n"] == 16 and r["media"] == pytest.approx(d.oro.loc[d.oro["d_covid"] == 1, "ocupacion_pct"].mean())
+    assert r["mes_min"] == "abril de 2020" and r["min"] == pytest.approx(d.oro["ocupacion_pct"].min())
+
+
+def test_las_fechas_salen_de_los_archivos_y_no_se_inventa_una_actualizacion_del_tablero():
+    d = cg.cargar_todo()
+    f = cg.fechas_clave(d)
+    assert f["ultimo_observado"] == "diciembre de 2024" and d.meta_oro["periodo_max"] == "2024-12"
+    assert f["resultados"] == cg.fecha_generacion(d.ejecucion)
+    utc = pd.Timestamp(d.meta_oro["fecha_proceso_utc"]).tz_convert("America/Mexico_City")
+    assert f["capa_oro"].startswith(f"{utc.day} de {cg.MESES[utc.month - 1]} de {utc.year}, {utc:%H:%M}")
+    assert set(f) == {"ultimo_observado", "resultados", "capa_oro"}  # ninguna «fecha de actualización del tablero»
+
+
+def test_el_destacado_de_la_comparacion_sale_de_la_tabla_del_laboratorio():
+    d = cg.cargar_todo()
+    dest = cg.destacado_comparacion(d)
+    t = d.comparacion.set_index("familia")
+    assert dest["menor_rmse_entre_obligatorios"] and t.loc[list(cg.FAMILIAS), "RMSE"].idxmin() == "SARIMA"
+    assert dest["referencia_mejor_en"] == ["MAE", "MAPE"] and dest["elegido_mejor_que_referencia_en"] == ["RMSE"]
+    texto = cg.textos_cliente(d)["destacado"]
+    for m, fam in (("RMSE", "SARIMA"), ("MAE", "SARIMA"), ("MAE", cg.FAMILIA_REFERENCIA), ("MAPE", cg.FAMILIA_REFERENCIA)):
+        assert f"{t.loc[fam, m]:.2f}" in texto, (m, fam)
+    assert "menor RMSE de los cuatro modelos obligatorios" in texto and "referencia ingenua estacional obtuvo mejor MAE y MAPE" in texto
+    assert "ninguna diferencia permite afirmar que un modelo sea mejor de forma general" in texto
+
+
+def test_el_resumen_ejecutivo_y_la_lectura_de_la_historia_distinguen_2024_y_2025():
+    d = cg.cargar_todo()
+    t = cg.textos_cliente(d)
+    e, h = t["ejecutivo"], t["historia"]
+    p = cg.resumen_proyeccion(d.elegido)
+    assert "12 de 12 meses" in e and f"±{p['semiancho_min']:.0f} a ±{p['semiancho_max']:.0f}" in e and "95 de cada 100" in e
+    assert "no es una garantía" in e and "No hay un ganador claro" in e
+    assert "evaluación retrospectiva de 2024" in h and "proyección histórica de 2025" in h and "diciembre de 2023" in h
+    assert "diciembre de 2024" in h and "no es un pronóstico vigente" in h
+
+
+PROHIBIDAS = [r"meses siguientes", r"próximos meses", r"pronóstic\w* (?:para|de) 202[56]", r"proyecci\w+ (?:para|de) 2026",
+              r"(?:en|para) 202[56] se (?:espera|prevé|proyecta)", r"pronóstico actual", r"datos? (?:observados? )?de 2025 (?:muestran|indican)"]
+
+
+def afirmaciones_incorrectas(texto: str) -> list:
+    """Frases que presentarían 2025 o 2026 como pronóstico vigente u observado. Toda mención de «vigente» debe ir negada."""
+    import re as _re
+    malas = [m.group(0) for p in PROHIBIDAS for m in _re.finditer(p, texto, flags=_re.IGNORECASE)]
+    for m in _re.finditer(r"vigente", texto, flags=_re.IGNORECASE):
+        if not _re.search(r"\bno\b[^.]{0,40}$", texto[max(0, m.start() - 45):m.start()], flags=_re.IGNORECASE):
+            malas.append(texto[max(0, m.start() - 45):m.end()])
+    return malas
+
+
+def test_los_textos_no_presentan_2025_ni_2026_como_pronostico_vigente():
+    d = cg.cargar_todo()
+    todo = " ".join([*cg.textos_cliente(d).values(), *cg.LIMITACIONES])
+    assert afirmaciones_incorrectas(todo) == []
+    assert afirmaciones_incorrectas("La ocupación de los meses siguientes será alta.") != []  # el detector sí detecta
+    assert afirmaciones_incorrectas("Este es un pronóstico vigente para 2026.") != []

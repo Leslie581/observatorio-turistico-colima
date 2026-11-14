@@ -6,17 +6,18 @@ Aplicación: [`tablero/streamlit_app.py`](../../tablero/streamlit_app.py) (Strea
 ## 1. Estado
 | Elemento | Estado |
 |---|---|
-| Aplicación (MVP) | **Implementada y probada en local** (arranque, lectura desde otro directorio, cifras y gráficas, vista de escritorio y de móvil) |
-| Despliegue en Streamlit Community Cloud | **NO desplegado** a la fecha de este documento. Los pasos están en §7; lo debe iniciar una persona con su cuenta de GitHub |
-| URL pública | **Ninguna todavía.** No se afirma que esté publicada hasta verificarla |
+| Aplicación (MVP) | **Implementada y probada en local** (arranque, lectura desde distintos directorios, cifras y gráficas). Segunda iteración de cierre de E1: §11 |
+| Despliegue en Streamlit Community Cloud | **Desplegado** por el equipo en <https://tdl-turistico-colima.streamlit.app> |
+| URL pública | **Responde públicamente**: el 2026-11-13 (20:00, hora de la Ciudad de México) devolvió la aplicación de Streamlit (HTTP 200) **sin pedir inicio de sesión**. **No se pudo verificar desde fuera qué versión sirve** (el contenido se dibuja en el navegador); eso exige abrirla en un navegador (§8) |
+| Repositorio | Renombrado a `Leslie581/tdl-turistico-colima` (la dirección anterior redirige) |
 
 ## 2. Qué muestra
-Seis pestañas, completamente en español:
+Seis pestañas, completamente en español, precedidas por un **resumen ejecutivo** y las **fechas clave** (§11):
 | Pestaña | Contenido |
 |---|---|
-| **Resumen** | Ocupación hotelera mensual 2016–2024 desde la capa oro, con el periodo de COVID y el año de prueba sombreados; cuatro indicadores |
-| **Pronóstico 2024** | SARIMA elegido y su **intervalo de predicción del 95 %** frente a los valores reales de 2024 (comparación retrospectiva, entrenado solo con 2016–2023) |
-| **Comparación de modelos** | SES, Holt, Holt-Winters, SARIMA y la **referencia ingenua estacional**: MAE, RMSE y MAPE, y las proyecciones de 2024 elegibles |
+| **Resumen** | Ocupación hotelera mensual desde la capa oro, con **filtro de periodo** (toda la serie, antes del COVID, COVID, recuperación), el periodo de COVID y el año de prueba sombreados, indicadores globales y del periodo, y la distinción entre la evaluación retrospectiva de 2024 y la proyección histórica de 2025 |
+| **Pronóstico 2024** | SARIMA elegido y su **intervalo de predicción del 95 %** frente a los valores reales de 2024 (comparación retrospectiva, entrenado solo con 2016–2023); **MAE, RMSE, MAPE** y meses dentro del intervalo; limitaciones de la evaluación |
+| **Comparación de modelos** | SES, Holt, Holt-Winters, SARIMA y la **referencia ingenua estacional**: MAE, RMSE y MAPE, y las proyecciones de 2024 elegibles. Aviso destacado, calculado desde la tabla: el SARIMA tiene el menor RMSE de los cuatro modelos obligatorios, pero la referencia ingenua tiene mejor MAE y MAPE |
 | **Proyección 2025** | Proyección con su intervalo del 95 %, **rotulada como proyección histórica calculada con datos hasta diciembre de 2024** |
 | **Cómo leerlo** | Explicación sencilla del intervalo, de los resultados y de las limitaciones |
 | **Fuentes y datos** | Fuente, licencia, cobertura temporal, fecha de generación de los resultados, entrenamiento y prueba, versiones |
@@ -75,10 +76,10 @@ python -m venv .venv-tablero
 ```
 Se abre en `http://localhost:8501`. Funciona también desde otro directorio (`streamlit run <ruta>/tablero/streamlit_app.py`). Para las pruebas del tablero, instalar además `pytest` y ejecutar `python -m pytest tests/test_tablero_cargador.py tests/test_tablero_app.py`.
 
-**Pruebas y alcance.** `test_tablero_cargador.py` (20 pruebas; solo pandas y numpy) corre en cualquier entorno, incluida la captura diaria. `test_tablero_app.py` (8 pruebas: estructura de las gráficas, intervalos y arranque con `streamlit.testing`) **se omite** si no están `altair` y `streamlit`; **el CI actual no los instala, así que ahí se omite** (el flujo de CI no se modificó). Sus resultados: ver §9.
+**Pruebas y alcance.** `test_tablero_cargador.py` (27 pruebas; solo pandas y numpy) corre en cualquier entorno, incluida la captura diaria. `test_tablero_app.py` (19 pruebas: estructura de las gráficas, intervalos, filtro, secciones, rutas y arranque con `streamlit.testing`) **se omite** si no están `altair` y `streamlit`; **el CI actual no los instala, así que ahí se omite** (el flujo de CI no se modificó). Sus resultados: ver §9.
 
 ## 7. Despliegue en Streamlit Community Cloud
-**Esto no se ha hecho.** Requiere iniciar sesión y autorizar el acceso a GitHub, y eso lo debe hacer una persona con su propia cuenta.
+**Ya desplegado** en <https://tdl-turistico-colima.streamlit.app>. **Para actualizarlo sin perder la URL:** la aplicación se vuelve a desplegar sola cuando cambia la rama configurada en Streamlit Cloud (probablemente `main`; confirmarlo en «Manage app» → «Settings»). Basta con fusionar el PR revisado a esa rama: **no** hay que borrar la app ni crear otra (eso cambiaría la URL). Si no se actualiza sola, usar «Manage app» → «Reboot app». Los pasos de abajo describen el despliegue inicial, por si hubiera que repetirlo; el repositorio se llama ahora `Leslie581/tdl-turistico-colima`.
 1. Fusionar primero el pull request de esta rama a `main` (con la revisión recíproca) para desplegar desde `main`. Para una prueba previa se puede desplegar desde la rama `e1/eimy-tablero`.
 2. Entrar a <https://share.streamlit.io> e **iniciar sesión con GitHub** (la cuenta debe tener acceso al repositorio `Leslie581/observatorio-turistico-colima`, que es público).
 3. Pulsar **Create app** → **Deploy a public app from GitHub**. Si Streamlit pide **autorizar el acceso a GitHub** (instalar su aplicación de GitHub o dar permiso sobre el repositorio), aceptar solo para este repositorio. Si la cuenta no tiene permisos de escritura sobre el repositorio, lo hace la propietaria (`Leslie581`).
@@ -89,7 +90,7 @@ Se abre en `http://localhost:8501`. Funciona también desde otro directorio (`st
 8. **Verificar la URL pública** (guía en §8) y enviar el enlace para anotarlo en la ficha de entrega.
 **Si falla:** ver el registro de la aplicación («Manage app»). Causas probables: Python distinto de 3.13, la rama o la ruta del archivo principal mal escritas, o el repositorio sin acceso para la cuenta.
 
-## 8. Verificación a realizar sobre la URL pública (pendiente)
+## 8. Verificación a realizar sobre la URL pública (pendiente en navegador)
 Abrir la URL en el navegador y en un teléfono, y comprobar que: la página carga sin mensaje de error; el título y el aviso superior se ven; las seis pestañas abren; las gráficas de «Resumen», «Pronóstico 2024» (con la franja del intervalo), «Comparación de modelos» (barras y líneas) y «Proyección 2025» se dibujan; los indicadores muestran 45.9 %, 54.7 %, 1.5 % y 12 de 12; la pestaña «Proyección 2025» muestra el aviso de proyección histórica; y «Fuentes y datos» muestra la fecha de generación. Registrar la fecha y la URL verificadas.
 
 ## 9. Verificación realizada en local (2026-11-13)
@@ -105,6 +106,22 @@ Abrir la URL en el navegador y en un teléfono, y comprobar que: la página carg
 - **Intervalos muy amplios** (de ±12 a ±21 puntos porcentuales en 2025) porque el entrenamiento incluye COVID.
 - **Resultados precalculados:** el tablero no se actualiza solo; para nuevos datos hay que regenerar el laboratorio y volver a versionar los resultados. Los resultados se generaron con Python 3.14.3; con otras versiones aparecen diferencias numéricas pequeñas (hasta 0.0086), sin cambio de conclusiones ([`pronostico.md`](pronostico.md) §8).
 - **Una categoría agregada:** hoteles de 2 a 5 estrellas de Manzanillo en conjunto; no hay desglose ni datos de establecimientos.
-- **Pruebas de la aplicación no están en el CI** (se omiten allí), y la revisión de móvil fue visual.
+- **Pruebas de la aplicación no están en el CI**: `ci.yml` no instala `tablero/requirements.txt`, así que `test_tablero_app.py` se omite allí. Se comprobó localmente que las cuatro listas de dependencias son compatibles (`pip check` sin conflictos) y que con ellas pasan todas las pruebas; añadir `-r tablero/requirements.txt` al paso de instalación de `ci.yml` (archivo de la integrante A) haría que se ejecuten. La revisión de móvil fue visual.
 - **Streamlit Community Cloud** puede poner la aplicación en reposo por inactividad y tardar unos segundos en reactivarla; no es un servicio con disponibilidad garantizada.
 - **Nombre provisional:** el nombre del observatorio puede cambiar.
+
+## 11. Cierre de E1: segunda iteración (2026-11-13, integrante B)
+Cambios sobre el MVP, sin rediseñarlo y sin cambiar dependencias:
+| Cambio | Detalle |
+|---|---|
+| **Filtro de la serie histórica** | Toda la serie (2016–2024, 108 meses), antes del COVID (2016–2019, 48), periodo COVID (marzo de 2020 a junio de 2021, 16) y recuperación (julio de 2021 a diciembre de 2024, 42). Solo cambia la gráfica, la tabla y los indicadores del periodo; **no** toca entrenamiento, parámetros ni resultados (una prueba lo comprueba). Las franjas de COVID y del año de prueba se recortan al periodo visible. Enero y febrero de 2020 solo aparecen en «Toda la serie» |
+| **Métricas en «Pronóstico 2024»** | MAE, RMSE y MAPE del SARIMA y meses dentro del intervalo del 95 %, con las limitaciones de una prueba de 12 meses |
+| **Aviso destacado en «Comparación de modelos»** | Calculado desde la tabla del laboratorio: menor RMSE del SARIMA entre los cuatro obligatorios y mejor MAE y MAPE de la referencia ingenua; sin afirmar superioridad general |
+| **Resumen ejecutivo** | Modelo elegido, resultado de 2024, incertidumbre y significado del intervalo del 95 % («95 de cada 100 casos, no es una garantía») |
+| **Frase corregida** | Se sustituyó «Los modelos de este tablero usan esa historia para proyectar los meses siguientes» por una explicación que distingue la **evaluación retrospectiva de 2024** y la **proyección histórica de 2025** |
+| **Fechas** | Último mes con datos observados (`periodo_max` de la ficha del oro), resultados estadísticos generados (`ejecucion.json`) y capa oro generada (`fecha_proceso_utc` de la ficha). **No** se muestra una fecha de actualización del tablero: no se puede verificar desde sus archivos |
+| **Prueba corregida (CI de `main` en rojo)** | `test_no_hay_secretos_ni_archivos_temporales_en_el_tablero` recorría el disco y fallaba con `tablero/__pycache__`, que crea el propio `import cargador` (en Linux, en CI y en cualquier clon limpio). **Así quedó en rojo el CI de `main` en `06452fd`** ([ejecución 43525789614](https://github.com/Leslie581/tdl-turistico-colima/actions/runs/43525789614): falló el paso «Pruebas»; el registro detallado exige iniciar sesión y no se pudo leer, así que la causa se confirmó reproduciendo el CI en un clon limpio con las mismas dependencias: 1 fallo, esta prueba). Ahora separa la **regla** (qué archivos no se publican) del **inventario** (lo que Git versiona más lo nuevo que Git no ignora, en `tablero/` y `.streamlit/`). La regla se prueba con casos sintéticos, y otra prueba comprueba que un `__pycache__` real en el disco no la rompe pero se detectaría si se versionara. Al probar la regla apareció una falla de la versión anterior: `.env` nunca se detectaba (`Path('.env').suffix` es vacío); ahora se revisa por nombre (`.env` y `.env.*`) |
+
+**Pruebas nuevas:** el filtro (periodos, que no altera el oro ni los resultados, gráfica con el eje limitado y franjas recortadas), las tres secciones con los datos de los CSV, las franjas con los límites exactos del CSV, el arranque desde la raíz, desde `tablero/` y desde otro directorio, las fechas tomadas de los archivos, el aviso de la comparación y un detector de afirmaciones incorrectas sobre 2025 y 2026, que también se prueba contra frases incorrectas a propósito.
+
+**Verificación del 2026-11-13 (20:35–20:45):** la aplicación arranca sin excepciones; las métricas del SARIMA (MAE 2.38 pp, RMSE 2.64 pp, MAPE 4.36 %, 12 de 12 meses dentro del intervalo), las tablas de 2024 y 2025 y sus límites del 95 % coinciden con los CSV del laboratorio; `streamlit run` responde (`/_stcore/health` = `ok`). En un clon limpio con las dependencias del CI pasan 272 pruebas aunque exista `tablero/__pycache__`. La URL pública responde (HTTP 200, sin inicio de sesión), pero sirve la versión de la rama configurada en Streamlit Cloud: los cambios de esta rama se verán allí solo después de fusionarla y comprobarlo en un navegador.

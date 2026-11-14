@@ -198,6 +198,34 @@ def resumen_proyeccion(e: pd.DataFrame) -> dict:
             "semiancho_min": float(p["semiancho"].min()), "semiancho_max": float(p["semiancho"].max())}
 
 
+# ---------------------------------------------------------------- filtro de la serie histórica (solo visualización)
+# Clave -> (etiqueta, primer periodo, último periodo). Filtra lo que se DIBUJA; no toca entrenamiento, parámetros ni resultados.
+# Enero y febrero de 2020 solo aparecen en «Toda la serie»: no son «antes del COVID» con la definición 2016–2019 ni parte del periodo COVID.
+PERIODOS_HISTORICOS = {
+    "todo": ("Toda la serie (2016–2024)", PRIMER_PERIODO, ULTIMO_PERIODO),
+    "pre_covid": ("Antes del COVID (2016–2019)", "2016-01", "2019-12"),
+    "covid": ("Periodo COVID (marzo de 2020 a junio de 2021)", COVID_INICIO, COVID_FIN),
+    "recuperacion": ("Recuperación (julio de 2021 a diciembre de 2024)", "2021-07", ULTIMO_PERIODO),
+}
+
+
+def filtrar_periodo(oro: pd.DataFrame, clave: str) -> pd.DataFrame:
+    """Meses de la capa oro dentro del periodo elegido. Devuelve una copia; no modifica ``oro``."""
+    if clave not in PERIODOS_HISTORICOS:
+        raise ValueError(f"Periodo desconocido: {clave!r}; use uno de {list(PERIODOS_HISTORICOS)}.")
+    _, inicio, fin = PERIODOS_HISTORICOS[clave]
+    return oro[(oro["periodo"] >= inicio) & (oro["periodo"] <= fin)].reset_index(drop=True).copy()
+
+
+def resumen_periodo(df: pd.DataFrame) -> dict:
+    """Media, mínimo y máximo de la ocupación en los meses dados, con el mes de cada extremo."""
+    y = df["ocupacion_pct"]
+    bajo, alto = df.loc[y.idxmin()], df.loc[y.idxmax()]
+    return {"n": int(len(df)), "media": float(y.mean()), "min": float(bajo["ocupacion_pct"]), "mes_min": bajo["mes_texto"],
+            "max": float(alto["ocupacion_pct"]), "mes_max": alto["mes_texto"],
+            "desde": df["mes_texto"].iloc[0], "hasta": df["mes_texto"].iloc[-1]}
+
+
 def validar_coherencia(oro: pd.DataFrame, comparacion: pd.DataFrame, por_modelo: pd.DataFrame, elegido: pd.DataFrame, resumen: dict) -> list:
     """Cotejo entre archivos: devuelve la lista de problemas (vacía si todo es coherente con el laboratorio y con la capa oro)."""
     problemas = []
@@ -260,6 +288,38 @@ def fecha_generacion(ejecucion: dict) -> str:
     return f"{local.day} de {MESES[local.month - 1]} de {local.year}, {local:%H:%M} (hora de la Ciudad de México; {utc:%H:%M} UTC)"
 
 
+def _fecha_local(utc_texto: str) -> str:
+    utc = pd.Timestamp(utc_texto)
+    local = utc.tz_convert("America/Mexico_City")
+    return f"{local.day} de {MESES[local.month - 1]} de {local.year}, {local:%H:%M} (hora de la Ciudad de México)"
+
+
+def fechas_clave(d: Datos) -> dict:
+    """Las fechas que el tablero puede VERIFICAR desde los archivos versionados (no se inventa ninguna).
+
+    No incluye una «fecha de actualización del tablero»: la aplicación no puede comprobar desde sus archivos cuándo se desplegó.
+    """
+    ultimo = pd.Timestamp(d.meta_oro["periodo_max"] + "-01")
+    out = {"ultimo_observado": mes_texto(ultimo), "resultados": fecha_generacion(d.ejecucion)}
+    if d.meta_oro.get("fecha_proceso_utc"):
+        out["capa_oro"] = _fecha_local(d.meta_oro["fecha_proceso_utc"])
+    return out
+
+
+def destacado_comparacion(d: Datos) -> dict:
+    """Qué modelo tiene el menor error por métrica, calculado desde la tabla (no escrito a mano).
+
+    Devuelve si el elegido tiene el menor RMSE entre los cuatro modelos obligatorios y en qué métricas lo supera la referencia ingenua.
+    """
+    t = d.comparacion.set_index("familia")
+    eleg = d.resumen["elegido"]["familia"]
+    obligatorios = t.loc[list(FAMILIAS)]
+    ref = t.loc[FAMILIA_REFERENCIA]
+    return {"elegido": eleg, "menor_rmse_entre_obligatorios": obligatorios["RMSE"].idxmin() == eleg,
+            "referencia_mejor_en": [m for m in ("MAE", "RMSE", "MAPE") if ref[m] < t.loc[eleg, m]],
+            "elegido_mejor_que_referencia_en": [m for m in ("MAE", "RMSE", "MAPE") if t.loc[eleg, m] < ref[m]]}
+
+
 def textos_cliente(d: Datos) -> dict:
     """Explicaciones para el cliente, con cifras tomadas de los archivos (no escritas a mano)."""
     retro = d.elegido[d.elegido["tipo"] == TIPO_RETRO]
@@ -272,7 +332,33 @@ def textos_cliente(d: Datos) -> dict:
     media_obs, media_pron = float(retro["observado"].mean()), float(retro["media"].mean())
     mejora = [m for m in ("MAE", "RMSE", "MAPE") if s[m] < ref[m]]
     peor = [m for m in ("MAE", "RMSE", "MAPE") if s[m] >= ref[m]]
+    dest = destacado_comparacion(d)
+    ultimo = mes_texto(pd.Timestamp(d.meta_oro["periodo_max"] + "-01"))
+    if dest["menor_rmse_entre_obligatorios"]:
+        frase_rmse = f"El SARIMA obtuvo el **menor RMSE de los cuatro modelos obligatorios** ({s['RMSE']:.2f} puntos porcentuales)"
+    else:
+        frase_rmse = f"El SARIMA se eligió con el criterio del laboratorio (RMSE {s['RMSE']:.2f} puntos porcentuales)"
+    if dest["referencia_mejor_en"]:
+        frase_ref = (f", pero la **referencia ingenua estacional obtuvo mejor {' y '.join(dest['referencia_mejor_en'])}** "
+                     f"(MAE {ref['MAE']:.2f} frente a {s['MAE']:.2f}; MAPE {ref['MAPE']:.2f} % frente a {s['MAPE']:.2f} %).")
+    else:
+        frase_ref = ", y también tuvo menor error que la referencia ingenua estacional en las tres métricas."
     return {
+        "ejecutivo": (
+            f"**El modelo seleccionado es un SARIMA.** Se probó con 2024: entrenado solo con datos hasta diciembre de 2023, "
+            f"proyectó una ocupación media de {media_pron:.1f} % frente a {media_obs:.1f} % observado, con un error medio de "
+            f"{s['MAE']:.1f} puntos porcentuales por mes, y los valores reales cayeron dentro de su intervalo del 95 % en {cob} de {n} meses. "
+            f"**La incertidumbre es alta:** el intervalo del 95 % abarca de ±{p['semiancho_min']:.0f} a ±{p['semiancho_max']:.0f} puntos porcentuales "
+            "alrededor del valor central. Significa que, si los patrones del pasado se mantienen, se espera que el valor real caiga dentro de esa franja "
+            "en 95 de cada 100 casos; no es una garantía. **No hay un ganador claro** frente a la referencia ingenua estacional, que repite el valor "
+            "del año anterior."),
+        "historia": (
+            "**Qué se hizo con esta historia.** Con estos datos se hicieron dos ejercicios distintos. "
+            "(1) Una **evaluación retrospectiva de 2024**: los modelos se entrenaron solo con datos hasta diciembre de 2023 y su pronóstico de 2024 "
+            "se comparó con lo que realmente ocurrió. "
+            f"(2) Una **proyección histórica de 2025**: el modelo elegido se volvió a ajustar con los datos hasta {ultimo}; como la fuente no trae "
+            "datos de 2025, esa proyección no se ha podido comparar con la realidad y no es un pronóstico vigente."),
+        "destacado": frase_rmse + frase_ref + " Con solo 12 meses de prueba, ninguna diferencia permite afirmar que un modelo sea mejor de forma general.",
         "intervalo": (
             "**Qué es el intervalo del 95 %.** Cada pronóstico mensual es un valor central (la línea) y una franja alrededor de él. "
             "La franja es el rango en el que, si los patrones del pasado se mantienen, esperamos que caiga el valor real con una confianza del 95 %. "
