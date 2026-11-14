@@ -58,6 +58,8 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m laboratorio.exploracion.ruido          # rama e1/mejoras-postentrega
 ```
 
+> **Nota:** volver a ejecutar el laboratorio en otro equipo cambia los resultados en el 5.º o 6.º decimal (tolerancia declarada: 1e-2, RNF-REP-04), y las pruebas del tablero comparan contra los valores versionados. Para probar el tablero después de regenerar, restaure primero los resultados: `git checkout -- laboratorio/pronosticos/resultados`. Comprobado en un entorno nuevo (Python 3.13): pipeline, verificación del oro, laboratorio, exploración, intervalos y ruido terminan en 0; 430 pruebas pasan y las 2 que fallan lo hacen solo por esa diferencia de 7e-6.
+
 **3. Pruebas y calidad** (el CI exige cobertura ≥ 75 %):
 ```powershell
 .\.venv\Scripts\python.exe -m ruff check .
