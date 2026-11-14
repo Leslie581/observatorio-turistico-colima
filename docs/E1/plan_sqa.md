@@ -121,6 +121,16 @@ Es el defecto de proceso **D1 de las Auditorías 3 a 7**, recurrente. El plan de
 - **Condiciones de cierre:** (a) las Auditorías 5 de B y 6 y 7 de A están en `main`; (b) registrar o declarar pendiente la revisión de A sobre los PR #7, #9, #13 y #14; (c) citar el defecto D1 y esta excepción en la ficha; (d) **no afirmar** que existe protección de ramas.
 - **Lo que la excepción NO cubre:** no reemplaza el control previo; si una revisión posterior hubiera hallado un defecto bloqueante, la etiqueta no se crearía.
 
+### 5.2 Clasificación de las desviaciones y procedimiento definitivo desde E2
+**Qué es y qué no es cada cosa.** (1) **Requisito del PDF** (págs. 16 y 25): plan SQA con estructura IEEE 730, revisiones y auditorías, reporte de problemas y acción correctiva; **el PDF no fija una penalización por cada PR sin aprobación formal**. (2) **Regla interna del equipo** (`plan_trabajo.md` §3): todo PR se aprueba en GitHub por la otra integrante antes de fusionarse. (3) **Buena práctica adicional**: protección de ramas. Las doce desviaciones de §5.1 son **incumplimientos de la regla interna (2)**, no doce incumplimientos independientes del PDF; el efecto sobre la rúbrica es el de **un** proceso de revisión que existió (Auditorías 1 a 8, con pruebas reales) pero que no se aplicó **antes** de fusionar. Ni se ocultan ni se multiplican.
+**Auditorías efectivamente realizadas:** ocho, en [`auditorias.md`](../../calidad/auditorias.md). **Conformidad definitiva de B con la relatoría:** aprobación del PR #19. **Acción correctiva:** *propuesta y preparada* (plantilla de PR, `CODEOWNERS`, ruleset sin activar); **implementada** solo cuando la protección esté activa y probada ([`seguridad.md`](seguridad.md) §7).
+**Procedimiento definitivo (E2 en adelante, sin burocracia añadida):**
+1. Todo cambio va en una rama y se integra por PR; la plantilla de PR trae la lista de comprobación (pruebas, `ruff`, documentación, defectos y tiempo registrados).
+2. La **otra** integrante lo revisa y lo aprueba **en GitHub antes** de fusionar; una revisión posterior no sustituye a la previa.
+3. Con la protección activa, el CI en verde (`calidad`, `auditoria-dependencias`, `bloqueo-tablero`, `secretos`) y la aprobación son obligatorios; sin protección, la autora **no** fusiona sin ambas cosas.
+4. La revisión que importa para el PDF es la **auditoría escrita** (`auditorias.md`) con pruebas reales; se hace una por entrega y por PR grande, no una por cambio menor.
+5. Cada defecto y cada bloque de tiempo se registran en el momento (inicio, fin, `minutos_correccion`) en los CSV individuales; ver [`calidad/README.md`](../../calidad/README.md).
+
 ## 6. Reporte de problemas y acciones correctivas
 **Sistema de reporte:** los CSV de defectos (`calidad/defectos-integrante-a.csv` y `-b.csv`, formato del Kit TDL con los diez tipos de PSP) son el registro de defectos **corregidos**; los hallazgos de una revisión ajena van a `auditorias.md`; lo que **puede** salir mal va a [`riesgos.md`](../../calidad/riesgos.md) y no a los CSV.
 **Flujo:** detectar → registrar (defecto propio en el CSV, hallazgo ajeno en `auditorias.md`) → clasificar (severidad) → corregir con un commit que lo referencie → verificar (prueba o revisión) → cerrar. Un defecto solo se anota cuando se introdujo **y** se corrigió; los minutos de corrección no se inventan.

@@ -10,6 +10,28 @@ Repositorio: https://github.com/Leslie581/tdl-turistico-colima (el nombre anteri
 
 > Esta ficha enlaza solo evidencias que existen en la rama. **PARCIAL**, **NO CUMPLIDO** y **PENDIENTE** significan lo que dicen. La auditoría contra la rúbrica del PDF está en [`auditoria_integral_pdf.md`](auditoria_integral_pdf.md).
 
+## Lista de comprobación de entregables
+**Origen:** *PDF* = lo pide el PDF oficial; *Interno* = regla del equipo; *Extra* = buena práctica adicional; *Posterior* = hecho después del plazo, en `e1/mejoras-postentrega`.
+| Entregable | Origen | Evidencia | Estado |
+|---|---|---|---|
+| Pipeline automatizado (bronce → plata → oro) | PDF | [`pipeline/ejecutar.py`](../../pipeline/ejecutar.py), [`captura-diaria.yml`](../../.github/workflows/captura-diaria.yml), [`pipeline.md`](pipeline.md) | Cumple |
+| Capas plata y oro | PDF | Oro versionado: [`data/oro/`](../../data/oro/); la plata se regenera en cada corrida (está en `.gitignore`) | Cumple |
+| Puerta de calidad y cuarentena | PDF | [`pipeline/calidad/`](../../pipeline/calidad/), [`resumen de cuarentena`](../../data/cuarentena/resumen_e1-e6c9a995c9ed.json) | Cumple |
+| Diccionario de datos | PDF | [`diccionario_datos.csv`](../../data/oro/diccionario_datos.csv) | Cumple |
+| Laboratorio estadístico y cuatro modelos | PDF | [`laboratorio/pronosticos/`](../../laboratorio/pronosticos/README.md), [`comparacion_modelos_2024.csv`](../../laboratorio/pronosticos/resultados/comparacion_modelos_2024.csv), [`pronostico.md`](pronostico.md) | Cumple |
+| Notebook reproducible | Extra / Posterior | [`notebooks/pronostico_e1.ipynb`](../../notebooks/pronostico_e1.ipynb) | Hecho después del plazo; ejecutado por una prueba |
+| Tablero público | PDF | https://tdl-turistico-colima.streamlit.app, [`tablero.md`](tablero.md) | Cumple (la URL sirve la versión entregada) |
+| Plan SQA (IEEE 730 adaptado) | PDF | [`plan_sqa.md`](plan_sqa.md) | Cumple, con la desviación interna de §5.1 |
+| Registros PSP individuales | PDF | [`tiempo-integrante-a.csv`](../../calidad/tiempo-integrante-a.csv), [`defectos-integrante-a.csv`](../../calidad/defectos-integrante-a.csv), [`tiempo-integrante-b.csv`](../../calidad/tiempo-integrante-b.csv), [`defectos-integrante-b.csv`](../../calidad/defectos-integrante-b.csv) | Parcial: tiempos estimados y sin minutos de corrección |
+| Bitácora y métricas de fiabilidad | PDF | [`bitacora_capturas.jsonl`](../../calidad/bitacora_capturas.jsonl), [`fiabilidad_e1.json`](../../calidad/fiabilidad_e1.json), [`fiabilidad.md`](fiabilidad.md) | Parcial: 3.83 de 7 días |
+| Seguridad y respaldo | PDF | [`seguridad.md`](seguridad.md), [`pipeline/respaldo.py`](../../pipeline/respaldo.py), [`calidad/evidencia/`](../../calidad/evidencia/) | Cumple; sin copia externa confirmada |
+| Requerimientos verificables | PDF | [`requerimientos.md`](requerimientos.md) | Cumple |
+| Integración continua | PDF | [`ci.yml`](../../.github/workflows/ci.yml) | Cumple; protección de `main` sin activar (*Extra*) |
+| Relatoría (máx. 2 páginas) | PDF | [`relatoria-E1.md`](../relatoria-E1.md) | Cumple |
+| Ficha `ENTREGA.md` con los tres apartados | PDF | Este documento | Cumple |
+| Declaración de uso de IA | PDF | Sección «Uso de IA generativa» de este documento y de la relatoría | Cumple |
+| Ruta experimental de E2 | PDF | [`ruta_experimento_e2.md`](ruta_experimento_e2.md) | Cumple (no se califica) |
+
 ## Ingeniería de Datos
 | Criterio de la rúbrica E1 | Evidencia (enlace) | Estado | Nota del equipo |
 |---|---|---|---|
