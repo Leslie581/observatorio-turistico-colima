@@ -1,0 +1,22 @@
+{
+  "decision_por_tipo": {
+    "error de captura (ocupados > disponibles)": "CUARENTENA con motivo (regla R-D06; en Manzanillo: 0 casos)",
+    "evento real (COVID)": "MARCAR y conservar; se modela con la variable de calendario d_covid",
+    "ruido (variación mes a mes sin causa)": "CONSERVAR sin suavizar: la serie es la medición; el pronóstico lo absorbe en la varianza",
+    "valor sin causa conocida": "MARCAR y revisar contra la fuente; no se elimina sin evidencia"
+  },
+  "iqr_k": 1.5,
+  "limites_iqr": [
+    18.0412,
+    75.9413
+  ],
+  "meses_covid_senalados": 3,
+  "senalados_fuera_de_covid": 0,
+  "senalados_iqr": 3,
+  "senalados_por_ambos": 3,
+  "senalados_z_robusto": 3,
+  "serie": "ocupacion_pct de Manzanillo, 108 meses",
+  "solo_iqr": [],
+  "solo_z_robusto": [],
+  "umbral_z_robusto": 3.5
+}

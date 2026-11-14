@@ -1,0 +1,152 @@
+{
+  "algoritmo": "sha256",
+  "archivos": [
+    {
+      "ruta": "datatur/Base70centros.csv",
+      "bytes": 2740171,
+      "sha256": "a8ca3f9bf34edf46321a45c1abcd3f774363d02db0395f1d6132b8a7c4d7d671"
+    },
+    {
+      "ruta": "datatur/Base70centros.csv.meta.json",
+      "bytes": 549,
+      "sha256": "1ff152fa02f74fccc820f3922859b85bec092e61e3b9c596ac8d601731a32e5b"
+    },
+    {
+      "ruta": "datatur/LEEME.md",
+      "bytes": 1426,
+      "sha256": "0b8bf73b641538504c575e47024f1cb3ec1d243cdb614654d52d2f6507e9c77f"
+    },
+    {
+      "ruta": "denue/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T004357Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T004357Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "607421d505fa81a90326f2c489d0fe0d509ebec91bf43616e39f323790cb5842"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T004357Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "d3ce38ae06fe7e614defa142f7d497c5b164c772ae9a366e30fa5c307338cb0b"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T004357Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "db12768b8dc1db3f03da34390abce4cd96cbed7cfa69bf6d39f2a856ebaadc33"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T010646Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T010646Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "fb2583b71d3dc031b3b7274b078e95573813355250337d55b4473564390b65a9"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T010646Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "60a657bd65d49f26338f1369994823b688a13ea518699a4a0705f7323522cd15"
+    },
+    {
+      "ruta": "denue/2026-11-09/20261110T010646Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "70d60b5ef5b938f2df1ebf10192a95b4e1df396cd63568c9b92d2dda0b6566ef"
+    },
+    {
+      "ruta": "denue/2026-11-10/20261110T202826Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-10/20261110T202826Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "8835ade0b12540bac6053fa0b49187d3bc45891391e26b2ac1eb1c904319e900"
+    },
+    {
+      "ruta": "denue/2026-11-10/20261110T202826Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "60a657bd65d49f26338f1369994823b688a13ea518699a4a0705f7323522cd15"
+    },
+    {
+      "ruta": "denue/2026-11-10/20261110T202826Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "6f6772ba8acad02651df3bced459f9a92f62ad4af6485811716854fbcfb57992"
+    },
+    {
+      "ruta": "denue/2026-11-11/20261111T201125Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-11/20261111T201125Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "d70bea8dad1ae0af9c6d0bc98cc88c3e1938176f21c1cf8368ef625ce0857337"
+    },
+    {
+      "ruta": "denue/2026-11-11/20261111T201125Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "d3ce38ae06fe7e614defa142f7d497c5b164c772ae9a366e30fa5c307338cb0b"
+    },
+    {
+      "ruta": "denue/2026-11-11/20261111T201125Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "3be1811ad1a110774df0cc3c496952bfeb319b43b0793b516a235ec392e073aa"
+    },
+    {
+      "ruta": "denue/2026-11-12/20261112T204832Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-12/20261112T204832Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "5945ea129e6eaf4597fa7f53d5ff835583e6b74b54466d8cc64377470e6a9d95"
+    },
+    {
+      "ruta": "denue/2026-11-12/20261112T204832Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "5f2476985cdc1b9cc34115cc6e4e559daae3fd971ea2478d55032ecba270fc69"
+    },
+    {
+      "ruta": "denue/2026-11-12/20261112T204832Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "c0f60cb9a20311c54e971b6c7f186da6e3d48162585f567bf06c9d93bad104be"
+    },
+    {
+      "ruta": "denue/2026-11-13/20261113T202853Z_01_Cuantificar.json",
+      "bytes": 41,
+      "sha256": "74899df496f31087df857c42c456dbb30c8fea50ce49d3cb6c7c4dc10cb264fa"
+    },
+    {
+      "ruta": "denue/2026-11-13/20261113T202853Z_01_Cuantificar.json.meta.json",
+      "bytes": 1698,
+      "sha256": "39fd877a496d92c57914baa86040fabfe75f62956076fbcd90370f8413fcf99a"
+    },
+    {
+      "ruta": "denue/2026-11-13/20261113T202853Z_02_BuscarAreaAct.json",
+      "bytes": 96570,
+      "sha256": "5f2476985cdc1b9cc34115cc6e4e559daae3fd971ea2478d55032ecba270fc69"
+    },
+    {
+      "ruta": "denue/2026-11-13/20261113T202853Z_02_BuscarAreaAct.json.meta.json",
+      "bytes": 2225,
+      "sha256": "3314888d13749fa4e1799a198e2dcc7cad6e0de3531da08db1a131470fbec195"
+    }
+  ],
+  "total_archivos": 28,
+  "total_bytes": 3345350,
+  "zip": {
+    "archivo": "bronce-20261114.zip",
+    "bytes": 685506,
+    "sha256": "725b499c5d16c062e273666b07d06b314cedebc670e2f4446b80e5e03a6127b2"
+  }
+}

@@ -122,3 +122,82 @@ def test_la_tasa_coincide_con_la_del_verificador_de_e0():
     bit = RAIZ / "calidad" / "bitacora_capturas.jsonl"
     nuevo, viejo = f.informe(bit), disponibilidad(bit)
     assert nuevo["tasa_exito"]["valor"] == viejo["tasa_exito"] and nuevo["ejecuciones"]["validas"] == viejo["ejecuciones"]
+
+
+# ---------------------------------------------------------------- estimación EXPLORATORIA del MTBF (con un solo incidente)
+def test_cuantiles_ji_cuadrada_en_python_puro_coinciden_con_valores_de_tabla():
+    assert f.ji2_cuantil_gl_par(0.05, 2) == pytest.approx(0.102587, abs=1e-6)
+    assert f.ji2_cuantil_gl_par(0.95, 4) == pytest.approx(9.487729, abs=1e-6)
+    assert f.ji2_cuantil_gl_par(0.5, 2) == pytest.approx(1.386294, abs=1e-6)  # mediana de una exponencial de media 2: 2 ln 2
+
+
+def test_cuantiles_y_cp_coinciden_con_scipy_si_esta_instalado():
+    stats = pytest.importorskip("scipy.stats")
+    for gl in (2, 4, 6, 10):
+        for p in (0.025, 0.05, 0.5, 0.95, 0.975):
+            assert f.ji2_cuantil_gl_par(p, gl) == pytest.approx(stats.chi2.ppf(p, gl), rel=1e-9)
+    for x, n in ((5, 6), (0, 6), (6, 6), (3, 10)):
+        lo, hi = f.intervalo_clopper_pearson(x, n, 0.95)
+        assert lo == pytest.approx(0.0 if x == 0 else stats.beta.ppf(0.025, x, n - x + 1), abs=1e-9)
+        assert hi == pytest.approx(1.0 if x == n else stats.beta.ppf(0.975, x + 1, n - x), abs=1e-9)
+
+
+def test_intervalo_de_epstein_con_un_fallo_reproduce_los_valores_calculados_aparte():
+    lo, hi = f.intervalo_mtbf_epstein(245075.0, 1, 0.90)  # T real de la bitácora (ventana 245,343 s menos 268 s)
+    assert lo / 3600 == pytest.approx(14.350, abs=0.001) and hi / 3600 == pytest.approx(1327.2, abs=0.1)
+    with pytest.raises(ValueError):
+        f.intervalo_mtbf_epstein(100.0, 0)
+
+
+def test_clopper_pearson_casos_limite_y_el_valor_de_5_de_6():
+    assert f.intervalo_clopper_pearson(5, 6) == pytest.approx((0.3588, 0.9958), abs=1e-4)
+    assert f.intervalo_clopper_pearson(0, 6)[0] == 0.0 and f.intervalo_clopper_pearson(6, 6)[1] == 1.0
+
+
+def test_estimacion_exploratoria_se_declara_exploratoria_y_con_intervalo():
+    filas = [reg(0, "fallo", error="sin_token"), reg(0.1), reg(24), reg(48), reg(72)]  # 1 incidente
+    e = f.calcular(filas)["estimacion_exploratoria"]
+    assert e["estado"].startswith("EXPLORATORIA") and e["fallas_r"] == 1
+    assert e["intervalo_90_mtbf_horas"][0] < e["mtbf_horas"] < e["intervalo_90_mtbf_horas"][1]
+    assert e["disponibilidad_A"]["con_mtbf_cota_inferior_90"] < e["disponibilidad_A"]["punto"] < e["disponibilidad_A"]["con_mtbf_cota_superior_90"]
+    assert e["supuestos_y_limites"] and "no sustituye" in e["estado"]
+
+
+def test_con_un_incidente_A_puntual_es_igual_a_la_disponibilidad_observada_por_tiempo():
+    """Equivalencia algebraica: T/(T+R) = (W−R)/W; el estimador solo aporta el intervalo."""
+    e = f.calcular([reg(0, "fallo"), reg(0.1), reg(24), reg(48)])["estimacion_exploratoria"]
+    assert e["disponibilidad_A"]["punto"] == pytest.approx(e["disponibilidad_observada_por_tiempo"], abs=1e-5)
+
+
+def test_sin_incidentes_cerrados_no_hay_estimacion_y_no_se_cambia_el_criterio_interno():
+    assert f.calcular([reg(0), reg(24), reg(48)])["estimacion_exploratoria"] is None
+    assert f.calcular([reg(0), reg(24), reg(48, "fallo")])["estimacion_exploratoria"] is None  # incidente abierto: sin recuperación
+    r = f.calcular([reg(0, "fallo"), reg(0.1), reg(24)])
+    assert r["mtbf"]["estimable"] is False and r["disponibilidad_A"]["estimable"] is False  # el criterio interno de 2 incidentes no cambia
+
+
+def test_dos_incidentes_usan_r_igual_a_2_en_la_estimacion():
+    e = f.calcular([reg(0), reg(24, "fallo"), reg(24.5), reg(72), reg(96, "fallo"), reg(96.25), reg(120)])["estimacion_exploratoria"]
+    assert e["fallas_r"] == 2 and e["intervalo_90_mtbf_horas"][0] < e["mtbf_horas"] < e["intervalo_90_mtbf_horas"][1]
+
+
+def test_estimacion_con_los_8_primeros_registros_reales(tmp_path):
+    """REAL (corte fijo): MTBF 68.076 h, IC 90 % 14.35 h a 1327.2 h, A 0.99891 (0.99484 con la cota inferior); tasa 5/6 con su IC."""
+    lineas = (RAIZ / "calidad" / "bitacora_capturas.jsonl").read_text(encoding="utf-8").splitlines()
+    corte = tmp_path / "bitacora.jsonl"
+    corte.write_text("\n".join(lineas[:8]) + "\n", encoding="utf-8")
+    r = f.informe(corte)
+    e = r["estimacion_exploratoria"]
+    assert e["ventana_s"] == 245343.0 and e["reparacion_total_s"] == 268.0 and e["tiempo_operativo_T_s"] == 245075.0 and e["fallas_r"] == 1
+    assert e["mtbf_horas"] == pytest.approx(68.076, abs=0.001) and e["intervalo_90_mtbf_horas"] == pytest.approx([14.35, 1327.2], abs=0.1)
+    assert e["disponibilidad_A"]["punto"] == pytest.approx(0.99891, abs=1e-5) and e["disponibilidad_A"]["con_mtbf_cota_inferior_90"] == pytest.approx(0.99484, abs=1e-5)
+    assert e["disponibilidad_observada_por_tiempo"] == pytest.approx(0.99891, abs=1e-5)
+    assert r["tasa_exito"]["intervalo_95_clopper_pearson"] == pytest.approx([0.3588, 0.9958], abs=1e-4)
+    assert r["tasa_exito"]["el_intervalo_incluye_el_objetivo"] is True and r["tasa_exito"]["valor"] == pytest.approx(0.8333, abs=1e-4)
+    assert r["mtbf"]["estimable"] is False and r["disponibilidad_A"]["estimable"] is False  # la medición con el criterio interno no cambia
+
+
+def test_el_nucleo_de_fiabilidad_no_depende_de_scipy():
+    """La captura diaria solo instala requirements.txt; el módulo debe funcionar sin scipy."""
+    codigo = (RAIZ / "pipeline" / "fiabilidad.py").read_text(encoding="utf-8")
+    assert "import scipy" not in codigo and "from scipy" not in codigo

@@ -8,7 +8,7 @@ Aplicación: [`tablero/streamlit_app.py`](../../tablero/streamlit_app.py) (Strea
 |---|---|
 | Aplicación (MVP) | **Implementada y probada en local** (arranque, lectura desde distintos directorios, cifras y gráficas). Segunda iteración de cierre de E1: §11 |
 | Despliegue en Streamlit Community Cloud | **Desplegado** por el equipo en <https://tdl-turistico-colima.streamlit.app> |
-| URL pública | **Responde públicamente**: el 2026-11-13 (20:00, hora de la Ciudad de México) devolvió la aplicación de Streamlit (HTTP 200) **sin pedir inicio de sesión**. **No se pudo verificar desde fuera qué versión sirve** (el contenido se dibuja en el navegador); eso exige abrirla en un navegador (§8) |
+| URL pública | **Responde públicamente y sirve la versión integrada.** Verificada el 2026-11-14 a las 04:25 UTC en el navegador: filtro de periodo, resumen ejecutivo, fechas clave, indicadores 45.9 %, 54.7 %, 1.5 % y 12 de 12, y seis pestañas sin errores. A las 03:09 UTC todavía servía una versión anterior (Auditoría 7, D2); la titular reconfiguró el despliegue desde `main` (Python 3.13). No se probó en un teléfono (§8) |
 | Repositorio | Renombrado a `Leslie581/tdl-turistico-colima` (la dirección anterior redirige) |
 
 ## 2. Qué muestra
@@ -76,21 +76,22 @@ python -m venv .venv-tablero
 ```
 Se abre en `http://localhost:8501`. Funciona también desde otro directorio (`streamlit run <ruta>/tablero/streamlit_app.py`). Para las pruebas del tablero, instalar además `pytest` y ejecutar `python -m pytest tests/test_tablero_cargador.py tests/test_tablero_app.py`.
 
-**Pruebas y alcance.** `test_tablero_cargador.py` (27 pruebas; solo pandas y numpy) corre en cualquier entorno, incluida la captura diaria. `test_tablero_app.py` (19 pruebas: estructura de las gráficas, intervalos, filtro, secciones, rutas y arranque con `streamlit.testing`) **se omite** si no están `altair` y `streamlit`; **el CI actual no los instala, así que ahí se omite** (el flujo de CI no se modificó). Sus resultados: ver §9.
+**Pruebas y alcance.** `test_tablero_cargador.py` (30 pruebas; solo pandas y numpy) corre en cualquier entorno, incluida la captura diaria. `test_tablero_app.py` (19 pruebas: estructura de las gráficas, intervalos, filtro, secciones, rutas y arranque con `streamlit.testing`) **se omite** localmente si no están `altair` y `streamlit`; **`ci.yml` instala `tablero/requirements.txt` y fija `TDL_EXIGIR_TABLERO=1`**, así que en CI su ausencia es un **error**, no una omisión (cambio del cierre de E1; ver la Auditoría 7). Sus resultados: ver §9.
 
 ## 7. Despliegue en Streamlit Community Cloud
 **Ya desplegado** en <https://tdl-turistico-colima.streamlit.app>. **Para actualizarlo sin perder la URL:** la aplicación se vuelve a desplegar sola cuando cambia la rama configurada en Streamlit Cloud (probablemente `main`; confirmarlo en «Manage app» → «Settings»). Basta con fusionar el PR revisado a esa rama: **no** hay que borrar la app ni crear otra (eso cambiaría la URL). Si no se actualiza sola, usar «Manage app» → «Reboot app». Los pasos de abajo describen el despliegue inicial, por si hubiera que repetirlo; el repositorio se llama ahora `Leslie581/tdl-turistico-colima`.
 1. Fusionar primero el pull request de esta rama a `main` (con la revisión recíproca) para desplegar desde `main`. Para una prueba previa se puede desplegar desde la rama `e1/eimy-tablero`.
-2. Entrar a <https://share.streamlit.io> e **iniciar sesión con GitHub** (la cuenta debe tener acceso al repositorio `Leslie581/observatorio-turistico-colima`, que es público).
+2. Entrar a <https://share.streamlit.io> e **iniciar sesión con GitHub** (la cuenta debe tener acceso al repositorio `Leslie581/tdl-turistico-colima`, que es público).
 3. Pulsar **Create app** → **Deploy a public app from GitHub**. Si Streamlit pide **autorizar el acceso a GitHub** (instalar su aplicación de GitHub o dar permiso sobre el repositorio), aceptar solo para este repositorio. Si la cuenta no tiene permisos de escritura sobre el repositorio, lo hace la propietaria (`Leslie581`).
-4. Completar el formulario: **Repository** `Leslie581/observatorio-turistico-colima`; **Branch** `main` (o `e1/eimy-tablero` para la prueba previa); **Main file path** `tablero/streamlit_app.py`.
+4. Completar el formulario: **Repository** `Leslie581/tdl-turistico-colima`; **Branch** `main` (o `e1/eimy-tablero` para la prueba previa); **Main file path** `tablero/streamlit_app.py`.
 5. Abrir **Advanced settings** y elegir **Python 3.13** (la versión con la que se probó). **No** agregar secretos: el tablero no los usa.
 6. Elegir una **App URL** sencilla (por ejemplo, `observatorio-ocupacion-manzanillo`, si está disponible) y pulsar **Deploy**.
 7. Esperar la instalación. En el registro debe verse que instala `streamlit==1.67.0`, `altair==6.3.0`, `pandas==3.0.5` y `numpy==2.5.3`, **no** las dependencias del laboratorio ni `pandera`. Si instalara el `requirements.txt` de la raíz del repositorio, indica que no detectó `tablero/requirements.txt`; ese archivo debe quedar junto al archivo principal.
 8. **Verificar la URL pública** (guía en §8) y enviar el enlace para anotarlo en la ficha de entrega.
 **Si falla:** ver el registro de la aplicación («Manage app»). Causas probables: Python distinto de 3.13, la rama o la ruta del archivo principal mal escritas, o el repositorio sin acceso para la cuenta.
 
-## 8. Verificación a realizar sobre la URL pública (pendiente en navegador)
+## 8. Verificación de la URL pública (realizada el 2026-11-14, 04:25 UTC)
+**Resultado:** Verificada el 2026-11-14 a las 04:25 UTC (2026-11-13, 22:25, hora de la Ciudad de México) en el navegador integrado: la aplicación, desplegada desde `main` con Python 3.13 (declarado por la titular del repositorio), muestra el filtro de periodo, el resumen ejecutivo, las fechas clave y los indicadores 45.9 %, 54.7 %, 1.5 % y 12 de 12; las seis pestañas abren sin errores y la frase que reemplazó el PR #15 ya no aparece. **No se probó en un teléfono.** La guía original, para repetirla:
 Abrir la URL en el navegador y en un teléfono, y comprobar que: la página carga sin mensaje de error; el título y el aviso superior se ven; las seis pestañas abren; las gráficas de «Resumen», «Pronóstico 2024» (con la franja del intervalo), «Comparación de modelos» (barras y líneas) y «Proyección 2025» se dibujan; los indicadores muestran 45.9 %, 54.7 %, 1.5 % y 12 de 12; la pestaña «Proyección 2025» muestra el aviso de proyección histórica; y «Fuentes y datos» muestra la fecha de generación. Registrar la fecha y la URL verificadas.
 
 ## 9. Verificación realizada en local (2026-11-13)
@@ -106,7 +107,7 @@ Abrir la URL en el navegador y en un teléfono, y comprobar que: la página carg
 - **Intervalos muy amplios** (de ±12 a ±21 puntos porcentuales en 2025) porque el entrenamiento incluye COVID.
 - **Resultados precalculados:** el tablero no se actualiza solo; para nuevos datos hay que regenerar el laboratorio y volver a versionar los resultados. Los resultados se generaron con Python 3.14.3; con otras versiones aparecen diferencias numéricas pequeñas (hasta 0.0086), sin cambio de conclusiones ([`pronostico.md`](pronostico.md) §8).
 - **Una categoría agregada:** hoteles de 2 a 5 estrellas de Manzanillo en conjunto; no hay desglose ni datos de establecimientos.
-- **Pruebas de la aplicación no están en el CI**: `ci.yml` no instala `tablero/requirements.txt`, así que `test_tablero_app.py` se omite allí. Se comprobó localmente que las cuatro listas de dependencias son compatibles (`pip check` sin conflictos) y que con ellas pasan todas las pruebas; añadir `-r tablero/requirements.txt` al paso de instalación de `ci.yml` (archivo de la integrante A) haría que se ejecuten. La revisión de móvil fue visual.
+- **Pruebas de la aplicación en CI:** `ci.yml` instala `tablero/requirements.txt` junto con las demás listas (una sola resolución de `pip`; `pip check` sin conflictos) y exige que `test_tablero_app.py` se ejecute (`TDL_EXIGIR_TABLERO=1`). **La primera ejecución en GitHub llegará con el push de ese cambio.** La revisión de móvil fue visual.
 - **Streamlit Community Cloud** puede poner la aplicación en reposo por inactividad y tardar unos segundos en reactivarla; no es un servicio con disponibilidad garantizada.
 - **Nombre provisional:** el nombre del observatorio puede cambiar.
 

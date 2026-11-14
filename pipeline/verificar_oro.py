@@ -24,9 +24,13 @@ from pathlib import Path
 from .config import RAIZ
 
 ESTRICTOS = ("data/oro/manzanillo_ocupacion_mensual.csv", "data/oro/diccionario_datos.csv")
+# Dimensiones de las jerarquías conceptuales que solo dependen de Base70 (congelado): igualdad byte a byte cuando YA están versionadas.
+# Si el commit de referencia aún no las tiene (primer commit que las agrega) se informan como pendientes, no como diferencia.
+ESTRICTOS_SI_VERSIONADOS = ("data/oro/dim_tiempo.csv", "data/oro/dim_geografia.csv")
 META = "data/oro/manzanillo_ocupacion_mensual.meta.json"
 CAMPOS_VARIABLES_META = ("fecha_proceso_utc", "corrida")
-NO_COMPARADOS = ("data/oro/manzanillo_oferta_hospedaje.csv", "data/oro/manzanillo_oferta_hospedaje.meta.json")
+NO_COMPARADOS = ("data/oro/manzanillo_oferta_hospedaje.csv", "data/oro/manzanillo_oferta_hospedaje.meta.json",
+                 "data/oro/dim_ubicacion_denue.csv")  # las colonias de DENUE crecen con las capturas del bot
 
 
 def _versionado(raiz: Path, ruta: str, ref: str) -> "bytes | None":
@@ -42,7 +46,16 @@ def _sin_variables(datos: bytes) -> dict:
 def comparar(raiz: Path = RAIZ, ref: str = "HEAD") -> dict:
     """Devuelve ``{"ok": bool, "diferencias": [...], "no_comparados": [...]}``."""
     raiz = Path(raiz)
-    dif = []
+    dif, pendientes = [], []
+    for ruta in ESTRICTOS_SI_VERSIONADOS:
+        versionado = _versionado(raiz, ruta, ref)
+        local = raiz / ruta
+        if versionado is None:
+            pendientes.append(ruta)
+        elif not local.is_file():
+            dif.append({"archivo": ruta, "motivo": "el pipeline no lo regeneró"})
+        elif local.read_bytes() != versionado:
+            dif.append({"archivo": ruta, "motivo": "el contenido regenerado difiere del versionado"})
     for ruta in (*ESTRICTOS, META):
         local = raiz / ruta
         versionado = _versionado(raiz, ruta, ref)
@@ -61,7 +74,7 @@ def comparar(raiz: Path = RAIZ, ref: str = "HEAD") -> dict:
         elif actual != versionado:
             dif.append({"archivo": ruta, "motivo": "el contenido regenerado difiere del versionado",
                         "bytes_regenerado": len(actual), "bytes_versionado": len(versionado)})
-    return {"ok": not dif, "referencia": ref, "diferencias": dif, "no_comparados": list(NO_COMPARADOS)}
+    return {"ok": not dif, "referencia": ref, "diferencias": dif, "pendientes_de_versionar": pendientes, "no_comparados": list(NO_COMPARADOS)}
 
 
 def main(argv=None) -> int:

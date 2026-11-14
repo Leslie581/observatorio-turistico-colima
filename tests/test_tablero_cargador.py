@@ -222,6 +222,25 @@ CARPETAS_PUBLICADAS = ("tablero", ".streamlit")  # lo que Streamlit Community Cl
 SUFIJOS_NO_PUBLICABLES = {".pyc", ".pyo", ".log", ".tmp", ".bak", ".env", ".swp"}
 NOMBRES_NO_PUBLICABLES = {"secrets.toml", ".DS_Store", "Thumbs.db"}
 PATRON_SECRETOS = re.compile(r"(?i)(INEGI_TOKEN\s*=|api[_-]?key|password|ghp_[A-Za-z0-9]{10,}|github_pat_)")
+# Plantillas de variables de entorno: se permiten SOLO si ninguna variable trae un valor real (vacío o marcador evidente).
+PLANTILLAS_ENV = {".env.example", ".env.sample", ".env.template"}
+VALOR_MARCADOR = re.compile(r"(?i)^(|<[^>]*>|\.\.\.|\*+|x{3,}|changeme|cambiar|ejemplo|example|tu[_-][\w-]*|your[_-][\w-]*"
+                            r"|token-de-prueba[\w-]*|[\w.+-]*@(ejemplo|example)\.\w+|0|1)$")
+PREFIJOS_CREDENCIAL = re.compile(r"(ghp_|gho_|github_pat_|AKIA|sk-|xox[bp]-)[A-Za-z0-9_-]{8,}|[A-Za-z0-9_-]{32,}")
+
+
+def plantilla_env_con_credenciales(texto: str) -> list:
+    """Nombres (nunca valores) de las variables de una plantilla ``.env.*`` con algo que no sea vacío o un marcador evidente."""
+    malas = []
+    for linea in texto.splitlines():
+        s = linea.strip()
+        if not s or s.startswith("#"):
+            continue
+        nombre, separador, valor = s.partition("=")
+        valor = valor.strip().strip("'\"")
+        if not separador or not VALOR_MARCADOR.match(valor) or PREFIJOS_CREDENCIAL.search(valor):
+            malas.append(nombre.strip() or "(línea sin nombre)")
+    return malas
 
 
 def archivos_no_publicables(rutas) -> list:
@@ -229,7 +248,7 @@ def archivos_no_publicables(rutas) -> list:
     # Ojo: Path(".env").suffix es "" (Python lo trata como nombre sin extensión); por eso .env se revisa por nombre.
     return [p for p in map(Path, rutas)
             if p.suffix in SUFIJOS_NO_PUBLICABLES or p.name in NOMBRES_NO_PUBLICABLES or "__pycache__" in p.parts
-            or p.name == ".env" or p.name.startswith(".env.")]
+            or p.name == ".env" or (p.name.startswith(".env.") and p.name not in PLANTILLAS_ENV)]
 
 
 def inventario_publicable() -> list:
@@ -254,6 +273,8 @@ def test_no_hay_secretos_ni_archivos_temporales_en_el_tablero():
     for p in archivos:
         if p.suffix in {".py", ".toml", ".txt", ".md"} and p.is_file():
             assert not PATRON_SECRETOS.search(p.read_text(encoding="utf-8")), p.name
+        if p.name in PLANTILLAS_ENV and p.is_file():  # una plantilla se permite solo si no trae credenciales
+            assert plantilla_env_con_credenciales(p.read_text(encoding="utf-8")) == [], p.name
     assert not (RAIZ / ".streamlit" / "secrets.toml").exists()
 
 
@@ -265,6 +286,20 @@ def test_la_regla_detecta_cada_tipo_de_archivo_no_publicable():
     assert [p.as_posix() for p in archivos_no_publicables(malos)] == malos
     assert archivos_no_publicables(["tablero/streamlit_app.py", "tablero/requirements.txt", ".streamlit/config.toml"]) == []
     assert PATRON_SECRETOS.search("INEGI_TOKEN = 'abc'") and PATRON_SECRETOS.search("ghp_" + "a" * 20)
+
+
+def test_una_plantilla_env_example_se_permite_solo_sin_credenciales_reales():
+    """``.env.example`` ya no es un falso positivo, pero un archivo con credenciales sigue rechazado (sin imprimir valores)."""
+    assert archivos_no_publicables(["tablero/.env.example", ".streamlit/.env.sample", "tablero/.env.template"]) == []
+    for real in (".env", ".env.local", ".env.production", ".env.development", "tablero/.env.example.bak"):
+        assert archivos_no_publicables([real]), real
+    buena = "# comentario\nINEGI_TOKEN=\nTDL_CONTACTO=correo@ejemplo.mx\nTDL_RED=0\nOTRA=<tu valor>\nCLAVE=tu_clave_aqui\n"
+    assert plantilla_env_con_credenciales(buena) == []
+    token_ghp = "ghp_" + "a" * 36  # construido en tiempo de ejecución: no es una credencial real ni queda literal en el repositorio
+    larga = "Z" * 40
+    for linea in (f"INEGI_TOKEN={token_ghp}", f"INEGI_TOKEN={larga}", "INEGI_TOKEN=abc123", "INEGI_TOKEN='valor-real'", "SOLO_NOMBRE"):
+        malas = plantilla_env_con_credenciales(linea)
+        assert malas and all(token_ghp not in m and larga not in m and "abc123" not in m for m in malas), linea  # solo nombres
 
 
 def test_un_pycache_real_en_el_disco_no_rompe_la_prueba_pero_si_se_versionara_se_detectaria():

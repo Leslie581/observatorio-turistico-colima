@@ -1,13 +1,13 @@
 {
   "avisos": [
-    "La bitácora cubre 2.84 días; la rúbrica pide 7. El objetivo O1 («cualquier ventana de 7 días») no es evaluable todavía.",
+    "La bitácora cubre 3.83 días; la rúbrica pide 7. El objetivo O1 («cualquier ventana de 7 días») no es evaluable todavía.",
     "El MTTR se calcula con 1 incidente(s): es una observación, no una estimación estable.",
     "MTBF y disponibilidad (A) no son estimables con los incidentes observados; no se sustituyen por valores supuestos."
   ],
-  "bitacora_sha256": "d16dfd92d37fe5d92ef86784c8c8d04720d65dba62ce87f294ddfce43ef1e855",
+  "bitacora_sha256": "1d6c6fe53a84de5cfcec40972a4ec37f3d6aee21055b76b8712fafe77c098909",
   "cobertura_diaria_descriptiva": {
-    "dias_con_captura_exitosa": 4,
-    "dias_con_ejecucion": 4
+    "dias_con_captura_exitosa": 5,
+    "dias_con_ejecucion": 5
   },
   "disponibilidad_A": {
     "estimable": false,
@@ -15,14 +15,42 @@
     "motivo": "requiere MTBF y MTTR; falta el MTBF"
   },
   "ejecuciones": {
-    "exitosas": 5,
+    "exitosas": 6,
     "fallidas": 1,
     "omitidas_duplicadas_excluidas": 2,
-    "programadas_exitosas": 3,
-    "programadas_schedule": 3,
-    "validas": 6
+    "programadas_exitosas": 4,
+    "programadas_schedule": 4,
+    "validas": 7
   },
   "estado": "calculado",
+  "estimacion_exploratoria": {
+    "disponibilidad_A": {
+      "con_mtbf_cota_inferior_90": 0.99617,
+      "con_mtbf_cota_superior_90": 0.999958,
+      "formula": "A = MTBF / (MTBF + MTTR)",
+      "punto": 0.99919
+    },
+    "disponibilidad_observada_por_tiempo": 0.99919,
+    "estado": "EXPLORATORIA: no sustituye a las magnitudes medidas ni a la tasa de éxito",
+    "fallas_r": 1,
+    "intervalo_90_mtbf_horas": [
+      19.34,
+      1788.7
+    ],
+    "metodo": "MTBF = T / r (máxima verosimilitud, tasa de fallos constante, observación truncada por tiempo); IC exacto de Epstein",
+    "mtbf_horas": 91.749,
+    "nota_equivalencia": "con un solo incidente A puntual es algebraicamente igual a la disponibilidad observada por tiempo (1 - reparación / ventana): el estimador solo aporta el intervalo",
+    "reparacion_total_s": 268.0,
+    "supuestos_y_limites": [
+      "tasa de fallos constante en el tiempo; el único fallo fue de configuración (falta de INEGI_TOKEN) en el primer intento, no un fallo aleatorio en régimen normal",
+      "la captura es un trabajo diario, no un servicio continuo: solo puede fallar cuando se ejecuta, así que medir la exposición en horas no es natural",
+      "la reparación (268 s) fue un reintento manual durante la puesta en marcha; un fallo de una ejecución programada tardaría hasta el siguiente ciclo (≈ 24 h)",
+      "un solo fallo da un intervalo muy ancho; no es una estimación estable",
+      "los dos extremos del incidente proceden de registros que la API pública de GitHub no corrobora (docs/E1/fiabilidad.md §4)"
+    ],
+    "tiempo_operativo_T_s": 330295.0,
+    "ventana_s": 330563.0
+  },
   "fuente": "calidad/bitacora_capturas.jsonl",
   "incidentes": {
     "abiertos": 0,
@@ -42,7 +70,7 @@
     "estimable": false,
     "motivo": "hay 1 incidente(s); se necesitan al menos 2 para tener un intervalo entre fallas",
     "nota_tiempo_sin_fallas": "dato CENSURADO por la derecha (no se observó una segunda falla): es una cota inferior, no el MTBF",
-    "tiempo_sin_fallas_desde_la_ultima_recuperacion_s": 245075.0
+    "tiempo_sin_fallas_desde_la_ultima_recuperacion_s": 330295.0
   },
   "mttr": {
     "estimable": true,
@@ -64,21 +92,30 @@
       {
         "ejecucion": "20261112T204832Z",
         "retraso_min": 451.5
+      },
+      {
+        "ejecucion": "20261113T202853Z",
+        "retraso_min": 431.9
       }
     ]
   },
-  "registros_en_bitacora": 8,
+  "registros_en_bitacora": 9,
   "tasa_exito": {
     "cumple_objetivo_en_lo_observado": false,
+    "el_intervalo_incluye_el_objetivo": true,
     "evaluable_como_se_definio_O1": false,
+    "intervalo_95_clopper_pearson": [
+      0.4213,
+      0.9964
+    ],
     "objetivo": 0.95,
-    "valor": 0.8333
+    "valor": 0.8571
   },
   "ventana": {
     "cumple_dias_requeridos": false,
-    "dias": 2.84,
+    "dias": 3.826,
     "dias_requeridos": 7,
-    "fin_utc": "2026-11-12T20:48:36+00:00",
+    "fin_utc": "2026-11-13T20:28:56+00:00",
     "inicio_utc": "2026-11-10T00:39:33+00:00"
   }
 }

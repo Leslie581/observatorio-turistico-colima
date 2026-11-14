@@ -1,0 +1,16 @@
+mecanismo,metodo,rmse,mae,sesgo,meses_ocultos_por_replica
+completamente_al_azar,media,12.8934,9.9214,0.4146,10
+completamente_al_azar,mediana,13.3944,9.7567,3.8577,10
+completamente_al_azar,interpolacion_lineal,6.8762,5.4324,0.2149,10
+completamente_al_azar,interpolacion_estacional,13.3469,9.4712,0.1558,10
+completamente_al_azar,knn,8.4437,6.5236,1.3766,10
+bloque_de_3_meses,media,13.1234,10.0669,0.0402,9
+bloque_de_3_meses,mediana,13.4176,9.7048,3.4973,9
+bloque_de_3_meses,interpolacion_lineal,9.4981,7.6479,-0.2703,9
+bloque_de_3_meses,interpolacion_estacional,13.2508,9.1983,0.1043,9
+bloque_de_3_meses,knn,10.6668,8.5476,1.7621,9
+no_al_azar_valores_altos,media,18.9778,18.7240,-18.7240,10
+no_al_azar_valores_altos,mediana,15.4912,15.1791,-15.1791,10
+no_al_azar_valores_altos,interpolacion_lineal,10.7278,10.2073,-10.2073,10
+no_al_azar_valores_altos,interpolacion_estacional,17.2807,16.4466,-16.4466,10
+no_al_azar_valores_altos,knn,10.7853,10.4764,-10.4764,10

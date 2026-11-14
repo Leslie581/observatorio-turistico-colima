@@ -12,6 +12,7 @@ import pandas as pd
 import pandera.pandas as pa
 
 from .calidad.cuarentena import ErrorPuertaCalidad
+from .jerarquias import DICCIONARIO_JERARQUIAS
 from .config import (CATEGORIAS_OBJETIVO, CENTRO_OBJETIVO, COVID_FIN, COVID_INICIO, N_PERIODOS, OFERTA_2017,
                      PERIODO_FIN, PERIODO_INICIO, VERSION_CONTRATO)
 
@@ -187,7 +188,8 @@ DICCIONARIO = [
 
 
 def diccionario_df() -> pd.DataFrame:
-    return pd.DataFrame(DICCIONARIO)
+    """Diccionario de las capas oro: el oro mensual, la oferta DENUE y las dimensiones de las jerarquías conceptuales."""
+    return pd.DataFrame(DICCIONARIO + DICCIONARIO_JERARQUIAS)
 
 
 def hash_bytes(b: bytes) -> str:

@@ -18,7 +18,7 @@ Un **riesgo** es algo que puede salir mal; un **defecto** es un error realmente 
 |---|---|---|---|
 | I1 | `repodatos.atdt.gob.mx` responde HTTP 403 a scripts (prototipo, Windows). Es una restricción del servidor; **no se evade**. Se mitiga con descarga manual por navegador y verificación por hash | `docs/fuentes/datatur.md` (R2) | Abierta; no se corrige, se evita |
 | I2 | Fin de línea: la puerta de calidad del prototipo reescribió CSV validados con LF. En este repositorio esa puerta no se migró y `.gitattributes` conserva los datos byte a byte | `registro_cambios.md` e informe v5.1 del prototipo | Mitigada en el repositorio definitivo; sin corrección en el prototipo |
-| I3 | Disponibilidad O1 **83.3 % (5 de 6) al 2026-11-12** (66.7 % al crear la etiqueta), objetivo 95 % no cumplido; la bitácora cubre 4 días | `calidad/bitacora_capturas.jsonl` | Abierta; se mide en E1 con ejecuciones reales |
+| I3 | Disponibilidad O1: **85.7 % (6 de 7) al 2026-11-13 20:28 UTC** (83.3 % al 2026-11-12; 66.7 % al crear la etiqueta e0), objetivo 95 % no cumplido; la bitácora cubre 3.83 días | `calidad/bitacora_capturas.jsonl` | Abierta; se mide en E1 con ejecuciones reales ([`docs/E1/fiabilidad.md`](../docs/E1/fiabilidad.md)) |
 | I4 | “Fecha duplicada”: mencionada por la integrante A sin que se localizara evidencia en archivos | — | Falta descripción y evidencia; no está en el CSV de defectos |
 
 MANOVA (E3) permanece en R6 como **riesgo metodológico**; no es un defecto corregido.

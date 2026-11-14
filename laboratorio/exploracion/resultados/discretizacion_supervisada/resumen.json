@@ -1,0 +1,48 @@
+{
+  "ajuste": "solo 2016-01 a 2023-12; 2024 (12 meses) solo evalúa los cortes ya fijados",
+  "entropia_objetivo_ajuste_sin_covid_bits": 0.830496,
+  "k": 3,
+  "meses_2024": 12,
+  "meses_temporada_alta_2024": 3,
+  "min_hoja": 8,
+  "objetivo": "temporada_alta = 1 si el mes es julio, agosto o diciembre (calendario; no usa ocupación)",
+  "permutaciones": 500,
+  "semilla_permutaciones": 20261113,
+  "supervisada_sin_covid": {
+    "cortes": [
+      48.635392,
+      55.3713105
+    ],
+    "ganancia_total_bits": 0.200376,
+    "ganancias_por_corte_bits": [
+      0.061622,
+      0.151078
+    ],
+    "mdlp_acepta": [
+      false,
+      true
+    ],
+    "meses_ajuste": 80,
+    "meses_excluidos": 16,
+    "p_valor_permutacion": 0.002
+  },
+  "supervisada_todo_entrenamiento": {
+    "cortes": [
+      48.635392,
+      55.3713105
+    ],
+    "ganancia_total_bits": 0.15622,
+    "ganancias_por_corte_bits": [
+      0.033394,
+      0.128391
+    ],
+    "mdlp_acepta": [
+      false,
+      true
+    ],
+    "meses_ajuste": 96,
+    "meses_excluidos": 0,
+    "p_valor_permutacion": 0.002
+  },
+  "variable_discretizada": "ocupacion_pct"
+}

@@ -1,16 +1,23 @@
 """Gráficas y arranque del tablero (tablero/graficas.py y tablero/streamlit_app.py).
 
-Requieren altair y streamlit (tablero/requirements.txt). El CI actual y la captura diaria NO los instalan, así que aquí se OMITEN
-(`-rs` lista el motivo); se ejecutan con ``pip install -r tablero/requirements.txt`` y están pensadas para correr localmente antes del despliegue.
+Requieren altair y streamlit (tablero/requirements.txt). Con ``TDL_EXIGIR_TABLERO=1`` (lo fija ci.yml) su ausencia es un ERROR, no una
+omisión silenciosa. Sin esa variable (captura diaria, entornos locales sin las dependencias del tablero) estas pruebas se OMITEN y
+``-rs`` lista el motivo; se ejecutan con ``pip install -r tablero/requirements.txt``.
 """
+import os
 import sys
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-alt = pytest.importorskip("altair", reason="sin altair (tablero/requirements.txt)")
-pytest.importorskip("streamlit", reason="sin streamlit (tablero/requirements.txt)")
+try:
+    import altair as alt  # noqa: F401
+    import streamlit  # noqa: F401
+except ImportError as error:
+    if os.environ.get("TDL_EXIGIR_TABLERO") == "1":
+        raise ImportError(f"falta una dependencia del tablero ({error.name}) y TDL_EXIGIR_TABLERO=1 exige ejecutar sus pruebas") from error
+    pytest.skip("sin altair o streamlit (tablero/requirements.txt)", allow_module_level=True)
 
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "tablero"))

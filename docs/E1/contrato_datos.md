@@ -100,7 +100,7 @@ Herramienta propuesta: **pandera** (pendiente de instalar; ver riesgos). Cada re
 
 **Faltantes (diagnóstico requerido por la rúbrica).** En Manzanillo no hay ninguno. En el resto del archivo solo existe 1 celda vacía (Mexicali, 2020-03), cuyo mecanismo **no se puede determinar con un solo caso** (coincide con el inicio de la pandemia); y 12 meses ausentes de El Fuerte, que son una ausencia estructural (probablemente no registrada, “no al azar”). Tratamiento: **no imputar en E1**; marcar y excluir la fila de las derivadas que la usan.
 **Duplicados.** Base70: 0. DENUE: las repeticiones entre capturas son esperadas (fotos); se resuelven por la clave `(fecha_captura_local, clee)`.
-**Atípicos.** Método: IQR 1.5 sobre `ocupacion_pct`. Decisión: **marcar, no corregir ni eliminar**, 2020-04 a 2020-06 (COVID, evento real); filas con ocupados > disponibles: **cuarentena** (error de captura).
+**Atípicos.** Método: IQR 1.5 sobre `ocupacion_pct`. Decisión: **marcar, no corregir ni eliminar**, 2020-04 a 2020-06 (COVID, evento real); filas con ocupados > disponibles: **cuarentena** (error de captura). **Ampliado el 2026-11-14:** el diagnóstico de faltantes con simulación de tratamientos y la comparación del IQR con el puntaje z robusto están en [`faltantes_y_atipicos.md`](faltantes_y_atipicos.md) (los dos métodos coinciden en los 3 meses de COVID).
 
 ## 3. Cuarentena
 - Ubicación: `data/cuarentena/<fuente>/<corrida>/rechazados.csv` y `data/cuarentena/resumen_<corrida>.json`, con `fuente` = `datatur_base70` o `denue_establecimientos` y `corrida` = `e1-` más 12 caracteres del hash de las entradas (determinista). El bronce **no se modifica nunca**.
@@ -164,7 +164,7 @@ Solo datos **públicos, agregados, pequeños y reproducibles**: `data/oro/*.csv`
 | Requisito | Diseño |
 |---|---|
 | Normalización y estandarización (min-max y z-score) con análisis comparativo | En el laboratorio, ajustadas con el entrenamiento (§4.2). Funciones puras reutilizables en `pipeline/transformaciones.py` |
-| Discretización y jerarquías | `ocupacion_nivel` (bajo, medio, alto) por **terciles del entrenamiento**; jerarquía DENUE `colonia → localidad → municipio (06007) → entidad (06)` y `categoria → hotel/motel` |
+| Discretización y jerarquías | `ocupacion_nivel` (bajo, medio, alto) por **terciles del entrenamiento** y, desde el 2026-11-14, la discretización supervisada (§8 de [`transformaciones.md`](transformaciones.md)). **Jerarquías implementadas** como dimensiones aparte del oro mensual: `dim_tiempo` (año → trimestre → mes), `dim_geografia` (estado → municipio → centro turístico) y `dim_ubicacion_denue` (estado → municipio → localidad → colonia); véase [`pipeline.md`](pipeline.md) §3.1 |
 | Reducción de datos | Agregación de categoría × mes a mes (**453 → 108 filas en Manzanillo, −76.2 %**; 31,147 → 108 si se parte de todo Base70, −99.65 %), descartando las columnas constantes de DENUE. Se pierde el detalle por categoría de estrellas |
 | Integración de fuentes | §5 |
 | Puerta de calidad con cuarentena | §2.3 y §3 |
@@ -214,5 +214,6 @@ Decisiones aprobadas por la integrante A el 2026-11-13, con las condiciones indi
 | 2026-11-13 | Contrato fijado (L0), con las condiciones D1 a D7 | **1.0.0** |
 | 2026-11-13 | **Revisión de documentación r1** (L1), a partir de las tres observaciones de la integrante B, verificadas con los datos: (1) las cifras de oferta y COVID de §1.1 se habían calculado con las 5 categorías y se recalcularon con 2 a 5 estrellas; (2) se documenta que el segundo salto de oferta (2017-11) no tiene indicador y por qué no hace falta; (3) las correlaciones de §4.1 se recalcularon solo con el entrenamiento | **1.0.0** (sin cambio) |
 | 2026-11-13 | Aclaración de implementación: `ejecucion` del oro es un identificador determinista de entrada + contrato (`oro-<12 hex del hash de bronce>-v1.0.0`), no un instante; el instante va en `meta.json` | 1.0.0 (sin cambio) |
+| 2026-11-14 | **Se agregan tres dimensiones** al oro (`dim_tiempo.csv`, `dim_geografia.csv` y `dim_ubicacion_denue.csv`) y 18 entradas al diccionario. **El oro mensual no cambia** (mismas 20 columnas, mismo contenido byte a byte): son archivos nuevos, no una versión nueva del esquema | 1.0.0 |
 
 **Por qué la versión del esquema sigue en 1.0.0.** La versión (`version_contrato`) identifica el **esquema, las fórmulas y las decisiones** del oro, y el laboratorio de pronósticos valida el archivo contra `1.0.0`. Las tres correcciones corrigen cifras descriptivas y aclaran reglas, sin tocar columnas, fórmulas ni decisiones, de modo que subir la versión habría invalidado sin motivo el trabajo ya validado. Un cambio de columnas, de fórmula o de una decisión (por ejemplo, un indicador `d_oferta_2017_11`) incrementará la versión (1.1.0 o 2.0.0) y se acordará antes con la integrante B.

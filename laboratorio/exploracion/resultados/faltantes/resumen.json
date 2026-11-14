@@ -1,0 +1,33 @@
+{
+  "diagnostico": [
+    {
+      "caso": "Manzanillo (alcance del observatorio)",
+      "faltantes": 0,
+      "mecanismo": "no aplica: no hay valores faltantes ni periodos ausentes",
+      "tratamiento": "ninguno; no se imputa ni se elimina nada"
+    },
+    {
+      "caso": "Mexicali, turistas_noche_residentes (2020-03 5 estrellas)",
+      "faltantes": 1,
+      "mecanismo": "INDETERMINADO: con 1 celda vacía no se puede contrastar completamente al azar frente a al azar; coincide con el inicio de la pandemia (marzo de 2020), pero solo 1 celda(s) falta(n) ese mes en todo el archivo",
+      "tratamiento": "se marca (`faltante_turistas_noche`) y no se imputa; la fila queda fuera de las derivadas que usan la columna"
+    },
+    {
+      "caso": "El Fuerte, periodos ausentes (2024-01 a 2024-12)",
+      "faltantes": 12,
+      "mecanismo": "NO AL AZAR (ausencia estructural): faltan todas las columnas de meses consecutivos al final de la serie; el centro dejó de reportar, y esa ausencia depende del propio dato que no se observa",
+      "tratamiento": "no se imputa (la imputación inventaría un destino que no reportó); el centro queda fuera de las series que exigen 108 meses"
+    }
+  ],
+  "faltantes_en_manzanillo": 0,
+  "fraccion_oculta": 0.1,
+  "mejor_metodo_por_mecanismo_rmse": {
+    "bloque_de_3_meses": "interpolacion_lineal",
+    "completamente_al_azar": "interpolacion_lineal",
+    "no_al_azar_valores_altos": "interpolacion_lineal"
+  },
+  "periodos_esperados": 108,
+  "replicas": 200,
+  "semilla": 20261113,
+  "serie": "Manzanillo, ocupacion_pct, entrenamiento 2016-01 a 2023-12 (96 meses); 2024 no se usa"
+}

@@ -1,0 +1,17 @@
+bloque,corrida,tratamiento,procesos_cod,analizador_cod,formato_cod,procesos,analizador,formato
+dia_1,1,2,-1,-1,1,1,json,parquet
+dia_1,2,8,1,1,1,4,orjson,parquet
+dia_1,3,1,-1,-1,-1,1,json,csv
+dia_1,4,5,1,-1,-1,4,json,csv
+dia_1,5,4,-1,1,1,1,orjson,parquet
+dia_1,6,7,1,1,-1,4,orjson,csv
+dia_1,7,3,-1,1,-1,1,orjson,csv
+dia_1,8,6,1,-1,1,4,json,parquet
+dia_2,1,8,1,1,1,4,orjson,parquet
+dia_2,2,3,-1,1,-1,1,orjson,csv
+dia_2,3,5,1,-1,-1,4,json,csv
+dia_2,4,2,-1,-1,1,1,json,parquet
+dia_2,5,6,1,-1,1,4,json,parquet
+dia_2,6,1,-1,-1,-1,1,json,csv
+dia_2,7,7,1,1,-1,4,orjson,csv
+dia_2,8,4,-1,1,1,1,orjson,parquet
