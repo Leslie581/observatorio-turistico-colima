@@ -5,18 +5,20 @@ import pandas as pd
 import pytest
 
 from pipeline.calidad import reglas_denue as re_
-from pipeline.calidad.cuarentena import ErrorPuertaCalidad  # noqa: F401  (misma clase que usa validar_plata)
+from pipeline.calidad.cuarentena import Cuarentena
+from pipeline.plata_denue import procesar_capturas
 
-PLATA = Path(__file__).resolve().parents[1] / "data" / "plata" / "denue_establecimientos.csv"
-TIPOS = {c: str for c in ("clee", "id", "scian_clase", "cp", "ageb", "manzana", "municipio_clave", "sha256_bronce")}
+BRONCE = Path(__file__).resolve().parents[1] / "data" / "bronce" / "denue"   # versionado; la plata se regenera (no está en Git)
+
+
+@pytest.fixture(scope="module")
+def _plata_real():
+    return procesar_capturas(BRONCE, Cuarentena("2026-11-13T00:00:00+00:00"))   # ya pasa por validar_plata
 
 
 @pytest.fixture()
-def plata():
-    df = pd.read_csv(PLATA, dtype=TIPOS)
-    for c in ("personal_min", "personal_max"):
-        df[c] = df[c].astype("Int64")
-    return df
+def plata(_plata_real):
+    return _plata_real.copy()
 
 
 def test_plata_real_cumple_el_esquema(plata):
