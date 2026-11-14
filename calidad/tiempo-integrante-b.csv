@@ -28,3 +28,6 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-13,20:08,20:10,0,codigo,"[E1][ASISTIDO POR CLAUDE CODE] Tablero: filtro histórico, métricas de 2024, aviso de la comparación, resumen ejecutivo, fechas verificables y corrección de la prueba de archivos temporales",
 2026-11-13,20:10,20:23,0,pruebas,"[E1][ASISTIDO POR CLAUDE CODE] Tablero: 18 pruebas nuevas; suite completa con TDL_EXIGIR_PRONOSTICOS=1, réplica del CI, prueba con tablero/requirements.txt, ruff y arranque real de streamlit",
 2026-11-13,20:23,20:26,0,documentacion,"[E1][ASISTIDO POR CLAUDE CODE] docs/E1/tablero.md (estado del despliegue, cambios de cierre y actualización sin perder la URL) y registro PSP",
+2026-11-13,20:35,20:36,0,revision,"[E1][ASISTIDO POR CLAUDE CODE] CI de main en rojo: estado de ramas y PR, intento de leer el registro real de Actions (403 sin autenticación) y evidencia de la falla",
+2026-11-13,20:36,20:38,0,codigo,"[E1][ASISTIDO POR CLAUDE CODE] Prueba del tablero: regla de archivos no publicables separada del inventario versionado; detección de .env",
+2026-11-13,20:38,20:42,0,pruebas,"[E1][ASISTIDO POR CLAUDE CODE] Verificación: app con pronósticos, intervalos y métricas frente a los CSV, suite completa, réplica del CI en clon limpio con __pycache__, ruff, servidor local y URL pública; docs/E1/tablero.md",

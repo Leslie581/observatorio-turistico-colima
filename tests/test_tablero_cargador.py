@@ -218,28 +218,72 @@ def test_requirements_del_tablero_son_minimos_y_estan_fijados():
     assert {x.split("==")[0]: x.split("==")[1] for x in lineas}["pandas"] == "3.0.5"  # misma versión que el resto del proyecto
 
 
-def _archivos_versionados_del_tablero() -> list:
-    """Archivos de tablero/ que Git versiona. Si no hay git, los del disco sin ``__pycache__``.
+CARPETAS_PUBLICADAS = ("tablero", ".streamlit")  # lo que Streamlit Community Cloud despliega del repositorio para el tablero
+SUFIJOS_NO_PUBLICABLES = {".pyc", ".pyo", ".log", ".tmp", ".bak", ".env", ".swp"}
+NOMBRES_NO_PUBLICABLES = {"secrets.toml", ".DS_Store", "Thumbs.db"}
+PATRON_SECRETOS = re.compile(r"(?i)(INEGI_TOKEN\s*=|api[_-]?key|password|ghp_[A-Za-z0-9]{10,}|github_pat_)")
 
-    Antes se revisaba el disco completo: el propio import de ``cargador`` (arriba) crea ``tablero/__pycache__``, que Git ignora,
-    y la prueba fallaba en un clon limpio (así falló el CI de main en 06452fd).
+
+def archivos_no_publicables(rutas) -> list:
+    """REGLA (no depende del disco): rutas que nunca deben versionarse ni desplegarse junto al tablero."""
+    # Ojo: Path(".env").suffix es "" (Python lo trata como nombre sin extensión); por eso .env se revisa por nombre.
+    return [p for p in map(Path, rutas)
+            if p.suffix in SUFIJOS_NO_PUBLICABLES or p.name in NOMBRES_NO_PUBLICABLES or "__pycache__" in p.parts
+            or p.name == ".env" or p.name.startswith(".env.")]
+
+
+def inventario_publicable() -> list:
+    """INVENTARIO: archivos que pueden llegar al despliegue, es decir, los versionados más los nuevos que Git NO ignora
+    (se podrían confirmar por error). Lo que Git ignora (``__pycache__``, que Python crea al importar) no se publica.
+
+    Antes la prueba recorría el disco y fallaba con ``tablero/__pycache__``, que el propio ``import cargador`` crea:
+    así quedó en rojo el CI de ``main`` en ``06452fd``.
     """
     import subprocess
-    try:
-        r = subprocess.run(["git", "-C", str(RAIZ), "ls-files", "tablero"], capture_output=True, text=True, check=True)
-        return [RAIZ / x for x in r.stdout.split()]
-    except (OSError, subprocess.CalledProcessError):
-        return [p for p in (RAIZ / "tablero").rglob("*") if p.is_file() and "__pycache__" not in p.parts]
+    r = subprocess.run(["git", "-C", str(RAIZ), "ls-files", "--cached", "--others", "--exclude-standard", "--", *CARPETAS_PUBLICADAS],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        pytest.skip("git no está disponible: no se puede saber qué archivos se publican")
+    return [RAIZ / x for x in r.stdout.split()]
 
 
 def test_no_hay_secretos_ni_archivos_temporales_en_el_tablero():
-    archivos = _archivos_versionados_del_tablero()
-    assert archivos, "no se encontraron archivos del tablero"
+    archivos = inventario_publicable()
+    assert any(p.name == "streamlit_app.py" for p in archivos), "el inventario no incluye la aplicación"
+    assert archivos_no_publicables(archivos) == []
     for p in archivos:
-        assert p.suffix not in {".pyc", ".log", ".tmp", ".bak", ".env"} and "__pycache__" not in p.parts, p
-    for p in (RAIZ / "tablero").glob("*.py"):
-        assert not re.search(r"(?i)(INEGI_TOKEN|api[_-]?key|password|ghp_|github_pat_)", p.read_text(encoding="utf-8")), p.name
+        if p.suffix in {".py", ".toml", ".txt", ".md"} and p.is_file():
+            assert not PATRON_SECRETOS.search(p.read_text(encoding="utf-8")), p.name
     assert not (RAIZ / ".streamlit" / "secrets.toml").exists()
+
+
+def test_la_regla_detecta_cada_tipo_de_archivo_no_publicable():
+    """La regla no se debilitó: detecta cachés, temporales, registros, respaldos, .env y secretos de Streamlit."""
+    malos = ["tablero/__pycache__/cargador.cpython-313.pyc", "tablero/__pycache__/x.cpython-314.opt-1.pyc", "tablero/x.pyo",
+             "tablero/depuracion.log", "tablero/x.tmp", "tablero/app.py.bak", "tablero/.env", "tablero/.env.local",
+             ".streamlit/secrets.toml", "tablero/.DS_Store"]
+    assert [p.as_posix() for p in archivos_no_publicables(malos)] == malos
+    assert archivos_no_publicables(["tablero/streamlit_app.py", "tablero/requirements.txt", ".streamlit/config.toml"]) == []
+    assert PATRON_SECRETOS.search("INEGI_TOKEN = 'abc'") and PATRON_SECRETOS.search("ghp_" + "a" * 20)
+
+
+def test_un_pycache_real_en_el_disco_no_rompe_la_prueba_pero_si_se_versionara_se_detectaria():
+    """Reproduce la causa del CI en rojo: hay un ``__pycache__`` real en ``tablero/`` (lo crea Python al importar; si el entorno
+    no escribe bytecode, se crea aquí). No entra al inventario porque Git lo ignora, y la regla lo marcaría si se versionara."""
+    import py_compile
+    cache = RAIZ / "tablero" / "__pycache__"
+    creado = None
+    if not any(cache.glob("*.pyc")):
+        creado = Path(py_compile.compile(str(RAIZ / "tablero" / "cargador.py"), doraise=True))
+    try:
+        en_disco = sorted(cache.glob("*.pyc"))
+        assert en_disco, "debe existir al menos un .pyc para reproducir el caso"
+        inventario = {p.resolve() for p in inventario_publicable()}
+        assert not any(p.resolve() in inventario for p in en_disco)  # ignorado por Git: no se publica
+        assert archivos_no_publicables([p.relative_to(RAIZ) for p in en_disco])  # y la regla sí lo detecta
+    finally:
+        if creado is not None:
+            creado.unlink(missing_ok=True)
 
 
 # ---------------------------------------------------------------- filtro histórico, fechas y textos de cierre de E1
