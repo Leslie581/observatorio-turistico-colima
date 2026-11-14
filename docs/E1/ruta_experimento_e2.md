@@ -29,3 +29,10 @@ Se correrá **contra una copia local de las respuestas ya capturadas** (`data/br
 - **Los niveles `orjson` y `parquet` no se han implementado ni se han agregado a las dependencias**; si no son viables se cambian en E2.
 - **La conformidad de la integrante B** y la confirmación con los docentes de que esta ruta cumple lo que piden en E2.
 - El experimento de E2 se ejecuta en una sola semana (23 al 27 de noviembre): conviene implementar los factores antes.
+
+## 5. Observación de la revisión cruzada: la tasa de error como variable de respuesta
+La integrante B señaló, en su revisión de `4242ea5`, un punto sobre la **tasa de error** como respuesta del experimento de E2. **El texto literal es de su Auditoría 8** (la registra ella; aquí no se transcribe ni se duplica). Lo que sigue es lo que la integrante A deja anotado **sin desarrollar el experimento**, como lectura de A que B puede corregir con su redacción:
+- **Hay que definir «error» antes de correr** (qué se cuenta: respuesta que no se puede interpretar, registro que la puerta de calidad rechaza, archivo de salida inválido) y **el denominador** (errores por registro procesado o por corrida). Sin esa definición la respuesta no es medible.
+- **Contra una copia local estable** de las respuestas ya capturadas es probable que la tasa de error sea **cero o casi cero en casi todas las corridas**. Una respuesta sin variación no sirve para un ANOVA; habría que **provocar errores de forma controlada** (por ejemplo, con respuestas alteradas a propósito y declaradas sintéticas) o dejar el tiempo de procesamiento como respuesta principal y la tasa de error como secundaria.
+- **Una proporción no es normal** y con pocas corridas (16) los supuestos del ANOVA se ven comprometidos; al analizarla hay que revisar los residuos y considerar una transformación o un modelo para proporciones.
+- **Decisión pendiente para E2** (no se toma aquí): qué es un error, si se provocan errores y cuál es la respuesta principal. La matriz 2³ ([`matriz_2x3.csv`](../../laboratorio/experimento/resultados/matriz_2x3.csv)) no cambia por esto.

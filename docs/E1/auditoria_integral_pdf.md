@@ -34,7 +34,7 @@ Estados: **CUMPLE** (evidencia verificable), **PARCIAL** (existe, pero con una b
 | Repositorio con ambos integrantes | CUMPLE | Contribuyentes `Leslie581` y `eimymuz` |
 | Los tres docentes como colaboradores | DECLARADO, no verificable | La titular informó el 2026-11-13 que los tres ya tienen acceso; la API pública no lista colaboradores |
 | Issues de los docentes con etiqueta de materia | NO VERIFICABLE | Hay 0 issues públicos (2026-11-14) |
-| Relatoría ≤ 2 páginas con las seis preguntas en orden | PARCIAL | 730 palabras (≈ 1.8 páginas estimadas: ~80 líneas de 45 por página), con las seis preguntas en orden; falta la conformidad de las integrantes |
+| Relatoría ≤ 2 páginas con las seis preguntas en orden | PARCIAL | 889 palabras; exportada a PDF A4 (Edge, 11 pt, márgenes de 2 cm): **2 páginas**, la segunda con ≈ 20 % de uso, con las seis preguntas en orden; falta la conformidad de las integrantes |
 | Registros PSP individuales, uno de los dos con la revisión | PARCIAL | Véase C3 |
 | Uso de IA declarado | CUMPLE | En `ENTREGA.md` y en la relatoría |
 | Preparación de E2: ruta del experimento (no se califica) | PARCIAL | [`ruta_experimento_e2.md`](ruta_experimento_e2.md): ruta ingeniería y matriz 2³; falta la conformidad de B |

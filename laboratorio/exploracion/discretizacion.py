@@ -60,6 +60,18 @@ def _fila(escenario, metodo, p, ps, x_tr, y_tr, x_te, y_te, usar):
     }
 
 
+def _valor_p(p: float) -> dict:
+    """Valor p con la corrección (b + 1) / (B + 1) y lo que significa: ``b`` permutaciones con ganancia igual o mayor de ``B``.
+
+    Con b = 0 el valor es 1 / (B + 1): **el mínimo que el procedimiento puede dar**, es decir, su límite de resolución. No es un
+    valor exacto ni se convierte en una desigualdad: solo dice que ninguna de las B permutaciones igualó la ganancia observada.
+    """
+    b = int(round(p * (N_PERMUTACIONES + 1))) - 1
+    return {"p_valor_permutacion": round(p, 6), "permutaciones_con_ganancia_igual_o_mayor": b,
+            "p_valor_minimo_alcanzable": round(1 / (N_PERMUTACIONES + 1), 6),
+            "p_valor_en_el_limite_de_resolucion": b == 0}
+
+
 def calcular(oro: "Path | str | None" = None) -> tuple[pd.DataFrame, dict]:
     df = cargar_oro_mensual(oro)
     x = serie_objetivo(df)
@@ -77,7 +89,7 @@ def calcular(oro: "Path | str | None" = None) -> tuple[pd.DataFrame, dict]:
                     "cortes": list(p.bordes), "ganancias_por_corte_bits": [round(g, 6) for g in ps.ganancias_bits],
                     "mdlp_acepta": list(ps.mdlp_acepta), "meses_ajuste": p.n, "meses_excluidos": ps.excluidos,
                     "ganancia_total_bits": round(ganancia, 6),
-                    "p_valor_permutacion": round(ds.p_valor_permutacion(x_tr[usar], y_tr[usar], ganancia, K, MIN_HOJA, N_PERMUTACIONES), 4)}
+                    **_valor_p(ds.p_valor_permutacion(x_tr[usar], y_tr[usar], ganancia, K, MIN_HOJA, N_PERMUTACIONES))}
     tabla = pd.DataFrame(filas)
     resumen.update({
         "objetivo": "temporada_alta = 1 si el mes es julio, agosto o diciembre (calendario; no usa ocupación)",
