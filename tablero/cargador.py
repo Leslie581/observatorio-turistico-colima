@@ -267,14 +267,48 @@ class Datos:
     elegido: pd.DataFrame
     resumen: dict
     ejecucion: dict
+    intervalos: "dict | None" = None   # intervalos sin supuesto de normalidad (bootstrap de bloques), ampliación posterior a la entrega
+
+
+CARPETA_INTERVALOS = CARPETA_RESULTADOS / "intervalos"
+
+
+def cargar_intervalos_bootstrap(raiz: Path = RAIZ) -> dict:
+    """Intervalos del 95 % sin supuesto de normalidad (bootstrap de bloques), 2024 mes a mes, proyección 2025 y cobertura en origen móvil."""
+    m = _csv(raiz, CARPETA_INTERVALOS / "intervalos_2024_mensual.csv",
+             {"periodo", "observado", "media_gauss", "li_gauss", "ls_gauss", "media_bootstrap", "li_bootstrap", "ls_bootstrap"})
+    p = _csv(raiz, CARPETA_INTERVALOS / "proyeccion_2025_2027.csv",
+             {"periodo", "media_gauss", "li_gauss", "ls_gauss", "media_bootstrap", "li_bootstrap", "ls_bootstrap", "tipo"})
+    o = _csv(raiz, CARPETA_INTERVALOS / "intervalos_origen_movil_resumen.csv", {"metodo", "meses", "meses_evaluados", "cobertura", "ancho_medio_pp"})
+    mo = _csv(raiz, CARPETA_INTERVALOS / "origen_movil_modelos.csv", {"modelo", "meses", "MAE", "RMSE", "MAPE_pct"})
+    return {"modelos_origen_movil": mo, "mensual_2024": _con_fecha(m), "proyeccion": _con_fecha(p.reset_index(drop=True)), "origen_movil": o}
+
+
+def validar_intervalos(iv: "dict | None", elegido: pd.DataFrame) -> list:
+    """Los intervalos gaussianos del archivo de bootstrap deben ser los mismos que publica el tablero (mismo modelo, mismos datos)."""
+    if iv is None:
+        return ["Faltan los intervalos sin supuesto de normalidad."]
+    problemas = []
+    for clave, tipo in (("mensual_2024", TIPO_RETRO), ("proyeccion", TIPO_PROYECCION)):
+        b = elegido[elegido["tipo"] == tipo].reset_index(drop=True)
+        a = iv[clave].iloc[:12].reset_index(drop=True)          # la proyección llega a 2027-12; los primeros 12 meses son los publicados
+        if len(iv[clave]) != (36 if clave == "proyeccion" else 12) or list(a["periodo"]) != list(b["periodo"]):
+            problemas.append(f"Los intervalos bootstrap de {clave} no cubren los mismos meses que el pronóstico publicado.")
+            continue
+        if not (np.allclose(a["li_gauss"], b["li"], atol=1e-3) and np.allclose(a["ls_gauss"], b["ls"], atol=1e-3)):
+            problemas.append(f"El intervalo gaussiano de {clave} no coincide con el del pronóstico publicado.")
+        if not ((a["li_bootstrap"] <= a["media_bootstrap"]) & (a["media_bootstrap"] <= a["ls_bootstrap"])).all():
+            problemas.append(f"Un intervalo bootstrap de {clave} tiene los límites invertidos.")
+    return problemas
 
 
 def cargar_todo(raiz: Path = RAIZ, validar: bool = True) -> Datos:
     """Lee y valida todo lo que muestra el tablero. Si algo no es coherente, lanza ``ErrorDatos`` con el motivo."""
     d = Datos(cargar_oro(raiz), cargar_meta_oro(raiz), cargar_comparacion(raiz), cargar_pronosticos_2024(raiz),
-              cargar_pronostico_elegido(raiz), cargar_resumen(raiz), cargar_ejecucion(raiz))
+              cargar_pronostico_elegido(raiz), cargar_resumen(raiz), cargar_ejecucion(raiz), cargar_intervalos_bootstrap(raiz))
     if validar:
         problemas = validar_coherencia(d.oro, d.comparacion, d.por_modelo, d.elegido, d.resumen)
+        problemas += validar_intervalos(d.intervalos, d.elegido)
         if problemas:
             raise ErrorDatos("Los resultados no son coherentes con el laboratorio: " + " | ".join(problemas))
     return d

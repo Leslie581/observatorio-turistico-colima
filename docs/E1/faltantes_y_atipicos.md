@@ -46,3 +46,7 @@ Los dos métodos **coinciden** exactamente y los tres meses son de COVID (`d_cov
 | Ruido (variación mes a mes sin causa) | **Conservar sin suavizar:** la serie es la medición y el pronóstico lo absorbe en su varianza | [`pronostico.md`](pronostico.md) §5 |
 | Valor sin causa conocida | **Marcar y revisar** contra la fuente; no se elimina sin evidencia | — (hoy ninguno) |
 **Límite:** el diagnóstico de atípicos es sobre la serie univariada de Manzanillo; no se revisaron los atípicos de los otros 63 centros.
+
+### 2.1 Ruido, estacionalidad y eventos reales (ampliación posterior a la entrega, 2026-11-14)
+Con la descomposición STL robusta versionada (108 meses; [`ruido.py`](../../laboratorio/exploracion/ruido.py), resultados en `laboratorio/exploracion/resultados/ruido/`): tendencia 23.9 %, estacionalidad 27.7 % y residuo 40.9 % de la varianza. **El residuo está dominado por COVID:** 5 de los 7 meses de residuo extremo (|z robusto| > 3.5) son 2020-03 a 2020-07 y, sin COVID, la desviación del residuo baja de 8.06 a 2.87 pp (estacionalidad 60.4 %, residuo 11.4 %). Los otros dos extremos (positivos) son 2017-04, que [`pronostico.md`](pronostico.md) §5 asocia a la Semana Santa (efecto de calendario que ningún modelo incluye), y 2019-08, **sin causa conocida**. Todos se marcan y se conservan.
+**Límite:** el residuo mezcla ruido de medición y variación real; sin una segunda fuente no se puede separar ni afirmar que haya errores de captura.

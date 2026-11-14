@@ -80,7 +80,7 @@ Columnas: `fecha_captura_local` (zona America/Mexico_City, a partir de `capturad
 Se descartan: `Tipo`, `SECTOR`, `SUBSECTOR`, `RAMA`, `SUBRAMA` y los dos campos de corredor industrial (constantes o vacíos), y `Tipo_vialidad` (detalle de domicilio que el proyecto ya minimiza). Es una reducción de columnas documentada.
 
 ### 2.3 Reglas de validación y limpieza (puerta de calidad)
-Herramienta propuesta: **pandera** (pendiente de instalar; ver riesgos). Cada regla tiene identificador; el rechazo produce una fila de cuarentena.
+Herramienta: **pandera** (instalada y en uso en el pipeline: `pipeline/calidad/`). Cada regla tiene identificador; el rechazo produce una fila de cuarentena.
 | ID | Dataset | Regla | Si falla |
 |---|---|---|---|
 | R-D01 | Base70 | Columnas exactas y tipos (§1.1) | Se detiene el lote (esquema cambiado) |
@@ -188,7 +188,7 @@ serie.index = serie.index.to_period("M")
 - **Cambios al contrato:** se anuncian con un incremento de `version_contrato` y una nota en este archivo; los cambios incompatibles (renombrar o quitar columnas) se acuerdan antes de la implementación.
 
 ## 8. Decisiones tomadas y riesgos abiertos
-Decisiones aprobadas por la integrante A el 2026-11-13, con las condiciones indicadas. Pendiente de conformidad de la integrante B sobre D1, D2, D3 y D7 antes de que escriba su laboratorio.
+Decisiones aprobadas por la integrante A el 2026-11-13, con las condiciones indicadas. La integrante B las revisó al escribir su laboratorio y las encontró conformes, con dos observaciones sobre las cifras de §1.1 y el indicador de 2017-11 ([`pronostico.md`](pronostico.md) §1).
 | # | Decisión | Resolución | Condición cumplida |
 |---|---|---|---|
 | D1 | Variable objetivo | **2 a 5 estrellas**, cociente de sumas | Fórmula comprobada con las columnas reales; no es un promedio de porcentajes; exclusión de `1 estrella` documentada (§1.1b); sin duplicados ni totales |

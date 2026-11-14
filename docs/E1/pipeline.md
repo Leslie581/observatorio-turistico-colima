@@ -51,6 +51,7 @@ Códigos de salida: **0** correcto · **2** la puerta de calidad impide una sali
 | R-E04 coordenadas numéricas dentro de Colima | Fila a cuarentena | 0 |
 | R-E05 campos excluidos por privacidad | **Incidente: detiene todo** | Ninguno presente |
 | R-E06 `Fecha_Alta` con formato válido y no posterior a la captura | Fila a cuarentena | 0 |
+| R-E07 esquema `pandera` de la plata de DENUE (`ESQUEMA_PLATA`, posterior a la entrega, 2026-11-14): tipos, rangos, unicidad `(fecha_captura_local, clee)`, catálogo SCIAN, municipio, caja de Colima y `personal_min ≤ personal_max` | Detiene la corrida (código 2) | Superada; 9 pruebas ([`test_esquema_plata_denue.py`](../../tests/test_esquema_plata_denue.py)) detectan cada violación sintética |
 Reglas con **0 rechazos reales** solo se probaron con datos sintéticos: aún no se ha visto un lote DENUE real que falle.
 
 ### 3.1 Jerarquías conceptuales (capa oro)

@@ -11,9 +11,13 @@
 | [`auditorias.md`](auditorias.md), [`lista_verificacion_auditoria.md`](lista_verificacion_auditoria.md) | Proceso y registro de la revisión cruzada; lista reutilizable | Quien audita |
 | [`riesgos.md`](riesgos.md) | Riesgos pendientes (distintos de defectos) | Equipo |
 
-**Estado de la entrega E1 (cerrada; etiqueta `e1`):** A: E0 750 min + E1 1,380 min = **2,130 min** (estimaciones retrospectivas; 480 min de E0 son del prototipo, etiquetados `[PROTOTIPO]`) y 22 defectos; B: E0 633 min + E1 118 min en 23 intervalos con inicio y fin, y 14 defectos. Sin horarios inventados. **No se editan** las filas de la entrega.
+**Estado de la entrega E1 (cerrada; etiqueta `e1`):** A: E0 750 min + E1 1,380 min = **2,130 min** (estimaciones retrospectivas; 480 min de E0 son del prototipo, etiquetados `[PROTOTIPO]`) y 22 defectos entregados (28 con los 6 documentales agregados el 2026-11-14); B: E0 633 min + E1 118 min en 23 intervalos con inicio y fin, y 14 defectos. Sin horarios inventados. **No se editan** las filas de la entrega.
 
 **Trabajo posterior a la entrega (desde 2026-11-13/14):** se registra aparte en `tiempo-posentrega-integrante-a.csv` (mismo formato) para no alterar lo entregado; se llena **desde el inicio de cada bloque** con `inicio`, `fin` e `interrupcion_min` reales. Para la retrospectiva PSP de E3 (exactitud de las estimaciones, defectos inyectados y eliminados por fase, rendimiento de revisiones) cada defecto nuevo debe llevar `minutos_correccion` y las fases correctas.
+
+**Compatibilidad con el formato del Kit.** Los CSV de defectos tienen exactamente las 8 columnas del Kit. Los de tiempo tienen las **6 columnas del Kit en el mismo orden** y una 7.ª, `minutos_estimados`, al final, que existe solo porque las filas retrospectivas no tienen `inicio` ni `fin` (la duración no se puede calcular); una lectura que use solo las columnas del Kit sigue funcionando. Las filas con horarios reales (desde la entrega, `tiempo-posentrega-integrante-a.csv`) dejan `minutos_estimados` vacío.
+**Vacío significa «no registrado», no cero.** Ningún defecto tiene aún `minutos_correccion`: no se midieron y los commits solo dan fechas de introducción y corrección, no esfuerzo.
+**Totales de A:** acumulado general 2,130 min = prototipo (`[PROTOTIPO]`) 480 + desarrollo formal 1,650 (E0 270 + E1 1,380). Detalle en [`psp-e0-integrante-a-respaldo.md`](psp-e0-integrante-a-respaldo.md) y [`psp-e1-integrante-a-respaldo.md`](psp-e1-integrante-a-respaldo.md).
 
 ## Cómo registrar
 1. **No renombren** los archivos `...-integrante-a.csv` / `...-integrante-b.csv`: las pruebas y los documentos dependen de esos nombres.

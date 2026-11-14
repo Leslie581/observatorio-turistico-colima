@@ -117,7 +117,7 @@ def test_la_app_arranca_sin_errores_desde_otro_directorio_y_muestra_lo_pedido(tm
     at = _app().run()
     assert not at.exception and not at.error
     assert at.title[0].value == "Observatorio de Ocupación Hotelera de Colima · Manzanillo"
-    assert [t.label for t in at.tabs] == ["Resumen", "Pronóstico 2024", "Comparación de modelos", "Proyección 2025", "Cómo leerlo", "Fuentes y datos"]
+    assert [t.label for t in at.tabs] == ["Resumen", "Pronóstico 2024", "Comparación de modelos", "Proyección 2025–2027", "Cómo leerlo", "Fuentes y datos"]
     assert dict((m.label.split(" (")[0], m.value) for m in at.metric) == {
         "Ocupación media 2016–2024": "45.9 %", "Ocupación media 2024": "54.7 %", "Mes más bajo": "1.5 %", "Meses de 2024 dentro del intervalo": "12 de 12",
         "Media del periodo seleccionado": "45.9 %", "Mínimo del periodo": "1.5 %", "Máximo del periodo": "66.3 %",
@@ -125,6 +125,7 @@ def test_la_app_arranca_sin_errores_desde_otro_directorio_y_muestra_lo_pedido(tm
     texto = " ".join(x.value for x in [*at.markdown, *at.info, *at.warning, *at.caption])
     assert "proyección histórica" in texto and "no es un pronóstico vigente" in texto and "Nombre provisional" in texto
     assert "Referencia ingenua estacional" in texto or "referencia ingenua estacional" in texto
+    assert "no son normales" in texto and "No es más preciso" in texto and "no supone normalidad" in texto and "la elección no es firme" in texto   # intervalos bootstrap publicados con su limitación
     assert "StayMetrics" not in texto and "DENUE" not in texto and "pronóstico para 2025" not in texto.lower()
 
 

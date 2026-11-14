@@ -1,7 +1,7 @@
 # Pronóstico de la ocupación hotelera de Manzanillo · E1
 
 Responsable: Eimy Melissa Urbina Meza (integrante B) · Rama `e1/eimy-pronosticos` · Contrato de datos 1.0.0.
-Estado: **evaluación definitiva con la capa oro** (`data/oro/manzanillo_ocupacion_mensual.csv`, integrada en `main` por el PR #8), pendiente de la revisión recíproca de la integrante A. El oro se validó contra la derivación de referencia del contrato §7 antes de evaluar (§7).
+Estado: **evaluación definitiva con la capa oro** (`data/oro/manzanillo_ocupacion_mensual.csv`, integrada en `main` por el PR #8), con la revisión recíproca de la integrante A en [`auditorias.md`](../../calidad/auditorias.md). El oro se validó contra la derivación de referencia del contrato §7 antes de evaluar (§7).
 Código y comandos: [`laboratorio/pronosticos/`](../../laboratorio/pronosticos/README.md). Todas las cifras de este documento salen de `laboratorio/pronosticos/resultados/`, ejecución `python -m laboratorio.pronosticos.ejecutar --fuente oro` del 2026-11-13 07:18 UTC (29.4 s; `ejecucion.json`: `fuente = "oro"`, SHA-256 del oro `135a056f…`).
 
 > **Aviso de interpretación.** Los valores de 2024 que aparecen como "pronóstico" son una **proyección retrospectiva**: modelos entrenados solo con 2016–2023 y comparados contra el dato observado de 2024. Los valores de 2025 son una **proyección futura**: no existe dato observado en la base usada (Base70 termina en 2024-12). Ninguna predicción se presenta como dato.
@@ -238,8 +238,24 @@ Los resultados versionados se generaron con **Python 3.14.3**; el CI y la reprod
 - **`captura-diaria.yml`** instala solo `requirements.txt` a propósito (las dependencias del laboratorio no deben poder detener la captura). Allí el módulo se omite con su motivo explícito, visible con `-rs`, y esa omisión **no cuenta** como ejecución. Comprobado en un entorno instalado solo con `requirements.txt`.
 - Ni `requirements*.txt` ni los workflows se modificaron en esta rama.
 
-## 9. Pendientes y fuera de alcance
-- Revisión recíproca de la integrante A sobre el PR de esta rama, y confirmación en Actions de que las pruebas de pronósticos se ejecutan en CI.
-- Página del pronóstico en `tablero/` (plan de trabajo).
-- Resueltos en la rama `e1/eimy-cierre-estadistico`: gráfica de la descomposición (§2.6) y comparación min-max frente a z-score (§2.7), que eran los riesgos R1 y R2 de la Auditoría 4.
-- Mejoras posibles, no implementadas: validación con origen móvil, indicador de Semana Santa, intervalos por bootstrap de residuos y comparación entrenando desde 2021-07.
+## 9. Limitaciones y fuera de alcance
+- Las pruebas de pronósticos se ejecutan en CI (`TDL_EXIGIR_PRONOSTICOS=1`); la revisión recíproca de la integrante A consta en [`auditorias.md`](../../calidad/auditorias.md). El pronóstico se publica en el tablero ([`tablero.md`](tablero.md)).
+- La gráfica de la descomposición (§2.6) y la comparación min-max frente a z-score (§2.7) se resolvieron en `e1/eimy-cierre-estadistico`.
+- No se incluyeron un indicador de Semana Santa ni la comparación entrenando desde 2021-07. La validación con origen móvil y los intervalos por bootstrap se implementaron **después de la entrega** (§10).
+
+## 10. Ampliación posterior a la entrega (2026-11-14): intervalos sin normalidad, origen móvil y proyección
+**Trazabilidad:** todo lo de esta sección se hizo **después** del plazo y de la etiqueta `e1` (rama `e1/mejoras-postentrega`, sin fusionar a `main` al escribirse). **No reemplaza** ninguna cifra de §4 ni §6: el modelo elegido, sus métricas de 2024 y sus intervalos gaussianos siguen siendo los entregados. Código: [`intervalos.py`](../../laboratorio/pronosticos/intervalos.py); resultados: [`resultados/intervalos/`](../../laboratorio/pronosticos/resultados/intervalos/); notebook: [`pronostico_e1.ipynb`](../../notebooks/pronostico_e1.ipynb).
+
+**Método.** Bootstrap de bloques de residuos del SARIMA elegido (bloques de 6 meses, B = 1,000, semilla 20261114; la autocorrelación de los residuos en el rezago 1 es 0.056, n = 83), simulado desde el estado filtrado al final de la muestra. Supone residuos intercambiables por bloques y **no** incorpora la incertidumbre de los parámetros. La validación de **origen móvil** usa 17 orígenes (2018-12 a 2022-12, uno cada tres meses, horizonte 12) con modelo reajustado en cada origen; **nunca se usa 2024**.
+
+| Evaluación | Gaussiano (E1) | Bootstrap de bloques |
+|---|---|---|
+| 2024 (12 meses): cobertura / ancho medio | 1.00 / 40.4 pp | 1.00 / 47.1 pp |
+| Origen móvil, 204 meses, todos: cobertura / ancho | 0.770 / ≈46 pp | 0.750 / ≈53 pp |
+| Origen móvil sin COVID, 140 meses: cobertura / ancho | 0.950 / ≈46 pp | 0.914 / ≈52 pp |
+
+**Lectura.** El bootstrap **no mejora** la cobertura: es más ancho y queda por debajo del 95 % nominal sin COVID. Su valor es **no suponer normalidad**. **Puerta de supuestos (PDF págs. 9–10): atendida con salvedad, no resuelta.** Se verificó el supuesto (Jarque-Bera lo rechaza), se aplicó un método alternativo y **ambos intervalos se publican en el tablero** con esta limitación; pero el alternativo no cubre mejor y el gaussiano sigue siendo el intervalo principal.
+
+**La selección del modelo no es estable.** En el origen móvil sin COVID: SES MAE 9.20 / RMSE 11.34 / MAPE 19.8; Holt 9.62 / 12.04 / 20.4; **Holt-Winters 7.50 / 9.05 / 15.9**; **SARIMA 7.35 / 9.67 / 16.4**. Holt-Winters tiene el menor RMSE y MAPE; SARIMA, el menor MAE. No se cambió el modelo elegido (la regla se fijó antes de comparar: menor RMSE en 2024, con Ljung-Box como filtro, y se conservan los cuatro modelos), pero se declara que con más de un año de prueba el ganador cambia. El tablero lo muestra en la pestaña de comparación.
+
+**Datos recientes.** Búsqueda acotada del 2026-11-13: la ficha de datos.gob.mx de Base70 indica última actualización el 28-may-2025, igual que [`datatur.md`](../fuentes/datatur.md); el Sistema de Monitoreo restringe el acceso automático por sus términos. **No hay datos oficiales 2025–2026 en la fuente permitida.** [`proyeccion_2025_2027.csv`](../../laboratorio/pronosticos/resultados/intervalos/proyeccion_2025_2027.csv) proyecta 2025-01 a 2027-12 con ambos intervalos: es una **proyección histórica con datos hasta 2024-12, no un pronóstico actualizado**; la incertidumbre crece con el horizonte (2027-12: gaussiano 34.1–95.7 %, bootstrap 31.0–92.6 %). El tablero publica la proyección 2025–2027 con ambos intervalos, rotulada como histórica y no vigente.

@@ -17,7 +17,8 @@ sys.path.insert(0, str(RAIZ / "tablero"))
 import cargador as cg  # noqa: E402
 
 ARCHIVOS = [cg.RUTA_ORO, cg.RUTA_META_ORO, *(cg.CARPETA_RESULTADOS / n for n in (
-    "comparacion_modelos_2024.csv", "pronosticos_2024_por_modelo.csv", "pronostico_modelo_elegido.csv", "resumen.json", "ejecucion.json"))]
+    "comparacion_modelos_2024.csv", "pronosticos_2024_por_modelo.csv", "pronostico_modelo_elegido.csv", "resumen.json", "ejecucion.json")),
+    *(cg.CARPETA_INTERVALOS / n for n in ("intervalos_2024_mensual.csv", "proyeccion_2025_2027.csv", "intervalos_origen_movil_resumen.csv", "origen_movil_modelos.csv"))]
 
 
 @pytest.fixture
@@ -410,3 +411,19 @@ def test_los_textos_no_presentan_2025_ni_2026_como_pronostico_vigente():
     assert afirmaciones_incorrectas(todo) == []
     assert afirmaciones_incorrectas("La ocupación de los meses siguientes será alta.") != []  # el detector sí detecta
     assert afirmaciones_incorrectas("Este es un pronóstico vigente para 2026.") != []
+
+
+# ---------------------------------------------------------------- intervalos sin supuesto de normalidad (ampliación posterior a la entrega)
+def test_los_intervalos_bootstrap_se_cargan_y_su_gaussiano_coincide_con_el_publicado():
+    d = cg.cargar_todo()
+    assert cg.validar_intervalos(d.intervalos, d.elegido) == []
+    assert len(d.intervalos["mensual_2024"]) == 12 and len(d.intervalos["proyeccion"]) == 36
+
+
+def test_un_intervalo_gaussiano_distinto_del_publicado_se_detecta(copia):
+    ruta = copia / cg.CARPETA_INTERVALOS / "proyeccion_2025_2027.csv"
+    df = pd.read_csv(ruta)
+    df.loc[0, "ls_gauss"] += 5
+    df.to_csv(ruta, index=False)
+    with pytest.raises(cg.ErrorDatos, match="no coincide"):
+        cg.cargar_todo(copia)

@@ -4,7 +4,7 @@ Proyecto integrador **Trusted Data Lab** (Ingeniería de Datos · Análisis Esta
 
 **Qué observa:** ocupación hotelera mensual de Manzanillo (SECTUR/DataTur, 2016–2024) y la oferta de hospedaje (INEGI, DENUE, captura diaria).
 **Para quién:** propietarios, administradores, gerentes e inversionistas hoteleros (hipótesis por validar).
-**Estado:** **E1 entregada** (etiqueta `e1` sobre `134c333`; no se mueve). Tablero: <https://tdl-turistico-colima.streamlit.app>. Las mejoras posteriores a la entrega viven en la rama `e1/mejoras-postentrega` y se describen en [`docs/E1/mejoras_postentrega.md`](docs/E1/mejoras_postentrega.md). Siguen vigentes las limitaciones declaradas: la disponibilidad de la captura (85.7 %, 6 de 7 ejecuciones) **no** alcanza el objetivo de 95 %, `main` **no** tiene protección de rama activada y no existe aún una copia externa del bronce.
+**Estado:** **E1 entregada** (etiqueta `e1` sobre `134c333`; no se mueve). Tablero: <https://tdl-turistico-colima.streamlit.app>. Las mejoras posteriores a la entrega viven en la rama `e1/mejoras-postentrega` y se resumen al final de [`docs/E1/ENTREGA.md`](docs/E1/ENTREGA.md) y están en cada documento técnico, con su fecha. Siguen vigentes las limitaciones declaradas: la disponibilidad de la captura (85.7 %, 6 de 7 ejecuciones) **no** alcanza el objetivo de 95 %, `main` **no** tiene protección de rama activada y no existe aún una copia externa del bronce.
 
 ## Documentación
 | Documento | Contenido |

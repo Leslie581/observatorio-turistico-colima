@@ -59,9 +59,18 @@ def test_los_enlaces_relativos_de_los_documentos_de_cierre_existen():
     assert not rotos, rotos
 
 
+def test_ningun_enlace_relativo_de_la_documentacion_esta_roto():
+    rotos = []
+    for ruta in [RAIZ / "README.md", *RAIZ.glob("calidad/*.md"), *RAIZ.glob("docs/**/*.md")]:
+        for destino in _enlaces_relativos(ruta):
+            if not (ruta.parent / destino).resolve().exists():
+                rotos.append(f"{ruta.relative_to(RAIZ)}: {destino}")
+    assert not rotos, rotos
+
+
 def test_la_ficha_no_afirma_lo_que_no_esta_verificado():
     texto = _leer(ENTREGA)
-    assert "no creada todavía" in texto
+    assert "no creada todavía" not in texto and "134c333" in texto   # la etiqueta e1 ya existe
     assert "@@" not in texto and "@@" not in _leer(RELATORIA)
     for prohibida in ("tablero está actualizado con `main`", "CI en verde", "disponibilidad cumplida"):
         assert prohibida not in texto

@@ -127,6 +127,17 @@ def evaluar_2024(serie: pd.Series, spec: tuple) -> pd.DataFrame:
     return pd.DataFrame(filas)
 
 
+def mensual_2024(serie: pd.Series, spec: tuple) -> pd.DataFrame:
+    """Mes a mes del año de prueba (modelo ajustado solo con 2016-2023): observado, pronóstico y los dos intervalos, para publicarlos en el tablero."""
+    ent, pru = datos.partir(serie)
+    res = ajustar(ent, spec)
+    g = intervalo_gaussiano(res, pru.index, spec)
+    bt = intervalo(trayectorias(res, pru.index, spec, B_BOOTSTRAP, SEMILLA))
+    return pd.DataFrame({"periodo": [str(p) for p in pru.index], "observado": pru.to_numpy(), "media_gauss": g["media"].to_numpy(),
+                         "li_gauss": g["li"].to_numpy(), "ls_gauss": g["ls"].to_numpy(),
+                         "media_bootstrap": bt["media"].to_numpy(), "li_bootstrap": bt["li"].to_numpy(), "ls_bootstrap": bt["ls"].to_numpy()})
+
+
 def origenes(serie: pd.Series) -> list:
     """Orígenes (último mes observado) cuyos H meses siguientes caen dentro del entrenamiento 2016-2023."""
     ent, _ = datos.partir(serie)
@@ -227,6 +238,7 @@ def ejecutar(salida: Path = SALIDA, fuente: str = "oro") -> dict:
     res_om = resumen_origen_movil(om)
     modelos = origen_movil_modelos(serie)
     proy = proyeccion(serie, spec)
+    m24 = mensual_2024(serie, spec)
     ent, _ = datos.partir(serie)
     e = residuos_centrados(ajustar(ent, spec))
     ac1 = float(np.corrcoef(e[:-1], e[1:])[0, 1])
@@ -236,7 +248,7 @@ def ejecutar(salida: Path = SALIDA, fuente: str = "oro") -> dict:
             "supuestos_del_bootstrap": ["residuos intercambiables por bloques", "sin incertidumbre de parámetros", "residuos futuros parecidos a los de entrenamiento (incluye COVID)"],
             "advertencia": "La proyección usa datos hasta 2024-12: es una proyección histórica, no un pronóstico actualizado."}
     for nombre, df in (("intervalos_2024.csv", a), ("intervalos_origen_movil_detalle.csv", om), ("intervalos_origen_movil_resumen.csv", res_om),
-                       ("origen_movil_modelos.csv", modelos), ("proyeccion_2025_2027.csv", proy)):
+                       ("origen_movil_modelos.csv", modelos), ("proyeccion_2025_2027.csv", proy), ("intervalos_2024_mensual.csv", m24)):
         (salida / nombre).write_bytes(df.to_csv(index=False, float_format="%.4f", lineterminator="\n").encode("utf-8"))
     (salida / "resumen.json").write_bytes((json.dumps(info, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8"))
     return info

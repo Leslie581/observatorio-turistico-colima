@@ -125,6 +125,24 @@ def grafica_modelos_2024(por_modelo: pd.DataFrame, observado: pd.DataFrame, fami
 
 
 # ---------------------------------------------------------------- 4. proyección 2025 (histórica)
+def grafica_intervalos_comparados(df: pd.DataFrame, con_observado: bool) -> alt.LayerChart:
+    """Franja gaussiana (supone residuos normales) frente a las líneas del bootstrap de bloques (no lo supone); mismo pronóstico central."""
+    x = alt.X("fecha:T", axis=_eje_mes())
+    y = alt.Y("li_gauss:Q", title="Ocupación (%)", scale=alt.Scale(domain=[0, 100], nice=False))
+    gauss = alt.Chart(df.assign(serie="Intervalo gaussiano (supone residuos normales)")).mark_area(opacity=0.3, color=AZUL).encode(
+        x=x, y=y, y2="ls_gauss:Q", tooltip=[alt.Tooltip("mes_texto:N", title="Mes"), alt.Tooltip("li_gauss:Q", title="Gauss inf.", format=".1f"),
+                                            alt.Tooltip("ls_gauss:Q", title="Gauss sup.", format=".1f")])
+    largo = pd.concat([df[["fecha", "mes_texto", c]].rename(columns={c: "valor"}).assign(serie="Intervalo bootstrap de bloques (sin normalidad)", lado=c)
+                       for c in ("li_bootstrap", "ls_bootstrap")])
+    boot = alt.Chart(largo).mark_line(strokeWidth=2.2, strokeDash=[5, 3], color=MORADO).encode(
+        x=x, y=alt.Y("valor:Q"), detail="lado:N", tooltip=[alt.Tooltip("mes_texto:N", title="Mes"), alt.Tooltip("valor:Q", title="Límite bootstrap", format=".1f")])
+    centro = alt.Chart(df).mark_line(strokeWidth=2, color=AZUL).encode(x=x, y=alt.Y("media_gauss:Q"))
+    capas = [gauss, boot, centro]
+    if con_observado:
+        capas.append(alt.Chart(df).mark_line(strokeWidth=2.5, color=TINTA, point=alt.OverlayMarkDef(size=30, filled=True)).encode(x=x, y=alt.Y("observado:Q")))
+    return _estilo(alt.layer(*capas).properties(height=ALTURA))
+
+
 def grafica_proyeccion(oro: pd.DataFrame, proyeccion: pd.DataFrame) -> alt.LayerChart:
     """Últimos 24 meses observados y la proyección de 2025 con su intervalo del 95 % (calculada con datos hasta 2024-12)."""
     nombres = ["Observado (hasta dic 2024)", "Proyección 2025", "Intervalo de predicción del 95 %"]

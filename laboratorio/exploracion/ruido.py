@@ -59,8 +59,8 @@ def calcular(ruta_stl: Path = STL, oro: "Path | str | None" = None) -> tuple:
                "meses_residuo_extremo": int(len(ext)), "extremos_covid": int(ext.d_covid.sum()),
                "extremos_sin_causa_conocida": int((~ext.d_covid).sum()),
                "lectura": "Con todos los meses el residuo STL absorbe ~41 % de la varianza, pero la mayor parte es el evento real COVID (5 de los 7 meses "
-                          "extremos): sin COVID la desviación del residuo baja de 8.06 a 2.87 pp. Los 2 extremos restantes (2017-04 y 2019-08, positivos) no tienen causa "
-                          "conocida en el contrato: se marcan y se conservan; una hipótesis por verificar es el calendario (p. ej. Semana Santa), no un error de captura. "
+                          "extremos): sin COVID la desviación del residuo baja de 8.06 a 2.87 pp. Los 2 extremos restantes son positivos: 2017-04, que docs/E1/pronostico.md §5 "
+                          "asocia a la Semana Santa (efecto de calendario), y 2019-08, sin causa conocida; se marcan y se conservan, no se tratan como errores de captura. "
                           "El residuo mezcla ruido de medición y variación real y no puede separarse sin una segunda fuente; no se elimina ni se suaviza ningún mes."}
     return tabla, ext, resumen
 

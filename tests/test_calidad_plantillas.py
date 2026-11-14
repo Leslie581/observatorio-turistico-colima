@@ -101,3 +101,18 @@ def test_b_conserva_sus_registros_propios_sin_horarios_inventados():
     for f in filas:
         if "RETROSPECTIVO" in f["actividad"]:
             assert f["inicio"] == f["fin"] == ""
+
+
+def test_totales_de_a_separan_prototipo_de_desarrollo_formal():
+    _, filas = _leer("tiempo-integrante-a.csv")
+    def suma(fs):
+        return sum(int(f["minutos_estimados"]) for f in fs)
+    proto = [f for f in filas if "[PROTOTIPO]" in f["actividad"]]
+    formal = [f for f in filas if "[PROTOTIPO]" not in f["actividad"]]
+    assert (suma(proto), suma(formal), suma(filas)) == (480, 1650, 2130)
+
+
+def test_defectos_de_a_tienen_numeracion_continua_y_sin_duplicados():
+    _, filas = _leer("defectos-integrante-a.csv")
+    assert [int(f["numero"]) for f in filas] == list(range(1, len(filas) + 1)) and len(filas) == 28
+    assert len({f["descripcion"] for f in filas}) == len(filas)
