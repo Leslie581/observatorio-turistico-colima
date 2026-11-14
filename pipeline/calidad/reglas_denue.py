@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pandera.pandas as pa
 
 from extractores.denue import CAMPOS_DOMICILIO, CAMPOS_NOMBRE, CAMPOS_PRIVADOS, CATALOGO_HOSPEDAJE, _normalizar_clave
 
@@ -12,6 +13,47 @@ CAMPOS_PROHIBIDOS = CAMPOS_PRIVADOS | CAMPOS_NOMBRE | CAMPOS_DOMICILIO
 CAMPOS_REQUERIDOS = ["CLEE", "Id", "Clase_actividad", "CLASE_ACTIVIDAD_ID", "Estrato", "Colonia", "CP", "Ubicacion",
                      "Longitud", "Latitud", "AGEB", "Manzana", "AreaGeo", "SUBSECTOR_ACTIVIDAD_ID",
                      "Tipo_Asentamiento", "Fecha_Alta"]
+
+
+# Esquema pandera de la plata de DENUE (puerta 1, PDF págs. 9–10 y 15): esquema, tipos, rangos, unicidad y reglas de negocio. Reutiliza las
+# constantes de las reglas R-E01 a R-E06 (municipio, subsector, catálogo SCIAN 721 y caja geográfica de Colima); es una SEGUNDA verificación sobre
+# lo que ya pasó las máscaras: si algo se cuela, la corrida se detiene con ``ErrorPuertaCalidad`` (código 2) y no escribe salidas.
+ESQUEMA_PLATA = pa.DataFrameSchema({
+    "fecha_captura_local": pa.Column(str, pa.Check.str_matches(r"^\d{4}-\d{2}-\d{2}$")),
+    "clee": pa.Column(str, pa.Check.str_length(min_value=1)),
+    "id": pa.Column(str, pa.Check.str_length(min_value=1)),
+    "clase_actividad": pa.Column(str),
+    "scian_clase": pa.Column(str, pa.Check.isin(list(CATALOGO_HOSPEDAJE))),
+    "estrato": pa.Column(str),
+    "personal_min": pa.Column("Int64", pa.Check.ge(0), nullable=True),
+    "personal_max": pa.Column("Int64", pa.Check.ge(0), nullable=True),
+    "colonia": pa.Column(str, nullable=True),
+    "cp": pa.Column(str, nullable=True),
+    "localidad": pa.Column(str),
+    "municipio_clave": pa.Column(str, pa.Check.eq(MUNICIPIO_CLAVE)),
+    "ageb": pa.Column(str, nullable=True),
+    "manzana": pa.Column(str, nullable=True),
+    "tipo_asentamiento": pa.Column(str, nullable=True),
+    "latitud": pa.Column(float, pa.Check.in_range(*CAJA_COLIMA["lat"])),
+    "longitud": pa.Column(float, pa.Check.in_range(*CAJA_COLIMA["lon"])),
+    "fecha_alta": pa.Column(str, pa.Check.str_matches(r"^\d{4}-(0[1-9]|1[0-2])-01$")),
+    "capturas_del_dia": pa.Column(int, pa.Check.ge(1)),
+    "ejecucion": pa.Column(str),
+    "archivo_bronce": pa.Column(str, pa.Check.str_length(min_value=1)),
+    "sha256_bronce": pa.Column(str, pa.Check.str_matches(r"^[0-9a-f]{64}$")),
+}, checks=[
+    pa.Check(lambda d: d["personal_max"].isna() | (d["personal_max"] >= d["personal_min"]), error="personal_max menor que personal_min"),
+    pa.Check(lambda d: d["fecha_alta"].str[:7] <= d["fecha_captura_local"].str[:7], error="fecha_alta posterior a la captura"),
+], unique=["fecha_captura_local", "clee"], strict=True, ordered=True)
+
+
+def validar_plata(df: pd.DataFrame) -> None:
+    """Valida la plata de DENUE con ``ESQUEMA_PLATA``; lanza ``ErrorPuertaCalidad('R-E07', ...)`` con los primeros casos si falla."""
+    try:
+        ESQUEMA_PLATA.validate(df, lazy=True)
+    except pa.errors.SchemaErrors as e:
+        casos = e.failure_cases[["column", "check", "failure_case"]].head(5).to_dict("records")
+        raise ErrorPuertaCalidad("R-E07", f"la plata de DENUE incumple su esquema: {casos}") from None
 
 
 def r_e05_privacidad(registros: list[dict], archivo: str) -> None:

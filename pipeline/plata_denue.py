@@ -126,4 +126,6 @@ def procesar_capturas(raiz_bronce: Path, cuarentena: Cuarentena) -> pd.DataFrame
                                       "capturas_por_dia": {k: int(v) for k, v in sorted(por_dia.items())},
                                       "nota": "los registros de capturas repetidas del mismo día se reemplazan por la última, "
                                               "no se rechazan (son fotos duplicadas, no datos erróneos)"}
-    return todo.drop(columns="_capturado_utc")[COLUMNAS_PLATA].sort_values(["fecha_captura_local", "clee"]).reset_index(drop=True)
+    plata = todo.drop(columns="_capturado_utc")[COLUMNAS_PLATA].sort_values(["fecha_captura_local", "clee"]).reset_index(drop=True)
+    re_.validar_plata(plata)                       # R-E07: segunda verificación con pandera (esquema, tipos, rangos, unicidad, reglas)
+    return plata

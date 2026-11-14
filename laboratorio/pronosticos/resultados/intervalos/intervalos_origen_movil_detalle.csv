@@ -1,0 +1,65 @@
+origen,metodo,meses,cobertura,ancho_medio_pp,n
+2018-12,gaussiano (E1),todos los meses,0.9167,27.1378,12
+2018-12,gaussiano (E1),sin meses COVID,0.9167,27.1378,12
+2018-12,bootstrap de bloques,todos los meses,0.6667,22.0997,12
+2018-12,bootstrap de bloques,sin meses COVID,0.6667,22.0997,12
+2019-03,gaussiano (E1),todos los meses,0.7500,25.8363,12
+2019-03,gaussiano (E1),sin meses COVID,0.8182,25.2641,11
+2019-03,bootstrap de bloques,todos los meses,0.6667,22.1252,12
+2019-03,bootstrap de bloques,sin meses COVID,0.7273,22.7967,11
+2019-06,gaussiano (E1),todos los meses,0.6667,30.2278,12
+2019-06,gaussiano (E1),sin meses COVID,1.0000,27.4884,8
+2019-06,bootstrap de bloques,todos los meses,0.6667,26.0238,12
+2019-06,bootstrap de bloques,sin meses COVID,1.0000,26.2639,8
+2019-09,gaussiano (E1),todos los meses,0.5000,28.7394,12
+2019-09,gaussiano (E1),sin meses COVID,1.0000,23.9082,5
+2019-09,bootstrap de bloques,todos los meses,0.5000,30.0387,12
+2019-09,bootstrap de bloques,sin meses COVID,1.0000,27.6332,5
+2019-12,gaussiano (E1),todos los meses,0.5000,27.3552,12
+2019-12,gaussiano (E1),sin meses COVID,1.0000,20.3290,2
+2019-12,bootstrap de bloques,todos los meses,0.4167,28.1181,12
+2019-12,bootstrap de bloques,sin meses COVID,1.0000,24.6727,2
+2020-03,gaussiano (E1),todos los meses,0.5833,26.6629,12
+2020-03,bootstrap de bloques,todos los meses,0.5833,29.3310,12
+2020-06,gaussiano (E1),todos los meses,0.0833,28.9108,12
+2020-06,bootstrap de bloques,todos los meses,0.1667,30.2874,12
+2020-09,gaussiano (E1),todos los meses,0.7500,33.8868,12
+2020-09,gaussiano (E1),sin meses COVID,1.0000,35.3163,3
+2020-09,bootstrap de bloques,todos los meses,0.7500,33.2311,12
+2020-09,bootstrap de bloques,sin meses COVID,1.0000,34.9108,3
+2020-12,gaussiano (E1),todos los meses,0.8333,35.6062,12
+2020-12,gaussiano (E1),sin meses COVID,1.0000,37.7979,6
+2020-12,bootstrap de bloques,todos los meses,0.9167,39.8071,12
+2020-12,bootstrap de bloques,sin meses COVID,1.0000,42.1660,6
+2021-03,gaussiano (E1),todos los meses,0.8333,35.5455,12
+2021-03,gaussiano (E1),sin meses COVID,1.0000,37.3977,9
+2021-03,bootstrap de bloques,todos los meses,0.8333,40.0940,12
+2021-03,bootstrap de bloques,sin meses COVID,1.0000,40.2542,9
+2021-06,gaussiano (E1),todos los meses,0.6667,47.2710,12
+2021-06,gaussiano (E1),sin meses COVID,0.6667,47.2710,12
+2021-06,bootstrap de bloques,todos los meses,0.5833,47.5111,12
+2021-06,bootstrap de bloques,sin meses COVID,0.5833,47.5111,12
+2021-09,gaussiano (E1),todos los meses,1.0000,73.8828,12
+2021-09,gaussiano (E1),sin meses COVID,1.0000,73.8828,12
+2021-09,bootstrap de bloques,todos los meses,1.0000,75.6193,12
+2021-09,bootstrap de bloques,sin meses COVID,1.0000,75.6193,12
+2021-12,gaussiano (E1),todos los meses,1.0000,71.8348,12
+2021-12,gaussiano (E1),sin meses COVID,1.0000,71.8348,12
+2021-12,bootstrap de bloques,todos los meses,1.0000,70.5556,12
+2021-12,bootstrap de bloques,sin meses COVID,1.0000,70.5556,12
+2022-03,gaussiano (E1),todos los meses,1.0000,71.6898,12
+2022-03,gaussiano (E1),sin meses COVID,1.0000,71.6898,12
+2022-03,bootstrap de bloques,todos los meses,1.0000,71.7610,12
+2022-03,bootstrap de bloques,sin meses COVID,1.0000,71.7610,12
+2022-06,gaussiano (E1),todos los meses,1.0000,71.4584,12
+2022-06,gaussiano (E1),sin meses COVID,1.0000,71.4584,12
+2022-06,bootstrap de bloques,todos los meses,1.0000,70.3040,12
+2022-06,bootstrap de bloques,sin meses COVID,1.0000,70.3040,12
+2022-09,gaussiano (E1),todos los meses,1.0000,72.7064,12
+2022-09,gaussiano (E1),sin meses COVID,1.0000,72.7064,12
+2022-09,bootstrap de bloques,todos los meses,1.0000,71.0633,12
+2022-09,bootstrap de bloques,sin meses COVID,1.0000,71.0633,12
+2022-12,gaussiano (E1),todos los meses,1.0000,71.0386,12
+2022-12,gaussiano (E1),sin meses COVID,1.0000,71.0386,12
+2022-12,bootstrap de bloques,todos los meses,1.0000,68.4141,12
+2022-12,bootstrap de bloques,sin meses COVID,1.0000,68.4141,12

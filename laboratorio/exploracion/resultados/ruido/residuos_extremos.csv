@@ -1,0 +1,8 @@
+periodo,residuo_stl,z_robusto,d_covid,tipo
+2017-04,14.2290,5.8000,False,sin causa conocida: revisar
+2019-08,11.0370,4.5200,False,sin causa conocida: revisar
+2020-03,-17.2790,-6.8330,True,"evento real (COVID, regla de calendario)"
+2020-04,-44.6890,-17.8230,True,"evento real (COVID, regla de calendario)"
+2020-05,-42.6900,-17.0220,True,"evento real (COVID, regla de calendario)"
+2020-06,-36.6050,-14.5820,True,"evento real (COVID, regla de calendario)"
+2020-07,-27.8820,-11.0840,True,"evento real (COVID, regla de calendario)"

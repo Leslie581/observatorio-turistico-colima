@@ -11,7 +11,9 @@
 | [`auditorias.md`](auditorias.md), [`lista_verificacion_auditoria.md`](lista_verificacion_auditoria.md) | Proceso y registro de la revisión cruzada; lista reutilizable | Quien audita |
 | [`riesgos.md`](riesgos.md) | Riesgos pendientes (distintos de defectos) | Equipo |
 
-**Estado (2026-11-10):** ambas integrantes registraron su PSP (A: 750 min y 11 defectos; B: 633 min y 0 defectos), con estimaciones retrospectivas etiquetadas y sin horarios inventados.
+**Estado de la entrega E1 (cerrada; etiqueta `e1`):** A: E0 750 min + E1 1,380 min = **2,130 min** (estimaciones retrospectivas; 480 min de E0 son del prototipo, etiquetados `[PROTOTIPO]`) y 22 defectos; B: E0 633 min + E1 118 min en 23 intervalos con inicio y fin, y 14 defectos. Sin horarios inventados. **No se editan** las filas de la entrega.
+
+**Trabajo posterior a la entrega (desde 2026-11-13/14):** se registra aparte en `tiempo-posentrega-integrante-a.csv` (mismo formato) para no alterar lo entregado; se llena **desde el inicio de cada bloque** con `inicio`, `fin` e `interrupcion_min` reales. Para la retrospectiva PSP de E3 (exactitud de las estimaciones, defectos inyectados y eliminados por fase, rendimiento de revisiones) cada defecto nuevo debe llevar `minutos_correccion` y las fases correctas.
 
 ## Cómo registrar
 1. **No renombren** los archivos `...-integrante-a.csv` / `...-integrante-b.csv`: las pruebas y los documentos dependen de esos nombres.

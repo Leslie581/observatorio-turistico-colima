@@ -1,0 +1,5 @@
+metodo,meses,origenes,meses_evaluados,cobertura,ancho_medio_pp
+bootstrap de bloques,sin meses COVID,15.0000,140.0000,0.9143,52.4024
+bootstrap de bloques,todos los meses,17.0000,204.0000,0.7500,45.6697
+gaussiano (E1),sin meses COVID,15.0000,140.0000,0.9500,52.9397
+gaussiano (E1),todos los meses,17.0000,204.0000,0.7696,45.8700

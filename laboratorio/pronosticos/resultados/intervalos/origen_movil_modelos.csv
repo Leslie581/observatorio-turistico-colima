@@ -1,0 +1,9 @@
+modelo,meses,origenes,n_errores,MAE,RMSE,MAPE_pct
+SES,todos los meses,17,204,13.2516,17.1327,132.2321
+SES,sin meses COVID,17,140,9.1980,11.3401,19.7605
+Holt,todos los meses,17,204,13.3946,17.1966,124.8725
+Holt,sin meses COVID,17,140,9.6181,12.0445,20.4180
+Holt-Winters,todos los meses,17,204,11.7364,16.4721,130.6633
+Holt-Winters,sin meses COVID,17,140,7.4978,9.0480,15.9203
+SARIMA,todos los meses,17,204,12.0236,16.8156,126.1205
+SARIMA,sin meses COVID,17,140,7.3457,9.6684,16.4473
