@@ -26,7 +26,7 @@ Que los datos de DATATUR y DENUE viajen de bronce a oro sin intervención, con u
 - **MTBF solo exploratorio**: con un incidente y 3.83 días de bitácora no es una medición.
 
 ## 4. Qué salió mal y cómo lo corregimos
-- **Diez PR de E1 (#7 a #16) se fusionaron sin revisión previa**, en 9 a 68 s, aunque el plan lo prohibía; la protección de `main` **no está configurada**. El #16 (este cierre) se fusionó 13 s después de abrirse, con 0 revisiones en GitHub; la revisión de B sobre `4242ea5` es su Auditoría 8, fuera del PR. El #17 (la Auditoría 8) se fusionó por error en la rama de integración, 12 s después de abrirse y sin llegar a `main`: undécima desviación, distinta de las demás.
+- **Doce PR de E1 se fusionaron sin revisión previa** (once hacia `main`, #7 a #16 y #18, en 9 a 68 s, y el #17 por error hacia la rama de integración), aunque el plan lo prohibía; el #18, el cierre definitivo, llegó a `main` 12 s después de abrirse sin la aprobación de B prevista, y el #16 tampoco tuvo la revisión de B en el PR (su Auditoría 8 es posterior o ajena al PR). La protección de `main` **no está configurada**.
 - **El CI de `main` estuvo en rojo** (3 de 30 ejecuciones) por una prueba del tablero que dependía de `__pycache__` (defecto 22 de A); B la corrigió en `eb8f606` y `main` volvió a verde; el CI nuevo pasó en GitHub (ejecuciones 43557153021 y 43557683882).
 - **La URL pública servía una versión anterior** (03:09 UTC del 14-nov); tras reconfigurar el despliegue desde `main`, a las 04:25 UTC sirve la integrada.
 - **La bitácora no llega a 7 días** (3.83): éxito 85.7 % (6/7), objetivo del 95 % **no cumplido**; no hay historia real recuperable de Actions.
