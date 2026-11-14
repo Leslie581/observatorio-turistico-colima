@@ -51,7 +51,7 @@ Estimación retrospectiva aceptada por la integrante A (2026-11-13) y registrada
 **Cierre documental (sin minutos todavía):** integración de `main` sin sobrescribir; Auditoría 6; respuesta a la Auditoría 5; actualización de fiabilidad con la captura del 13 de noviembre; evidencia de `gitleaks`; `ENTREGA.md`, relatoría y auditoría integral; validación. Se estimará cuando terminen las correcciones, pruebas y revisión de la entrega.
 
 ## Registro (2026-11-13)
-- **Tiempos de A aceptados y registrados:** L0 y L1 240 min, L2 150 min y L3 270 min = **660 min de E1 registrados hasta ahora**, más 750 min de E0. Todos `[ESTIMADO RETROSPECTIVO]`, con `inicio`, `fin` e `interrupcion_min` vacíos. El total de E1 crecerá cuando se registre el cierre documental.
+- **Tiempos de A aceptados y registrados:** L0 y L1 240 min, L2 150 min, L3 270 min y cierre documental 720 min = **1,380 min de E1**, más 750 min de E0. Todos `[ESTIMADO RETROSPECTIVO]`, con `inicio`, `fin` e `interrupcion_min` vacíos. El total de E1 crecerá cuando se registre el cierre documental.
 - **Defectos 19, 20 y 21** (Auditoría 5, D2, D3 y D4): registrados con `minutos_correccion` vacío. El 21 no duplica al 18 (recuento de requerimientos). El defecto de la prueba del tablero con `__pycache__` se registró como defecto 22 (véase abajo).
 - **Pendiente:** el tiempo del cierre documental.
 - El PSP de B no se tocó.
@@ -59,5 +59,16 @@ Estimación retrospectiva aceptada por la integrante A (2026-11-13) y registrada
 ## Defecto de la prueba del tablero (Auditoría 7, D4): autoría y registro
 Historial de Git (consultado el 2026-11-13): la prueba `test_no_hay_secretos_ni_archivos_temporales_en_el_tablero` entró en el commit `9489dc5` (2026-11-13 17:08 -0600), cuyo **autor y comitente es Leslie Valadez**; la corrigieron los commits `80d8b5b` y `eb8f606` de **eimymuz** (20:27 y 20:42 -0600), fusionados en el PR #15. El defecto tuvo 3 ejecuciones de CI fallidas. Se registró como **defecto 22 en `defectos-integrante-a.csv`** (con `minutos_correccion` vacío), porque el commit que lo introdujo figura a nombre de la integrante A; la documentación del tablero lo atribuye a un trabajo de B, pero Git no distingue quién redactó el código dentro de ese commit. El defecto 14 de B es otro (un `import`).
 
-## Trabajo del cierre documental ampliado (2026-11-14), sin tiempo registrado todavía
-Actividades hechas después de aceptar L2 y L3, que se estimarán junto con el resto del cierre documental cuando este termine (**no se propone ningún minuto ahora y no se agregó nada a los CSV**): integración de `main` y revisión del PR #15 (Auditoría 7); `gitleaks` y pruebas del tablero en CI; jerarquías conceptuales en el oro; discretización supervisada y su comparación; faltantes y atípicos; respaldo del bronce con manifiesto; bloqueo con hashes y acciones por SHA; cobertura; preparación de E2; auditoría integral y evaluación contra las rúbricas; actualización de la documentación. El PSP de B no se tocó.
+## Cierre documental: 720 minutos, estimación retrospectiva aceptada (2026-11-13)
+La integrante A aceptó estas estimaciones de su dedicación **personal** y se registraron en `tiempo-integrante-a.csv` (7 filas, `[ESTIMADO RETROSPECTIVO]`, sin horarios; la fase es la que mejor describe cada actividad). **No son mediciones**, y **no incluyen** el tiempo de ejecución autónoma de herramientas (suites de pruebas, CI, escaneos) ni el de B.
+| Actividad | Minutos | Evidencia |
+|---|---|---|
+| Integración de `main` y Auditoría 7 | 60 | `calidad/auditorias.md` (Auditoría 7) |
+| `gitleaks`, pruebas del tablero y CI | 90 | `.github/workflows/ci.yml`, `tests/test_ci_workflow.py` |
+| Jerarquías, discretización, faltantes y atípicos | 150 | `pipeline/jerarquias.py`, `pipeline/discretizacion_supervisada.py`, `laboratorio/exploracion/` |
+| Respaldo, dependencias, seguridad y cobertura | 105 | `pipeline/respaldo.py`, `pipeline/bloqueo.py`, `docs/E1/seguridad.md` |
+| Preparación de la ruta experimental de E2 | 45 | `docs/E1/ruta_experimento_e2.md`, `laboratorio/experimento/` |
+| Auditoría integral y evaluación de rúbricas | 135 | `docs/E1/auditoria_integral_pdf.md`, `docs/E1/evaluacion_rubrica.md` |
+| Revisión cruzada, correcciones y cierre documental | 135 | `docs/E1/ENTREGA.md`, `docs/relatoria-E1.md` |
+| **Total** | **720** | |
+**Totales de A:** E1 = 240 + 150 + 270 + 720 = **1,380 min (23 h)**; E0 + E1 = 750 + 1,380 = **2,130 min (35 h 30 min)**. **Sin duplicados:** el «cierre de observaciones: gitleaks» de L3 (40 min) fue el escaneo local y la evaluación del UUID; el rubro «`gitleaks`, pruebas del tablero y CI» es la integración en CI, posterior. La Auditoría 6 (revisión del PR #12) quedó dentro de L3 y del cierre original y no se cuenta dos veces.

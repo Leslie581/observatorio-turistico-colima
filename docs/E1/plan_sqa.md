@@ -83,7 +83,18 @@ Tiempo y defectos por fase (PSP), tasa de éxito de la captura, MTTR/MTBF (cuand
 | #14 | Tablero (MVP) | B (trabajo de B; el commit figura a nombre de A por haberse publicado desde la máquina de A) | 19 s | **No registrada**; además dejó el CI de `main` en rojo (§6) |
 | #15 | Cierre del tablero y corrección de la prueba | B | 11 s | Auditoría 7 (A), registrada en la rama `e1/cierre-documental`, **sin fusionar todavía** |
 | #16 | Cierre documental y requisitos pendientes (commit `7f8f315`) | A | 13 s (04:38:45 → 04:38:58 UTC del 14-nov) | **0 revisiones en GitHub.** La revisión de B sobre `4242ea5` es su Auditoría 8, registrada por ella fuera del PR (no se transcribe aquí); las correcciones posteriores van en un PR nuevo |
+| #17 | Auditoría 8 de B | B | 12 s (05:07:01 → 05:07:13 UTC del 14-nov) | **0 revisiones.** Distinto de los anteriores: base `e1/cierre-documental`, **no `main`**, y lo fusionó A **por error** (§5.1, «Desviación adicional») |
 Es el defecto de proceso **D1 de las Auditorías 3 a 7**, recurrente. El plan de trabajo (§3) pedía que desde E1 todo cambio se integrara por pull request **revisado por la otra integrante**; no se cumplió.
+
+**Desviación adicional (11.ª), distinta de las diez anteriores.** El **PR #17** (Auditoría 8 de B, rama `e1/eimy-auditoria-8`, commit `1e59f5f`) se abrió el 2026-11-14 a las 05:07:01 UTC y la integrante A lo **fusionó por error** a las 05:07:13 UTC (merge `bbaf187`, 23:07 hora local), **12 s después de abrirlo y antes de registrar su aprobación formal en GitHub** (0 revisiones). Qué lo distingue y qué no:
+| | Los diez anteriores (#7 a #16) | El #17 |
+|---|---|---|
+| Destino | `main` | `e1/cierre-documental` (rama de integración; **no llegó a `main`**) |
+| Contenido | Código, datos y documentación de la entrega | Solo `calidad/auditorias.md` (+64 líneas: la Auditoría 8) |
+| Qué faltó | Revisión recíproca previa registrada | La **aprobación formal de A en GitHub** (B es la autora; la revisión que importa es la de A sobre un texto de B) |
+| Cómo se subsana | Revisiones posteriores (Auditorías 3 a 8) | La integrante A valida la Auditoría 8 y deja su revisión en el PR #17 **como posterior**; no se simula una aprobación previa ni se revierte la fusión |
+| Control que aún queda | Protección de `main` (no activada) | El **PR definitivo hacia `main`** lo debe revisar y aprobar B antes de fusionarlo |
+**Hecho verificado:** el contenido de `calidad/auditorias.md` en `e1/cierre-documental` es idéntico, línea por línea, al de `1e59f5f`. No se rehace ni se duplica la Auditoría 8. En total son **once PR de E1 fusionados sin revisión previa registrada en GitHub** (diez hacia `main` y uno hacia una rama de integración).
 
 **Protección de ramas: NO configurada.** El 2026-11-13 a las 19:14 UTC la API pública de GitHub devolvía para `main` `protected: false`, sin comprobaciones obligatorias y sin reglas ni *rulesets* activos. **No hay ninguna protección configurada.** Activarla (revisión obligatoria de 1 aprobación y CI en verde antes de fusionar, con una excepción para el bot de captura, riesgo R2 de `riesgos.md`) **requiere permisos de administración y no se ha hecho**; mientras no exista, el cumplimiento depende solo de la disciplina del equipo.
 
@@ -99,7 +110,7 @@ Es el defecto de proceso **D1 de las Auditorías 3 a 7**, recurrente. El plan de
 | Conformidad con la acción correctiva y con la excepción de E1 (§5.1) | Fecha |
 |---|---|
 | Leslie Valadez Macías (A): ☒ **conforme** con el plan SQA v1.1, con la acción correctiva preparada y con el **reconocimiento formal** de que los diez PR de E1 (#7 a #16) se fusionaron sin revisión previa registrada en GitHub, contra la regla de `plan_trabajo.md` §3 (comunicado por Leslie en la conversación de trabajo; no es una firma manuscrita) | 2026-11-13 |
-| Eimy Melissa Urbina Meza (B): ☐ pendiente (la registra ella) | |
+| Eimy Melissa Urbina Meza (B): ☒ **conforme** (su Auditoría 8 (commit `1e59f5f`, incorporada en `e1/cierre-documental` por el PR #17, merge `bbaf187`)): aceptó el plan SQA v1.1 con el reconocimiento formal de la desviación de E1 (diez PR, #7 a #16, fusionados sin revisión previa; no se atribuye autorización a los docentes) y acordó como acción correctiva las **revisiones previas obligatorias** | 2026-11-13 |
 
 **Excepción explícita para la entrega E1 (texto listo; se declara en `docs/E1/ENTREGA.md` cuando ambas den su conformidad en la tabla de arriba):**
 - **Alcance:** el criterio 5 de §7 («cada PR integrado tiene su revisión recíproca registrada») **se incumple** para los PR #7 a #16 y se acepta **solo para la etiqueta `e1`**; no es un precedente para E2.

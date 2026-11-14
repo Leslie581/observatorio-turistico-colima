@@ -32,3 +32,10 @@ fecha,inicio,fin,interrupcion_min,fase,actividad,minutos_estimados
 2026-11-13,,,,documentacion,[ESTIMADO RETROSPECTIVO] plan_sqa.md y actualizacion de plan_trabajo.md y README (L3),35
 2026-11-13,,,,pruebas,"[ESTIMADO RETROSPECTIVO] Validacion: suite, ruff, verificador E0 y pipeline (L3)",10
 2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Cierre de observaciones: gitleaks, evaluacion del UUID, horarios y defectos 17 y 18 (L3)",40
+2026-11-13,,,,revision,[ESTIMADO RETROSPECTIVO] Integracion de main y Auditoria 7 (cierre documental),60
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Gitleaks, pruebas del tablero y CI (cierre documental)",90
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Jerarquias, discretizacion, faltantes y atipicos (cierre documental)",150
+2026-11-13,,,,codigo,"[ESTIMADO RETROSPECTIVO] Respaldo, dependencias, seguridad y cobertura (cierre documental)",105
+2026-11-13,,,,planeacion,[ESTIMADO RETROSPECTIVO] Preparacion de la ruta experimental de E2 (cierre documental),45
+2026-11-13,,,,revision,[ESTIMADO RETROSPECTIVO] Auditoria integral y evaluacion de rubricas (cierre documental),135
+2026-11-13,,,,documentacion,"[ESTIMADO RETROSPECTIVO] Revision cruzada, correcciones y cierre documental (cierre documental)",135
