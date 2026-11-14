@@ -1,7 +1,7 @@
 # Entrega E1 · Observatorio de Ocupación Hotelera de Colima (Manzanillo; nombre provisional)
 
 Equipo: Leslie Valadez Macías (integrante A, `Leslie581`) y Eimy Melissa Urbina Meza (integrante B, `eimymuz`) · Etiqueta: `e1` (**no creada todavía**) · Tablero: https://tdl-turistico-colima.streamlit.app (responde en público y sirve la versión integrada, véase «Tablero»)
-Repositorio: https://github.com/Leslie581/tdl-turistico-colima (el nombre anterior, `observatorio-turistico-colima`, redirige) · Corte: **2026-11-14** (verificación local entre las 03:10 y las 05:00 UTC; 2026-11-13, 21:10 a 23:00, hora de la Ciudad de México) · Estado: el cierre original se fusionó en `main` por el PR #16 (`628136b`); las correcciones posteriores (`372a6ab`, `1a31012` y el commit de cierre) están en `e1/cierre-documental` y **se integran con un PR nuevo**
+Repositorio: https://github.com/Leslie581/tdl-turistico-colima (el nombre anterior, `observatorio-turistico-colima`, redirige) · Corte: **2026-11-14** (verificación local entre las 03:10 y las 05:00 UTC; 2026-11-13, 21:10 a 23:00, hora de la Ciudad de México) · Estado: el cierre original se fusionó en `main` por el PR #16 (`628136b`); las correcciones posteriores (`372a6ab`, `1a31012` y el commit de cierre) están en `e1/cierre-documental` y **se integraron en `main` por el PR #18 (`3c6cf42`)**
 
 ## Resumen en tres líneas
 1. Los datos viajan de bronce a oro sin intervención ([`pipeline.md`](pipeline.md)): 31,147 filas de DATATUR leídas, 2 rechazadas a cuarentena con su motivo, 108 meses de oro para Manzanillo; el tablero publica el pronóstico elegido por su error en 2024 (SARIMA, RMSE 2.64 pp), que **no supera** a la referencia ingenua estacional en MAE ni en MAPE ([`pronostico.md`](pronostico.md) §4).
@@ -62,7 +62,7 @@ Ambas integrantes usaron Claude Code (Anthropic) para escribir y revisar código
 ### A. Obligatorios para la entrega (PDF, págs. 5 y 12; antes de las 23:59 del 13 de noviembre)
 | Pendiente | Estado | Quién |
 |---|---|---|
-| Fusionar el PR de las correcciones **después** de que B lo revise y lo apruebe en GitHub (primera revisión previa real) y de que su CI esté en verde | Pendiente | B revisa; A fusiona con autorización |
+| Integración del cierre definitivo en `main` | **Hecha** (PR #18, `3c6cf42`); **sin** la aprobación previa de B (desviación 12.ª). B puede dejar su revisión como **posterior** en el PR #18 | B |
 | **Etiqueta `e1`** sobre un commit de `main` (con esta ficha y la relatoría dentro) | **No creada** | A, con autorización |
 | **Registro del enlace de la etiqueta en el formulario de entregas** (un solo registro; cuenta para las tres materias) | **No verificable** desde el repositorio | A |
 | Los tres docentes como colaboradores del repositorio | **Declarado por la titular** (2026-11-13); no verificable desde la API pública | A (comprobarlo en Settings → Collaborators) |
@@ -80,7 +80,7 @@ Ambas integrantes usaron Claude Code (Anthropic) para escribir y revisar código
 ### C. Incumplimientos históricos que ya no se pueden corregir antes de la entrega
 | Incumplimiento | Evidencia |
 |---|---|
-| Los **diez PR de E1 hacia `main` (#7 a #16)** se fusionaron sin revisión previa registrada en GitHub, contra `plan_trabajo.md` §3; el **#17** (Auditoría 8) se fusionó por error en `e1/cierre-documental` antes de registrar la aprobación de A (desviación distinta; no llegó a `main`) | [`plan_sqa.md`](plan_sqa.md) §5.1; Auditorías 3 a 7 |
+| Los **once PR de E1 hacia `main` (#7 a #16 y #18)** se fusionaron sin revisión previa registrada en GitHub, contra `plan_trabajo.md` §3; el **#17** (Auditoría 8) se fusionó por error en `e1/cierre-documental` antes de registrar la aprobación de A (no llegó a `main`). El **#18** (cierre definitivo) se fusionó 12 s después de abrirse, **sin la aprobación de B que el equipo había fijado como condición** | [`plan_sqa.md`](plan_sqa.md) §5.1; Auditorías 3 a 7 |
 | El CI de `main` estuvo en rojo (3 ejecuciones del commit `9489dc5`) | [`plan_sqa.md`](plan_sqa.md) §6; corregido en `eb8f606` |
 | La bitácora cubre **3.83 de 7 días**: MTBF y disponibilidad solo exploratorios; el objetivo del 95 % no se cumple. La ventana del PDF (6 al 13 de noviembre) no se puede completar hacia atrás | [`fiabilidad.md`](fiabilidad.md) §4.2 |
 | El mecanismo de la única celda vacía de Base70 (Mexicali) no se puede determinar | [`faltantes_y_atipicos.md`](faltantes_y_atipicos.md) §1 |
