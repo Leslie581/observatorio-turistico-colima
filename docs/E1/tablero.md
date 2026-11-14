@@ -107,7 +107,7 @@ Abrir la URL en el navegador y en un teléfono, y comprobar que: la página carg
 - **Intervalos muy amplios** (de ±12 a ±21 puntos porcentuales en 2025) porque el entrenamiento incluye COVID.
 - **Resultados precalculados:** el tablero no se actualiza solo; para nuevos datos hay que regenerar el laboratorio y volver a versionar los resultados. Los resultados se generaron con Python 3.14.3; con otras versiones aparecen diferencias numéricas pequeñas (hasta 0.0086), sin cambio de conclusiones ([`pronostico.md`](pronostico.md) §8).
 - **Una categoría agregada:** hoteles de 2 a 5 estrellas de Manzanillo en conjunto; no hay desglose ni datos de establecimientos.
-- **Pruebas de la aplicación en CI:** `ci.yml` instala `tablero/requirements.txt` junto con las demás listas (una sola resolución de `pip`; `pip check` sin conflictos) y exige que `test_tablero_app.py` se ejecute (`TDL_EXIGIR_TABLERO=1`). **La primera ejecución en GitHub llegará con el push de ese cambio.** La revisión de móvil fue visual.
+- **Pruebas de la aplicación en CI:** `ci.yml` instala `tablero/requirements.txt` junto con las demás listas (una sola resolución de `pip`; `pip check` sin conflictos) y exige que `test_tablero_app.py` se ejecute (`TDL_EXIGIR_TABLERO=1`). **Ya se ejecutó en GitHub: ejecución 43557153021 de `ci.yml` sobre `4242ea5`: éxito en `calidad`, `auditoria-dependencias`, `bloqueo-tablero` y `secretos`.** La revisión de móvil fue visual.
 - **Streamlit Community Cloud** puede poner la aplicación en reposo por inactividad y tardar unos segundos en reactivarla; no es un servicio con disponibilidad garantizada.
 - **Nombre provisional:** el nombre del observatorio puede cambiar.
 

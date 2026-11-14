@@ -50,7 +50,7 @@
     "las confirmaciones que no agregan líneas (fusiones y la que solo elimina un archivo)"
   ],
   "limitaciones": [
-    "Los escaneos de este resumen son locales y manuales. El trabajo 'secretos' de .github/workflows/ci.yml (agregado el 2026-11-14 en la rama e1/cierre-documental) repite el escaneo en cada push y pull request; su primera ejecucion en GitHub Actions esta pendiente (llegara con el push), asi que aun no hay evidencia de que funcione alli.",
+    "Los escaneos de este resumen son locales y manuales. El trabajo 'secretos' de .github/workflows/ci.yml (agregado el 2026-11-14) repite el escaneo en cada push y pull request; su primera ejecucion en GitHub Actions (run 43557153021, commit 4242ea5) termino en exito.",
     "Que gitleaks no encuentre nada no demuestra que no exista un secreto en lo no escaneado ni uno que sus reglas no reconozcan.",
     "Los tres valores de verificación del binario (calculado, checksums.txt y digest de GitHub) salen del mismo origen (GitHub); no prueban por sí solos la identidad del autor.",
     "Un tercero puede reproducir el escaneo del primer alcance con el mismo binario y el commit indicado; los reportes versionados están vacíos y no contienen secretos."
@@ -75,6 +75,6 @@
     "comando": "gitleaks git . --log-opts=\"--all\" --redact --no-banner --exit-code 1",
     "historial_completo": "actions/checkout con fetch-depth: 0",
     "control_positivo_local": "un repositorio temporal con un token sintetico (formato ghp_, generado al vuelo y no versionado) produjo 1 hallazgo y codigo de salida 1 con el binario de Windows 8.30.1; no se imprimio el valor",
-    "ejecucion_en_github": "pendiente"
+    "ejecucion_en_github": "https://github.com/Leslie581/tdl-turistico-colima/actions/runs/43557153021"
   }
 }
